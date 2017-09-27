@@ -30,7 +30,8 @@
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.4.0",
     "test-fixture": "PolymerElements/test-fixture#^3.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
-    "arc-demo-helpers": "advanced-rest-client/arc-demo-helpers#^1.0.20"
+    "arc-demo-helpers": "advanced-rest-client/arc-demo-helpers#^1.0.20",
+    "fetch-polyfill": "advanced-rest-client/fetch-polyfill#^0.1.1"
   },
   "ignore": [
     "**/.*",
