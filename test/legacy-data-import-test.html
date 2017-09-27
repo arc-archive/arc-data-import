@@ -23,6 +23,7 @@ the License.
 
     <link rel="import" href="../../arc-demo-helpers/data-generator.html">
     <link rel="import" href="../arc-data-import.html">
+    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
   </head>
   <body>
 
@@ -106,7 +107,7 @@ the License.
       });
     });
 
-    suite('Legacy import to datastore', function() {
+    suite('Legacy single request to datastore', function() {
       var originalData;
       var element;
       var data;
