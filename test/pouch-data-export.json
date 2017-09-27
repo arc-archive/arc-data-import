@@ -1,0 +1,197 @@
+{
+  "createdAt": "2017-09-25T20:54:48.615Z",
+  "version": "9.14.64.305",
+  "kind": "ARC#AllDataExport",
+  "requests": [{
+      "headers": "x-test: true",
+      "method": "POST",
+      "name": "request-0",
+      "payload": "test-payload-0",
+      "type": "saved",
+      "url": "http://localhost:3000/api/test/0",
+      "updated": 1506371004395,
+      "kind": "ARC#RequestData"
+    },
+    {
+      "created": 1449004087420,
+      "headers": null,
+      "method": "GET",
+      "name": "test-reqyest",
+      "payload": null,
+      "type": "saved",
+      "url": "http://127.0.0.1:8888/",
+      "kind": "ARC#RequestData"
+    },
+    {
+      "url": "http://localhost:3000/sessions/",
+      "method": "GET",
+      "headers": "",
+      "payload": "",
+      "name": "Sessions API endpoint 1",
+      "type": "saved",
+      "updated": 1506374000371,
+      "_referenceLegacyProject": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+      "kind": "ARC#RequestData"
+    },
+    {
+      "type": "saved",
+      "headers": "",
+      "method": "GET",
+      "name": "Sessions API endpoint 2",
+      "payload": "",
+      "url": "http://localhost:3000/sessions/users/",
+      "updated": 1506374026004,
+      "_referenceLegacyProject": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+      "kind": "ARC#RequestData"
+    }
+  ],
+  "projects": [{
+    "name": "test-project-1",
+    "order": 0,
+    "created": 1506223472294,
+    "updated": 1506223472295,
+    "_referenceId": "c99b754d-74e4-44b0-a1b2-f5fe76f0180e",
+    "kind": "ARC#ProjectData"
+  }, {
+    "name": "test-project-2",
+    "order": 0,
+    "created": 1506223472295,
+    "updated": 1506223472296,
+    "_referenceId": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+    "kind": "ARC#ProjectData"
+  }],
+  "history": [{
+      "created": 1506223403380,
+      "updated": 1506223442093,
+      "method": "GET",
+      "url": "https://onet.pl",
+      "kind": "ARC#HistoryData"
+    },
+    {
+      "created": 1506371042634,
+      "updated": 1506371042634,
+      "headers": "accept: application/json\naccept-encoding: gzip, deflate\naccept-language: en-US,en;q=0.8\nuser-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3218.0 Safari/537.36",
+      "method": "GET",
+      "payload": "",
+      "url": "http://www.wp.pl",
+      "kind": "ARC#HistoryData"
+    },
+    {
+      "created": 1506372769951,
+      "updated": 1506372787607,
+      "headers": "authorization: Basic dXNlcjpwYXNzd2Q=",
+      "method": "GET",
+      "payload": "",
+      "url": "https://httpbin.org/basic-auth/user/passwd",
+      "kind": "ARC#HistoryData"
+    }
+  ],
+  "websocket-url-history": [{
+    "cnt": 1,
+    "time": 1506372512925,
+    "key": "wss://echo.websocket.org",
+    "kind": "ARC#WebsocketHistoryData"
+  }],
+  "url-history": [{
+      "cnt": 1,
+      "time": 1506370997614,
+      "key": "http://localhost:3000/api/test",
+      "kind": "ARC#UrlHistoryData"
+    },
+    {
+      "cnt": 1,
+      "time": 1506371042126,
+      "key": "http://www.wp.pl",
+      "kind": "ARC#UrlHistoryData"
+    },
+    {
+      "cnt": 2,
+      "time": 1506372787600,
+      "key": "https://httpbin.org/basic-auth/user/passwd",
+      "kind": "ARC#UrlHistoryData"
+    },
+    {
+      "cnt": 2,
+      "time": 1506223441378,
+      "key": "https://onet.pl",
+      "kind": "ARC#UrlHistoryData"
+    },
+    {
+      "cnt": 1,
+      "time": 1506371036377,
+      "key": "www.wp.pl",
+      "kind": "ARC#UrlHistoryData"
+    }
+  ],
+  "variables": [{
+      "environment": "other env",
+      "enabled": true,
+      "variable": "other-var-2",
+      "value": "value-2",
+      "kind": "ARC#Variable"
+    },
+    {
+      "environment": "other env",
+      "enabled": true,
+      "variable": "other-var",
+      "value": "value-1",
+      "kind": "ARC#Variable"
+    },
+    {
+      "environment": "default",
+      "enabled": true,
+      "variable": "test-var",
+      "value": "default-env",
+      "kind": "ARC#Variable"
+    },
+    {
+      "environment": "test env",
+      "enabled": true,
+      "variable": "myVar",
+      "value": "varValue",
+      "kind": "ARC#Variable"
+    }
+  ],
+  "headers-sets": [{
+    "name": "test set",
+    "headers": "content-type: abc",
+    "created": 1506223641455,
+    "order": 0,
+    "kind": "ARC#HeadersSet"
+  }],
+  "auth-data": [{
+    "encoded": "dXNlcjpwYXNzd2Q=",
+    "key": "basic/https%3A%2F%2Fhttpbin.org%2Fbasic-auth%2Fuser%2Fpasswd",
+    "kind": "ARC#AuthData"
+  }],
+  "cookies": [{
+      "max-age": 900,
+      "name": "fiv",
+      "value": "2.11.2",
+      "created": 1506371044551,
+      "lastAccess": 1506371044551,
+      "persistent": true,
+      "hostOnly": true,
+      "path": "/",
+      "httponly": null,
+      "domain": "wp.pl",
+      "expires": 1506371944551,
+      "maxAge": 900,
+      "key": "wp.pl/fiv/%2F",
+      "kind": "ARC#Cookie"
+    },
+    {
+      "name": "sgv",
+      "value": "1506371043",
+      "created": 1506371044551,
+      "lastAccess": 1506371044552,
+      "persistent": true,
+      "hostOnly": true,
+      "path": "/",
+      "domain": "wp.pl",
+      "expires": 1537907043000,
+      "key": "wp.pl/sgv/%2F",
+      "kind": "ARC#Cookie"
+    }
+  ]
+}

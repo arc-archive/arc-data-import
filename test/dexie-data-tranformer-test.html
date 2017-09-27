@@ -1,0 +1,239 @@
+<!doctype html>
+<!--
+@license
+Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/test-helpers.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+    <script src="test-helper.js"></script>
+    <link rel="import" href="../dexie-data-tranformer.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <dexie-data-tranformer></dexie-data-tranformer>
+      </template>
+    </test-fixture>
+
+    <script>
+    /* global fixture, assert, DataTestHelper */
+    suite('Dexie export', function() {
+      var data;
+      var element;
+      var result;
+      suiteSetup(function() {
+        return DataTestHelper.getFile('dexie-data-export.json')
+        .then(response => {
+          data = JSON.parse(response);
+          element = fixture('basic');
+          return element.transform(data);
+        })
+        .then(data => result = data);
+      });
+
+      test('Normalizes the data', function() {
+        assert.typeOf(result, 'object');
+      });
+
+      test('Contains export object properties', function() {
+        assert.typeOf(result.createdAt, 'string');
+        assert.equal(result.version, 'unknown');
+        assert.equal(result.kind, 'ARC#Import');
+        assert.typeOf(result.projects, 'array');
+        assert.typeOf(result.requests, 'array');
+        assert.typeOf(result.history, 'array');
+      });
+
+      test('Projects contains 2 entries', function() {
+        assert.lengthOf(result.projects, 2);
+      });
+
+      test('History is empty', function() {
+        assert.lengthOf(result.history, 0);
+      });
+
+      test('Requests contains 6 entries', function() {
+        assert.lengthOf(result.requests, 6);
+      });
+
+      test('Request objects are valid', function() {
+        DataTestHelper.assertRequestObject(result.requests[0]);
+        DataTestHelper.assertRequestObject(result.requests[3]);
+        DataTestHelper.assertRequestObject(result.requests[5]);
+      });
+
+      test('Request values are set', function() {
+        var request = result.requests[0];
+        assert.equal(request.url, 'hrttp://localhost:8080/url2');
+        assert.equal(request.method, 'GET');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506365775233);
+        assert.equal(request.name, 'test-request');
+        assert.equal(request.type, 'saved');
+
+        request = result.requests[3];
+        assert.equal(request.url, 'http://onet.pl/test');
+        assert.equal(request.method, 'GET');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506365939968);
+        assert.equal(request.name, 'Other endpoint');
+        assert.equal(request.type, 'saved');
+
+        request = result.requests[5];
+        assert.equal(request.url, 'http://second-project.com');
+        assert.equal(request.method, 'PUT');
+        assert.equal(request.headers, 'x-test: headers');
+        assert.equal(request.payload, 'test-payload');
+        assert.equal(request.created, 1506367353657);
+        assert.equal(request.name, 'second-project-request');
+        assert.equal(request.type, 'saved');
+      });
+
+      test('Projects object is valid', function() {
+        DataTestHelper.assertProjectObject(result.projects[0]);
+        DataTestHelper.assertProjectObject(result.projects[1]);
+      });
+
+      test('Project values are set', function() {
+        var project = result.projects[0];
+        assert.equal(project.name, 'Project name', 'name is set');
+        assert.equal(project.created, 1506365878724, 'created is set');
+        assert.strictEqual(project.order, 0, 'order is set');
+
+        project = result.projects[1];
+        assert.equal(project.name, 'second-project', 'name is set');
+        assert.equal(project.created, 1506367353678, 'created is set');
+        assert.strictEqual(project.order, 0, 'order is set');
+      });
+
+      test('Associate requests with porojects', function() {
+        assert.isUndefined(result.requests[0].legacyProject);
+        assert.isUndefined(result.requests[1].legacyProject);
+        assert.typeOf(result.requests[2].legacyProject, 'string');
+        assert.typeOf(result.requests[3].legacyProject, 'string');
+        assert.typeOf(result.requests[4].legacyProject, 'string');
+        assert.typeOf(result.requests[5].legacyProject, 'string');
+      });
+
+      test('Project ID is set correctly', function() {
+        var p1id = result.projects[0]._id;
+        var p2id = result.projects[1]._id;
+        assert.equal(result.requests[2].legacyProject, p1id);
+        assert.equal(result.requests[3].legacyProject, p1id);
+        assert.equal(result.requests[4].legacyProject, p1id);
+        assert.equal(result.requests[5].legacyProject, p2id);
+      });
+    });
+
+    suite('Dexie history', function() {
+      var data;
+      var element;
+      var result;
+      suiteSetup(function() {
+        return DataTestHelper.getFile('dexie-history-export.json')
+        .then(response => {
+          data = JSON.parse(response);
+          element = fixture('basic');
+          return element.transform(data);
+        })
+        .then(data => result = data);
+      });
+
+      test('Normalizes the data', function() {
+        assert.typeOf(result, 'object');
+      });
+
+      test('History contains 4 entries', function() {
+        assert.lengthOf(result.history, 4);
+      });
+
+      test('History objects are valid', function() {
+        DataTestHelper.assertHistoryObject(result.history[0]);
+        DataTestHelper.assertHistoryObject(result.history[1]);
+        DataTestHelper.assertHistoryObject(result.history[2]);
+        DataTestHelper.assertHistoryObject(result.history[3]);
+      });
+
+      test('Request values are set', function() {
+        var request = result.history[0];
+        assert.equal(request.url, 'http://wp.pl');
+        assert.equal(request.method, 'GET');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506366584358);
+
+        request = result.history[2];
+        assert.equal(request.url, 'http://google.com');
+        assert.equal(request.method, 'PUT');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506365841855);
+      });
+    });
+
+    suite('Dexie saved export', function() {
+      var data;
+      var element;
+      var result;
+      suiteSetup(function() {
+        return DataTestHelper.getFile('dexie-saved-export.json')
+        .then(response => {
+          data = JSON.parse(response);
+          element = fixture('basic');
+          return element.transform(data);
+        })
+        .then(data => result = data);
+      });
+
+      test('Requests contains 2 entries', function() {
+        assert.lengthOf(result.requests, 2);
+      });
+
+      test('Request objects are valid', function() {
+        DataTestHelper.assertRequestObject(result.requests[0]);
+        DataTestHelper.assertRequestObject(result.requests[1]);
+      });
+
+      test('Request values are set', function() {
+        var request = result.requests[0];
+        assert.equal(request.url, 'hrttp://localhost:8080/url2');
+        assert.equal(request.method, 'GET');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506365775233);
+        assert.equal(request.name, 'Request in project');
+        assert.equal(request.type, 'saved');
+
+        request = result.requests[1];
+        assert.equal(request.url, 'http://google.com');
+        assert.equal(request.method, 'GET');
+        assert.equal(request.headers, '');
+        assert.equal(request.payload, '');
+        assert.equal(request.created, 1506365826194);
+        assert.equal(request.name, 'Regular request');
+        assert.equal(request.type, 'saved');
+      });
+    });
+
+    </script>
+
+  </body>
+</html>

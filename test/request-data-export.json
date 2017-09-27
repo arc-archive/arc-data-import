@@ -1,0 +1,109 @@
+{
+  "kind": "ARC#requestsDataExport",
+  "createdAt": "2016-04-18T13:53:01.015Z",
+  "version": "5.0.5-test",
+  "requests": [{
+    "order": 0,
+    "url": "https://httpbin.org/gzip",
+    "method": "GET",
+    "type": "drive",
+    "updateTime": 1460987581010,
+    "id": 1304,
+    "kind": "ARC#RequestObject",
+    "har": {
+      "comment": "Created when making a request as a history object.",
+      "version": "1.2",
+      "creator": {
+        "comment": "ARC for Google Chrome.",
+        "version": "5.0.5-test",
+        "name": "Advanced REST client"
+      },
+      "browser": {
+        "version": "49.0.2623.112",
+        "name": "Chrome"
+      },
+      "pages": [{
+        "startedDateTime": "2016-04-18T13:53:00.998Z",
+        "id": "GET:https://httpbin.org/gzip-0",
+        "title": "encoding - gzip",
+        "pageTimings": {
+          "onLoad": -1,
+          "onContentLoad": -1
+        }
+      }],
+      "entries": [{
+        "startedDateTime": "2016-04-18T13:52:48.594Z",
+        "pageref": "GET:https://httpbin.org/gzip-0",
+        "time": 265.9000000000233,
+        "timings": {
+          "blocked": -1,
+          "connect": 85.98000000009779,
+          "dns": -1,
+          "receive": -1,
+          "send": 0.8299999999580905,
+          "wait": 91.90000000002328
+        },
+        "cache": {
+          "beforeRequest": null,
+          "afterRequest": null
+        },
+        "request": {
+          "method": "GET",
+          "url": "https://httpbin.org/gzip",
+          "httpVersion": "HTTP/1.1",
+          "headersSize": 70,
+          "bodySize": 0,
+          "postData": {
+            "mimeType": "application/octet-stream",
+            "text": "",
+            "params": []
+          },
+          "headers": [],
+          "queryString": [],
+          "cookies": []
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "httpVersion": "HTTP/1.1",
+          "redirectURL": "",
+          "headersSize": 434,
+          "bodySize": 182,
+          "content": {
+            "size": 182,
+            "mimeType": "application/json",
+            "text": "{\"gzipped\":true,\"headers\":{\"Host\":\"httpbin.org\"},\"method\":\"GET\",\"origin\":\"213.122.163.130\"}"
+          },
+          "headers": [{
+            "name": "server",
+            "value": "nginx"
+          }, {
+            "name": "date",
+            "value": "Mon, 18 Apr 2016 13:52:48 GMT"
+          }, {
+            "name": "content-type",
+            "value": "application/json"
+          }, {
+            "name": "content-length",
+            "value": "119"
+          }, {
+            "name": "connection",
+            "value": "keep-alive"
+          }, {
+            "name": "content-encoding",
+            "value": "gzip"
+          }, {
+            "name": "access-control-allow-origin",
+            "value": "*"
+          }, {
+            "name": "access-control-allow-credentials",
+            "value": "true"
+          }],
+          "cookies": []
+        }
+      }]
+    },
+    "name": "encoding - gzip"
+  }],
+  "projects": []
+}
