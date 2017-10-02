@@ -222,7 +222,11 @@ Polymer({
       return Promise.reject(new Error('Data not normalized for import.'));
     }
     var store = this._dataStore;
-    return store.importData(importObject);
+    return store.importData(importObject)
+    .then(result => {
+      this.fire('data-imported');
+      return result;
+    });
   },
   /**
    * Parses file data with JSON parser and throws an error if not a JSON.
