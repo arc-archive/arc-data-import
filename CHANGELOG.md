@@ -1,3 +1,17 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.1...0.1.2) (2017-10-02)
+
+
+### Fix
+
+* Added back error object ([e7d136a9c6ee1e7a7afb154982947a9998e1b715](https://github.com/advanced-rest-client/arc-data-import/commit/e7d136a9c6ee1e7a7afb154982947a9998e1b715))
+
+### Update
+
+* Added data-imported custom event. ([be9f54c29264752ee38a9e9209ce55887ad40c4f](https://github.com/advanced-rest-client/arc-data-import/commit/be9f54c29264752ee38a9e9209ce55887ad40c4f))
+
+
+
 <a name="0.1.1"></a>
 ## 0.1.1 (2017-09-27)
 
