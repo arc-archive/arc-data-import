@@ -49,7 +49,12 @@ Import data store helper element.
     get _authDataDb() {
       return new PouchDB('auth-data');
     },
-
+    /**
+     * Imports data into the data store.
+     *
+     * @param {Object} exportObj Normalized export object
+     * @return {Promise} Promise resolved to list of error messages, if any.
+     */
     importData: function(exportObj) {
       var errors = [];
       var promise;
@@ -123,6 +128,10 @@ Import data store helper element.
         if (exportObj.variables && exportObj.variables.length) {
           return this._importEnvironments(exportObj.variables);
         }
+      })
+      .then(info => {
+        handleInfo(info);
+        return errors.length ? errors : undefined;
       });
     },
 
