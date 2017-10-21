@@ -1,3 +1,13 @@
+<a name="0.1.4"></a>
+## [0.1.4](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.3...0.1.4) (2017-10-21)
+
+
+### Update
+
+* Added new import file kinds ([2016ee4c8568b8764ca5c3ae8d44675a545428bd](https://github.com/advanced-rest-client/arc-data-import/commit/2016ee4c8568b8764ca5c3ae8d44675a545428bd))
+
+
+
 <a name="0.1.3"></a>
 ## [0.1.3](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.2...0.1.3) (2017-10-02)
 
