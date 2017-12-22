@@ -129,6 +129,9 @@ DataTestHelper.getDatastoreUrlsData = function() {
 DataTestHelper.getDatastoreAthDataData = function() {
   return DataTestHelper.getDatastoreData('auth-data');
 };
+DataTestHelper.getDatastoreHostRulesData = function() {
+  return DataTestHelper.getDatastoreData('host-rules');
+};
 DataTestHelper.updateObject = function(dbName, obj) {
   var db = new PouchDB(name);
   return db.put(obj, {
