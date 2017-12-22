@@ -1,3 +1,13 @@
+<a name="0.1.6"></a>
+## [0.1.6](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.5...0.1.6) (2017-12-22)
+
+
+### New
+
+* Added support for host-rules model ([48d1e88a7ac36a11a36178561e825b673bdcc529](https://github.com/advanced-rest-client/arc-data-import/commit/48d1e88a7ac36a11a36178561e825b673bdcc529))
+
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.4...0.1.5) (2017-10-21)
 
