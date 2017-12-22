@@ -116,6 +116,11 @@ the License.
         })
         .then(auth => {
           assert.lengthOf(auth, 1);
+          return DataTestHelper.getDatastoreHostRulesData();
+        })
+        .then(rules => {
+          assert.lengthOf(rules, 1);
+          assert.equal(rules[0]._id, 'host-rule');
         });
       });
       test('Overrides all data', function() {

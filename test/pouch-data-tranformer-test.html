@@ -65,6 +65,7 @@ the License.
         assert.typeOf(result['url-history'], 'array');
         assert.typeOf(result['headers-sets'], 'array');
         assert.typeOf(result['auth-data'], 'array');
+        assert.typeOf(result['host-rules'], 'array');
       });
 
       test('Data are accounted for', function() {
@@ -77,6 +78,7 @@ the License.
         assert.lengthOf(result['url-history'], 5);
         assert.lengthOf(result['headers-sets'], 1);
         assert.lengthOf(result['auth-data'], 1);
+        assert.lengthOf(result['host-rules'], 1);
       });
 
       test('Request objects are valid', function() {
@@ -251,6 +253,17 @@ the License.
         var v1 = result['auth-data'][0];
         var compare = data['auth-data'][0];
         assert.strictEqual(v1.encoded, compare.encoded);
+        assert.isUndefined(v1.kind);
+      });
+
+      test('host-rules object has the `_id` property', function() {
+        assert.typeOf(result['host-rules'][0]._id, 'string');
+      });
+
+      test('host-rules values are set', function() {
+        var v1 = result['host-rules'][0];
+        var compare = data['host-rules'][0];
+        assert.strictEqual(v1.from, compare.from);
         assert.isUndefined(v1.kind);
       });
     });
