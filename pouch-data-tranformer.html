@@ -54,6 +54,10 @@ An element to transform data expored in PouchDB system into ready import object.
       if (data.cookies && data.cookies.length) {
         data.cookies = this._tranformSimpleObject(data.cookies);
       }
+      var hostRules = data['host-rules'];
+      if (hostRules && hostRules.length) {
+        data['host-rules'] = this._tranformSimpleObject(hostRules);
+      }
       data.kind = 'ARC#Import';
       return Promise.resolve(data);
     },

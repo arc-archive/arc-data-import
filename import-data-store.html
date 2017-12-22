@@ -49,6 +49,9 @@ Import data store helper element.
     get _authDataDb() {
       return new PouchDB('auth-data');
     },
+    get _hostRulesDb() {
+      return new PouchDB('host-rules');
+    },
     /**
      * Imports data into the data store.
      *
@@ -131,6 +134,13 @@ Import data store helper element.
       })
       .then(info => {
         handleInfo(info);
+        let data = exportObj['host-rules'];
+        if (data && data.length) {
+          return this.importHostRules(data);
+        }
+      })
+      .then(info => {
+        handleInfo(info);
         return errors.length ? errors : undefined;
       });
     },
@@ -179,6 +189,12 @@ Import data store helper element.
 
     importHeaders: function(data) {
       var db = this._headersSetsDb;
+      return db.bulkDocs(data)
+      .then(result => this._handleInsertResponse(result, data, db));
+    },
+
+    importHostRules: function(data) {
+      var db = this._hostRulesDb;
       return db.bulkDocs(data)
       .then(result => this._handleInsertResponse(result, data, db));
     },

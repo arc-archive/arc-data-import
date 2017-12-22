@@ -193,5 +193,13 @@
       "key": "wp.pl/sgv/%2F",
       "kind": "ARC#Cookie"
     }
-  ]
+  ],
+  "host-rules": [{
+    "from": "https://from",
+    "to": "http://to",
+    "enabled": true,
+    "comment": "test",
+    "key": "host-rule",
+    "kind": "ARC#HostRule"
+  }]
 }
