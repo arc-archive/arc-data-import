@@ -1,0 +1,58 @@
+{
+  "id": "90a0d920-d5c2-95b7-70e2-c659da58294f",
+  "name": "TestEnvironment",
+  "values": [
+    {
+      "enabled": true,
+      "key": "cloudhubApi",
+      "value": "https://domain.com/cloudhub/api",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "accessManagementApi",
+      "value": "https://domain.com/accounts",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "YY",
+      "value": "01",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "username",
+      "value": "testUsernem",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "password",
+      "value": "testPassword",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "currentGroupCounter",
+      "value": "1",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "parentId",
+      "value": "abcd-efgh-ijkl-mnop-qrst",
+      "type": "text"
+    },
+    {
+      "enabled": false,
+      "key": "disabledVariable",
+      "value": "i am disbaled variable.",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1512788139783,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2018-02-13T01:42:25.304Z",
+  "_postman_exported_using": "Postman/5.5.1"
+}
