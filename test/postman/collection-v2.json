@@ -15,7 +15,7 @@
 					"name": "url encoded",
 					"request": {
 						"url": {
-							"raw": "https://onet.pl/{{$randomInt}}?a=bb&e=ff",
+							"raw": "https://onet.pl/{{$randomInt}}?{{a}}={{bb}}&e=ff",
 							"protocol": "https",
 							"host": [
 								"onet",
@@ -26,13 +26,13 @@
 							],
 							"query": [
 								{
-									"key": "a",
-									"value": "bb",
+									"key": "{{a}}",
+									"value": "{{bb}}",
 									"equals": true,
 									"description": ""
 								},
 								{
-									"key": "c",
+									"key": "{{c}}",
 									"value": "dd",
 									"equals": true,
 									"description": "Test desc",
@@ -60,7 +60,7 @@
 							"urlencoded": [
 								{
 									"key": "fd1",
-									"value": "1",
+									"value": "{{v1}}",
 									"description": "",
 									"type": "text"
 								},
@@ -72,7 +72,7 @@
 									"disabled": true
 								},
 								{
-									"key": "fd3",
+									"key": "{{fd3}}",
 									"value": "3",
 									"description": "",
 									"type": "text"
@@ -98,20 +98,20 @@
 							],
 							"query": [
 								{
-									"key": "a",
-									"value": "ase",
+									"key": "p1",
+									"value": "v1",
 									"equals": true,
-									"description": "asdasdasdasd"
+									"description": "test-param"
 								},
 								{
-									"key": "assasdasdasdas",
-									"value": "asdasdasd",
+									"key": "p2",
+									"value": "v2",
 									"equals": true,
 									"disabled": true
 								},
 								{
-									"key": "sssss",
-									"value": "ddddddd",
+									"key": "p3",
+									"value": "v3",
 									"equals": true,
 									"description": ""
 								}
@@ -134,6 +134,12 @@
 								"key": "x-test",
 								"value": "{{host}}",
 								"description": ""
+							},
+							{
+								"key": "x-disabled",
+								"value": "true",
+								"description": "",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -264,7 +270,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "some raw value"
+					"raw": "some {{raw}} value"
 				},
 				"description": "Request description - raw"
 			},
@@ -293,7 +299,7 @@
 						},
 						{
 							"key": "fb2",
-							"value": "v2",
+							"value": "{{v2}}",
 							"description": "",
 							"type": "text",
 							"disabled": true

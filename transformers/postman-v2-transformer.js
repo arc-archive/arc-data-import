@@ -94,7 +94,8 @@ class _PostmanV2Transformer extends PostmanTransformer {
     }
     if (item.item) {
       // this is a folder
-      return this._extractRequestsV2(item, result);
+      return this._extractRequestsV2(item.item, result)
+      .then(() => this._extractRequestsV2(data, result));
     }
     let arcRequest = this._computeArcRequest(item);
     result.push(arcRequest);
@@ -103,10 +104,10 @@ class _PostmanV2Transformer extends PostmanTransformer {
         this._currentItem = 0;
         this.deffer(resolve);
       })
-      .then(() => this._extractRequestsV2(item, result));
+      .then(() => this._extractRequestsV2(data, result));
     }
     this._currentItem++;
-    return this._extractRequestsV2(item, result);
+    return this._extractRequestsV2(data, result);
   }
   /**
    * Computes ARC request out of Postman v2 item.
@@ -118,9 +119,13 @@ class _PostmanV2Transformer extends PostmanTransformer {
     let request = item.request;
     let name = item.name || 'unnamed';
     let url = request.url.raw || 'http://';
+    url = this.ensureVariablesSyntax(url);
     let method = request.method || 'GET';
-    let headersModel = this.computeSimpleModel(request.header);
-    let queryModel = this.computeSimpleModel(request.url.query);
+    method = this.ensureVariablesSyntax(method);
+    const header = this.ensureVarsRecursevily(request.header);
+    const query = this.ensureVarsRecursevily(request.url.query);
+    let headersModel = this.computeSimpleModel(header);
+    let queryModel = this.computeSimpleModel(query);
     let time = Date.now();
     const result = {
       name: name,
@@ -133,7 +138,7 @@ class _PostmanV2Transformer extends PostmanTransformer {
       type: 'saved',
       projectOrder: this._currentItem,
       legacyProject: this._data.info._postman_id,
-      headers: this._computeHeaders(request.header)
+      headers: this._computeHeaders(header)
     };
     result._id = this.generateRequestId(result, result.legacyProject);
     result.payload = this._computePayload(request.body, result);
@@ -150,7 +155,8 @@ class _PostmanV2Transformer extends PostmanTransformer {
     if (!headers || !headers.length) {
       return result;
     }
-    result = headers.map((item) => item.key + ': ' + item.value).join('\n');
+    let tmp = headers.filter((h) => !h.disabled);
+    result = tmp.map((item) => item.key + ': ' + item.value).join('\n');
     return result;
   }
   /**
@@ -165,8 +171,8 @@ class _PostmanV2Transformer extends PostmanTransformer {
     if (!def) {
       return;
     }
-    switch (item.mode) {
-      case 'raw': return body.raw;
+    switch (body.mode) {
+      case 'raw': return this.ensureVariablesSyntax(body.raw);
       case 'formdata': return this._computeFormDataBody(def, item);
       case 'urlencoded': return this._computeUrlEncodedBody(def, item);
       default: return '';
@@ -185,6 +191,7 @@ class _PostmanV2Transformer extends PostmanTransformer {
     if (!items || !items.length) {
       return '';
     }
+    items = this.ensureVarsRecursevily(items);
     item.multipart = items.map((_item) => {
       let obj = {
         enabled: !_item.disabled,
@@ -210,6 +217,7 @@ class _PostmanV2Transformer extends PostmanTransformer {
     }
     let result = [];
     let model = [];
+    items = this.ensureVarsRecursevily(items);
     items.forEach((item) => {
       let name = this._paramValue(item.key);
       let value = this._paramValue(item.value);

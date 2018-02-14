@@ -19,6 +19,7 @@ class _PostmanTransformer extends BaseTransformer {
    */
   constructor(data) {
     super(data);
+    this._postamVarRegex = /\{\{(.*?)\}\}/gim;
   }
   /**
    * Computes body value for Postman's v1 body definition.
@@ -115,6 +116,57 @@ class _PostmanTransformer extends BaseTransformer {
       };
     });
     return result;
+  }
+  /**
+   * Replacer function for regex replace to be used to replace variables
+   * notation to ARC's
+   *
+   * @param {String} match
+   * @param {String} value
+   * @return {String} Value to be replaced in the string.
+   */
+  variablesReplacerFunction(match, value) {
+    switch (value) {
+      case '$randomInt': value = 'random()'; break;
+      case '$guid': value = 'uuid()'; break;
+      case '$timestamp': value = 'now()'; break;
+    }
+    return '${' + value + '}';
+  }
+  /**
+   * Replaces any occurence of {{STRING}} with ARC's variables syntax.
+   *
+   * @param {String} str A string value to check for variables.
+   * @return {String} The same string with ARC's variables syntax
+   */
+  ensureVariablesSyntax(str) {
+    if (!str || !str.indexOf) {
+      return str;
+    }
+    // https://jsperf.com/regex-replace-with-test-conditions
+    if (str.indexOf('{{') !== -1) {
+      str = str.replace(this._postamVarRegex, this.variablesReplacerFunction);
+    }
+    return str;
+  }
+
+  ensureVarsRecursevily(obj) {
+    if (obj instanceof Array) {
+      for (let i = 0, len = obj.length; i < len; i++) {
+        obj[i] = this.ensureVarsRecursevily(obj[i]);
+      }
+      return obj;
+    }
+    if (obj === Object(obj)) {
+      Object.keys(obj).forEach((index) => {
+        obj[index] = this.ensureVarsRecursevily(obj[index]);
+      });
+      return obj;
+    }
+    if (typeof obj === 'string') {
+      return this.ensureVariablesSyntax(obj);
+    }
+    return obj;
   }
 }
 if (isNode) {
