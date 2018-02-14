@@ -35,12 +35,12 @@ the License.
 
     <script>
     /* global fixture, assert, DataTestHelper, DataGenerator */
-    suite('Postamn import to datastore - backup data', function() {
+    suite('Postamn import to datastore - v2', function() {
       var originalData;
       var element;
       var data;
       suiteSetup(function() {
-        return DataTestHelper.getFile('postman-data.json')
+        return DataTestHelper.getFile('collection-v2.json')
         .then(response => {
           originalData = JSON.parse(response);
         });
@@ -61,13 +61,9 @@ the License.
         data = DataTestHelper.clone(originalData);
       });
 
-      var readProjects;
-      var readRequests;
-
       test('Stores the data', function() {
         return element.normalizeImportData(data)
         .then(parsed => {
-
           return element.storeData(parsed);
         })
         .then(errors => {
@@ -75,25 +71,11 @@ the License.
           return DataTestHelper.getDatastoreRequestData();
         })
         .then(requests => {
-          assert.lengthOf(requests, 46);
-          readRequests = requests;
+          assert.lengthOf(requests, 5);
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then(projects => {
-          assert.lengthOf(projects, 2);
-          readProjects = projects;
-          return DataTestHelper.getDatastoreVariablesData();
-        })
-        .then(variables => {
-          assert.lengthOf(variables, 5);
-          return DataTestHelper.getDatastoreEnvironmentsData();
-        })
-        .then(environments => {
-          assert.lengthOf(environments, 2);
-          return DataTestHelper.getDatastoreheadersData();
-        })
-        .then(headers => {
-          assert.lengthOf(headers, 1);
+          assert.lengthOf(projects, 1);
         });
       });
 
@@ -107,26 +89,11 @@ the License.
           return DataTestHelper.getDatastoreRequestData();
         })
         .then(requests => {
-          // 1 request is in a project in the test data
-          // and this import is missing project ID so it generates IDs again
-          // so together it should give 2 from previous import + 1 new
-          assert.lengthOf(requests, 46);
+          assert.lengthOf(requests, 5);
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then(projects => {
-          assert.lengthOf(projects, 2);
-          return DataTestHelper.getDatastoreVariablesData();
-        })
-        .then(variables => {
-          assert.lengthOf(variables, 10);
-          return DataTestHelper.getDatastoreEnvironmentsData();
-        })
-        .then(environments => {
-          assert.lengthOf(environments, 2);
-          return DataTestHelper.getDatastoreheadersData();
-        })
-        .then(headers => {
-          assert.lengthOf(headers, 2);
+          assert.lengthOf(projects, 1);
         });
       });
 

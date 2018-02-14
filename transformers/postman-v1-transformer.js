@@ -135,11 +135,17 @@ class _PostmanV1Transformer extends PostmanTransformer {
    */
   _postmanRequestToArc(item) {
     item.name = item.name || 'unnamed';
-    item.url = item.url || 'http://';
-    item.method = item.method || 'GET';
+    let url = item.url || 'http://';
+    url = this.ensureVariablesSyntax(url);
+    let method = item.method || 'GET';
+    method = this.ensureVariablesSyntax(method);
+    const header = this.ensureVarsRecursevily(item.headerData);
+    const query = this.ensureVarsRecursevily(item.queryParams);
+    let headers = item.headers || '';
+    headers = this.ensureVariablesSyntax(headers);
     let body = this.computeBodyOld(item);
-    let headersModel = this.computeSimpleModel(item.headerData);
-    let queryModel = this.computeSimpleModel(item.queryParams);
+    let headersModel = this.computeSimpleModel(header);
+    let queryModel = this.computeSimpleModel(query);
     let id = this.generateRequestId(item, this._data.id);
     let created = Number(item.time);
     if (created !== created) {
@@ -149,12 +155,12 @@ class _PostmanV1Transformer extends PostmanTransformer {
       _id: id,
       created: created,
       updated: Date.now(),
-      headers: item.headers || '',
-      method: item.method,
+      headers: headers || '',
+      method: method,
       name: item.name,
       payload: body,
       type: 'saved',
-      url: item.url,
+      url: url,
       projectOrder: 0,
       queryModel: queryModel,
       headersModel: headersModel

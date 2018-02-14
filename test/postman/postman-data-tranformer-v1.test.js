@@ -124,8 +124,8 @@ describe('postman-v1-transformer (collection)', function() {
 
     it('headersModel contains properties', function() {
       var model = result.requests[1].headersModel[0];
-      assert.equal(model.name, 'h1');
-      assert.equal(model.value, 'h1v');
+      assert.equal(model.name, '${h1}');
+      assert.equal(model.value, '${h1v}');
       assert.isTrue(model.enabled);
       model = result.requests[1].headersModel[1];
       assert.isFalse(model.enabled);
@@ -139,11 +139,21 @@ describe('postman-v1-transformer (collection)', function() {
 
     it('queryModel contains properties', function() {
       var model = result.requests[1].queryModel[0];
-      assert.equal(model.name, 'p1');
-      assert.equal(model.value, 'v1');
+      assert.equal(model.name, '${p1}');
+      assert.equal(model.value, '${v1}');
       assert.isTrue(model.enabled);
       model = result.requests[1].queryModel[1];
       assert.isFalse(model.enabled);
+    });
+
+    it('Variables are processed', function() {
+      var model = result.requests[0];
+      assert.equal(model.url, 'https://domain.com/accounts/${login}');
+      assert.equal(model.headers, 'h1: h1v\n//h2: h2v\nh3: ${h3v}');
+      const multipart = model.multipart;
+      assert.equal(multipart[0].name, '${param}');
+      assert.equal(multipart[0].value, '${value}');
+      assert.equal(multipart[2].value, '${cloudhubApi}');
     });
   });
 });

@@ -26,16 +26,16 @@
 	"requests": [
 		{
 			"id": "2246fd9b-169a-7051-c3e2-d2137ab90ede",
-			"headers": "h1: h1v\n//h2: h2v\nh3: h3v\n",
+			"headers": "h1: h1v\n//h2: h2v\nh3: {{h3v}}\n",
 			"headerData": [
 				{
-					"key": "h1",
-					"value": "h1v",
+					"key": "{{h1}}",
+					"value": "{{h1v}}",
 					"description": "Test headers",
 					"enabled": true
 				},
 				{
-					"key": "h2",
+					"key": "{{h2}}",
 					"value": "h2v",
 					"description": null,
 					"enabled": false
@@ -50,14 +50,14 @@
 			"url": "https://onet.pl/{{$randomInt}}",
 			"queryParams": [
 				{
-					"key": "p1",
-					"value": "v1",
+					"key": "{{p1}}",
+					"value": "{{v1}}",
 					"equals": true,
 					"description": "Test description",
 					"enabled": true
 				},
 				{
-					"key": "p1",
+					"key": "{{p1}}",
 					"value": "v2",
 					"equals": true,
 					"description": null,
@@ -82,15 +82,15 @@
 			"helperAttributes": {},
 			"time": 1518549678426,
 			"name": "ONET NAME",
-			"description": "a dsasdf sdf sdf asd",
+			"description": "Test",
 			"collectionId": "e4638c4e-1a37-9b63-4db3-4ad8c3516706",
 			"responses": []
 		},
 		{
 			"id": "6995f0d5-4c47-8bbd-de3c-1cd357e6a99d",
-			"headers": "",
+			"headers": "h1: h1v\n//h2: h2v\nh3: {{h3v}}",
 			"headerData": [],
-			"url": "https://anypoint.mulesoft.com/accounts/login",
+			"url": "https://domain.com/accounts/{{login}}",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -98,21 +98,21 @@
 			"method": "POST",
 			"data": [
 				{
-					"key": "asdasd",
-					"value": "asdasda",
+					"key": "{{param}}",
+					"value": "{{value}}",
 					"description": "",
 					"type": "text",
 					"enabled": true
 				},
 				{
-					"key": "aasdasd",
-					"value": "asdasdasd",
+					"key": "other",
+					"value": "pval",
 					"description": "",
 					"type": "text",
 					"enabled": false
 				},
 				{
-					"key": "asdasdasd",
+					"key": "enabled",
 					"value": "{{cloudhubApi}}",
 					"description": "",
 					"type": "text",
@@ -128,7 +128,7 @@
 				"password": "sdfsdfsdf"
 			},
 			"time": 1518549661105,
-			"name": "https://anypoint.mulesoft.com/accounts/login",
+			"name": "https://domain.com/accounts/{{login}}",
 			"description": "",
 			"collectionId": "e4638c4e-1a37-9b63-4db3-4ad8c3516706",
 			"responses": []

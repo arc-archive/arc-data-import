@@ -29,7 +29,7 @@ class _PostmanTransformer extends BaseTransformer {
    */
   computeBodyOld(item) {
     if (typeof item.data === 'string') {
-      return item.data;
+      return this.ensureVariablesSyntax(item.data);
     }
     if (item.data instanceof Array && !item.data.length) {
       return '';
@@ -52,6 +52,7 @@ class _PostmanTransformer extends BaseTransformer {
       return '';
     }
     let multipart = [];
+    item.data = this.ensureVarsRecursevily(item.data);
     item.data.forEach((item) => {
       let obj = {
         enabled: item.enabled,
@@ -74,8 +75,9 @@ class _PostmanTransformer extends BaseTransformer {
     if (!item.data || !item.data.length) {
       return '';
     }
+    item.data = this.ensureVarsRecursevily(item.data);
     return item.data.map((item) => {
-      let name = this._paramValue(item.name);
+      let name = this._paramValue(item.key);
       let value = this._paramValue(item.value);
       return name + '=' + value;
     }).join('&');
@@ -125,7 +127,7 @@ class _PostmanTransformer extends BaseTransformer {
    * @param {String} value
    * @return {String} Value to be replaced in the string.
    */
-  variablesReplacerFunction(match, value) {
+  _variablesReplacerFunction(match, value) {
     switch (value) {
       case '$randomInt': value = 'random()'; break;
       case '$guid': value = 'uuid()'; break;
@@ -145,7 +147,7 @@ class _PostmanTransformer extends BaseTransformer {
     }
     // https://jsperf.com/regex-replace-with-test-conditions
     if (str.indexOf('{{') !== -1) {
-      str = str.replace(this._postamVarRegex, this.variablesReplacerFunction);
+      str = str.replace(this._postamVarRegex, this._variablesReplacerFunction);
     }
     return str;
   }

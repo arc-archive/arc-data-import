@@ -50,11 +50,11 @@
       "syncedPermissions": {},
       "requests": [{
           "id": "1c895dcd-10d0-382a-ff17-8fe7dd629c0b",
-          "headers": "Content-Type: application/json\n",
+          "headers": "Content-Type: application/json\nx-var: {{var}}",
           "headerData": [
     				{
-    					"key": "h1",
-    					"value": "h1v",
+    					"key": "{{h1}}",
+    					"value": "{{h1v}}",
     					"description": "Test headers",
     					"enabled": true
     				},
@@ -71,11 +71,11 @@
     					"enabled": true
     				}
     			],
-          "url": "https://httpbin.org/anything",
+          "url": "https://httpbin.org/anything/{{param}}",
           "queryParams": [
     				{
-    					"key": "p1",
-    					"value": "v1",
+    					"key": "{{p1}}",
+    					"value": "{{v1}}",
     					"equals": true,
     					"description": "Test description",
     					"enabled": true
@@ -100,7 +100,7 @@
           "preRequestScript": "",
           "method": "PUT",
           "collectionId": "762fe787-ec44-abff-c154-55cc371705e4",
-          "data": "{\n\t\"json\": \"body\"\n}",
+          "data": "{\n\t\"json\": \"{{body}}\"\n}",
           "dataMode": "raw",
           "name": "Raw JSON request",
           "description": "",
@@ -208,7 +208,7 @@
           "method": "PUT",
           "data": [{
               "key": "body key - form data",
-              "value": "body value",
+              "value": "{{bodyValue}}",
               "description": "Some desc",
               "type": "text",
               "enabled": true
@@ -266,7 +266,7 @@
             },
             {
               "key": "other key",
-              "value": "other value",
+              "value": "{{otherValue}}",
               "type": "text",
               "enabled": true,
               "description": "test"
@@ -332,8 +332,8 @@
           "currentHelper": "basicAuth",
           "helperAttributes": {
             "id": "basic",
-            "username": "test",
-            "password": "test",
+            "username": "{{test}}",
+            "password": "{{test}}",
             "saveToRequest": true
           },
           "isFromCollection": true,
@@ -3311,6 +3311,11 @@
         "enabled": true,
         "key": "host",
         "value": "http://my-env.com",
+        "type": "text"
+      }, {
+        "enabled": true,
+        "key": "var-in-var",
+        "value": "test {{host}}",
         "type": "text"
       }],
       "timestamp": 1506378182599,

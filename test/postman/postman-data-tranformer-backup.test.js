@@ -32,7 +32,7 @@ describe('Postman backup transformer', function() {
   it('Data are accounted for', function() {
     assert.lengthOf(result.projects, 2);
     assert.lengthOf(result.requests, 46);
-    assert.lengthOf(result.variables, 4);
+    assert.lengthOf(result.variables, 5);
     assert.lengthOf(result['headers-sets'], 1);
   });
 
@@ -84,8 +84,8 @@ describe('Postman backup transformer', function() {
 
   it('headersModel contains properties', function() {
     var model = result.requests[5].headersModel[0];
-    assert.equal(model.name, 'h1');
-    assert.equal(model.value, 'h1v');
+    assert.equal(model.name, '${h1}');
+    assert.equal(model.value, '${h1v}');
     assert.isTrue(model.enabled);
     model = result.requests[5].headersModel[1];
     assert.isFalse(model.enabled);
@@ -99,10 +99,29 @@ describe('Postman backup transformer', function() {
 
   it('queryModel contains properties', function() {
     var model = result.requests[5].queryModel[0];
-    assert.equal(model.name, 'p1');
-    assert.equal(model.value, 'v1');
+    assert.equal(model.name, '${p1}');
+    assert.equal(model.value, '${v1}');
     assert.isTrue(model.enabled);
     model = result.requests[5].queryModel[1];
     assert.isFalse(model.enabled);
+  });
+
+  it('Variables are computed', function() {
+    assert.equal(result.variables[3].variable, 'test ${host}', 'Variable is transformed');
+    assert.equal(result.requests[5].headers,
+      'Content-Type: application/json\nx-var: ${var}',
+      'Header is transformed');
+    assert.equal(result.requests[5].headersModel[0].name, '${h1}', 'headersModel is transformed');
+    assert.equal(result.requests[5].headersModel[0].value, '${h1v}', 'headersModel is transformed');
+    assert.equal(result.requests[5].url,
+      'https://httpbin.org/anything/${param}',
+      'URL is transformed');
+    assert.equal(result.requests[5].queryModel[0].name, '${p1}', 'queryModel is transformed');
+    assert.equal(result.requests[5].queryModel[0].value, '${v1}', 'queryModel is transformed');
+
+    assert.equal(result.requests[2].multipart[0].value, '${bodyValue}', 'multipart is transformed');
+    assert.equal(result.requests[3].payload,
+      'url encoded key=url encoded value&other key=${otherValue}',
+      'payload url encoded is transformed');
   });
 });

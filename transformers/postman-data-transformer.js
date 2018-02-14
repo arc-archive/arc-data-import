@@ -7,6 +7,7 @@ if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.import
 if (isNode) {
   var {PostmanBackupTransformer} = require('./postman-backup-transformer');
   var {PostmanV1Transformer} = require('./postman-v1-transformer');
+  var {PostmanV2Transformer} = require('./postman-v2-transformer');
 }
 class _PostmanDataTransformer {
   transform(data) {
@@ -18,6 +19,9 @@ class _PostmanDataTransformer {
         break;
       case 'collection':
         instance = new PostmanV1Transformer(data);
+        break;
+      case 'collection-v2':
+        instance = new PostmanV2Transformer(data);
         break;
       default: return Promise.reject('Unsupported Postman version.');
     }
@@ -35,7 +39,7 @@ class _PostmanDataTransformer {
       switch (data.info.schema) {
         case 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json':
           return 'collection-v2';
-        case 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json':
+        case 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json':
           return 'collection-v2.1';
       }
     }
