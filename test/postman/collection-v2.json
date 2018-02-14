@@ -1,9 +1,9 @@
 {
 	"variables": [],
 	"info": {
-		"name": "Single level colection",
-		"_postman_id": "2dde2bb2-321d-f3d3-9d26-1f817fcbe6a5",
-		"description": "",
+		"name": "TestCollection v2",
+		"_postman_id": "c0a9562a-e1a3-5ecd-ef63-a4512f4fce44",
+		"description": "V2 description",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
@@ -12,54 +12,80 @@
 			"description": "Sub description",
 			"item": [
 				{
-					"name": "Sub request",
+					"name": "url encoded",
 					"request": {
-						"auth": {
-							"type": "digest",
-							"digest": {
-								"algorithm": "MD5",
-								"username": "asd",
-								"realm": "",
-								"password": "asdasd",
-								"nonce": "",
-								"nonceCount": "",
-								"clientNonce": "",
-								"opaque": "",
-								"qop": "",
-								"disableRetryRequest": false
-							}
+						"url": {
+							"raw": "https://onet.pl/{{$randomInt}}?a=bb&e=ff",
+							"protocol": "https",
+							"host": [
+								"onet",
+								"pl"
+							],
+							"path": [
+								"{{$randomInt}}"
+							],
+							"query": [
+								{
+									"key": "a",
+									"value": "bb",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "c",
+									"value": "dd",
+									"equals": true,
+									"description": "Test desc",
+									"disabled": true
+								},
+								{
+									"key": "e",
+									"value": "ff",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
 						},
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "qwe",
-									"value": "qweqweqwe",
+									"key": "fd1",
+									"value": "1",
 									"description": "",
 									"type": "text"
 								},
 								{
-									"key": "qweqwe",
-									"value": "qweqweqweqw",
-									"description": "",
+									"key": "fd2",
+									"value": "2",
+									"description": "desc",
 									"type": "text",
 									"disabled": true
 								},
 								{
-									"key": "qweqwe",
-									"value": "cqwed wed w wef sdf wd",
+									"key": "fd3",
+									"value": "3",
 									"description": "",
 									"type": "text"
 								}
 							]
 						},
+						"description": "Different description."
+					},
+					"response": []
+				},
+				{
+					"name": "header-with-variable",
+					"request": {
 						"url": {
 							"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
 							"protocol": "https",
@@ -86,7 +112,51 @@
 								{
 									"key": "sssss",
 									"value": "ddddddd",
-									"equals": true
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Content-Length",
+								"value": "2",
+								"description": ""
+							},
+							{
+								"key": "x-test",
+								"value": "{{host}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "qwe",
+									"value": "qweqweqwe",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "qweqwe",
+									"value": "qweqweqweqw",
+									"description": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "qweqwe",
+									"value": "cqwed wed w wef sdf wd",
+									"description": "",
+									"type": "text"
 								}
 							]
 						},
@@ -97,56 +167,10 @@
 			]
 		},
 		{
-			"name": "Single request",
+			"name": "Binary value",
 			"request": {
-				"auth": {
-					"type": "digest",
-					"digest": {
-						"algorithm": "MD5",
-						"username": "asd",
-						"realm": "",
-						"password": "asdasd",
-						"nonce": "",
-						"nonceCount": "",
-						"clientNonce": "",
-						"opaque": "",
-						"qop": "",
-						"disableRetryRequest": false
-					}
-				},
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "qwe",
-							"value": "qweqweqwe",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "qweqwe",
-							"value": "qweqweqweqw",
-							"description": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "qweqwe",
-							"value": "cqwed wed w wef sdf wd",
-							"description": "",
-							"type": "text"
-						}
-					]
-				},
 				"url": {
-					"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
+					"raw": "https://onet.pl/{{$randomInt}}?a=b&e=f",
 					"protocol": "https",
 					"host": [
 						"onet",
@@ -158,78 +182,48 @@
 					"query": [
 						{
 							"key": "a",
-							"value": "ase",
+							"value": "b",
 							"equals": true,
-							"description": "asdasdasdasd"
+							"description": "test desc"
 						},
 						{
-							"key": "assasdasdasdas",
-							"value": "asdasdasd",
+							"key": "c",
+							"value": "{{host}}",
 							"equals": true,
 							"disabled": true
 						},
 						{
-							"key": "sssss",
-							"value": "ddddddd",
-							"equals": true
+							"key": "e",
+							"value": "f",
+							"equals": true,
+							"description": ""
 						}
-					]
+					],
+					"variable": []
 				},
-				"description": "asdawdasdasd"
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"description": "Request description - binary"
 			},
 			"response": []
 		},
 		{
-			"name": "Other request",
+			"name": "Raw value",
 			"request": {
-				"auth": {
-					"type": "digest",
-					"digest": {
-						"algorithm": "MD5",
-						"username": "asd",
-						"realm": "",
-						"password": "asdasd",
-						"nonce": "",
-						"nonceCount": "",
-						"clientNonce": "",
-						"opaque": "",
-						"qop": "",
-						"disableRetryRequest": false
-					}
-				},
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "qwe",
-							"value": "qweqweqwe",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "qweqwe",
-							"value": "qweqweqweqw",
-							"description": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "qweqwe",
-							"value": "cqwed wed w wef sdf wd",
-							"description": "",
-							"type": "text"
-						}
-					]
-				},
 				"url": {
-					"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
+					"raw": "https://onet.pl/{{$randomInt}}?a=bbb&e=fff",
 					"protocol": "https",
 					"host": [
 						"onet",
@@ -241,24 +235,84 @@
 					"query": [
 						{
 							"key": "a",
-							"value": "ase",
+							"value": "bbb",
 							"equals": true,
-							"description": "asdasdasdasd"
+							"description": ""
 						},
 						{
-							"key": "assasdasdasdas",
-							"value": "asdasdasd",
+							"key": "c",
+							"value": "ddd",
 							"equals": true,
 							"disabled": true
 						},
 						{
-							"key": "sssss",
-							"value": "ddddddd",
-							"equals": true
+							"key": "e",
+							"value": "fff",
+							"equals": true,
+							"description": "Test desc"
+						}
+					],
+					"variable": []
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "some raw value"
+				},
+				"description": "Request description - raw"
+			},
+			"response": []
+		},
+		{
+			"name": "Form Data value",
+			"request": {
+				"url": "https://postman-echo.com/delay/3",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fb1",
+							"value": "v1",
+							"description": "test",
+							"type": "text"
+						},
+						{
+							"key": "fb2",
+							"value": "v2",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "fb3",
+							"value": "v3",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "fb4",
+							"description": "",
+							"type": "file",
+							"src": "16x16.png"
 						}
 					]
 				},
-				"description": "Different description."
+				"description": "Request description - FormData"
 			},
 			"response": []
 		}

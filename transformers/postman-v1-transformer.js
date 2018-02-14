@@ -33,7 +33,7 @@ class _PostmanV1Transformer extends PostmanTransformer {
     const project = this._readProjectInfo();
     const requests = this._readRequestsData();
 
-    var result = {
+    let result = {
       createdAt: new Date().toISOString(),
       version: 'postman-collection-v1',
       kind: 'ARC#Import',
@@ -69,12 +69,13 @@ class _PostmanV1Transformer extends PostmanTransformer {
    * @return {Array} List of ARC request objects.
    */
   _readRequestsData() {
-    var result = [];
+    let result = [];
     if (!this._data.requests || !this._data.requests.length) {
       return result;
     }
     const requests = this._computeRequestsInOrder();
-    result = requests.map((postmanRequest) => this._postmanRequestToArc(postmanRequest));
+    result = requests.map((postmanRequest) =>
+      this._postmanRequestToArc(postmanRequest));
     return result;
   }
   /**
@@ -85,12 +86,13 @@ class _PostmanV1Transformer extends PostmanTransformer {
    * @return {Object} List of ordered Postman requests
    */
   _computeRequestsInOrder() {
-    var ordered = [];
+    let ordered = [];
     if (this._data.order && this._data.order.length) {
       ordered = ordered.concat(this._data.order);
     }
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    var folders = this._computeOrderedFolders(this._data.folders, this._data.folders_order);
+    let folders = this._computeOrderedFolders(this._data.folders,
+      this._data.folders_order);
     // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
     if (folders) {
       folders.forEach((folder) => {
@@ -99,8 +101,8 @@ class _PostmanV1Transformer extends PostmanTransformer {
         }
       });
     }
-    var requests = this._data.requests;
-    var result = ordered.map((id) => {
+    let requests = this._data.requests;
+    let result = ordered.map((id) => {
       return requests.find((request) => request.id === id);
     });
     result = result.filter((item) => !!item);
@@ -120,7 +122,7 @@ class _PostmanV1Transformer extends PostmanTransformer {
     if (!orderIds || !orderIds.length) {
       return folders;
     }
-    var result = orderIds.map((id) => {
+    let result = orderIds.map((id) => {
       return folders.find((folder) => folder.id === id);
     });
     result = result.filter((item) => !!item);
@@ -135,15 +137,15 @@ class _PostmanV1Transformer extends PostmanTransformer {
     item.name = item.name || 'unnamed';
     item.url = item.url || 'http://';
     item.method = item.method || 'GET';
-    var body = this.computeBodyOld(item);
-    var headersModel = this.computeSimpleModel(item.headerData);
-    var queryModel = this.computeSimpleModel(item.queryParams);
-    var id = this.generateRequestId(item, this._data.id);
-    var created = Number(item.time);
+    let body = this.computeBodyOld(item);
+    let headersModel = this.computeSimpleModel(item.headerData);
+    let queryModel = this.computeSimpleModel(item.queryParams);
+    let id = this.generateRequestId(item, this._data.id);
+    let created = Number(item.time);
     if (created !== created) {
       created = Date.now();
     }
-    var result = {
+    let result = {
       _id: id,
       created: created,
       updated: Date.now(),
@@ -160,6 +162,9 @@ class _PostmanV1Transformer extends PostmanTransformer {
     result.legacyProject = this._data.id;
     if (item.description) {
       result.description = item.description;
+    }
+    if (item.multipart) {
+      result.multipart = item.multipart;
     }
     return result;
   }

@@ -29,8 +29,8 @@ class _PostmanBackupTransformer extends PostmanTransformer {
   }
 
   _readPostmanData(data) {
-    var collections = this._readRequestsData(data.collections);
-    var result = {
+    let collections = this._readRequestsData(data.collections);
+    let result = {
       createdAt: new Date().toISOString(),
       version: 'postman-backup',
       kind: 'ARC#Import',
@@ -40,22 +40,29 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     if (data.headerPresets && data.headerPresets.length) {
       result['headers-sets'] = this._computeHeadersSets(data.headerPresets);
     }
-    var variables = this._computeVariables(data);
+    let variables = this._computeVariables(data);
     if (variables && variables.length) {
       result.variables = variables;
     }
     return Promise.resolve(result);
   }
-
+  /**
+   * Iterates over collection requests array and transforms objects
+   * to ARC requests.
+   *
+   * @param {Array<Object>} data
+   * @return {Array} List of ARC request objects.
+   */
   _readRequestsData(data) {
-    var result = {
+    let result = {
       projects: [],
       requests: []
     };
     if (!data || !data.length) {
       return result;
     }
-    var parts = data.map((item, index) => this._readCollectionData(item, index));
+    let parts = data.map((item, index) =>
+      this._readCollectionData(item, index));
     parts.forEach((data) => {
       result.projects.push(data.project);
       result.requests = result.requests.concat(data.requests);
@@ -64,7 +71,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
   }
 
   _readCollectionData(collection, index) {
-    var result = {
+    let result = {
       project: {},
       requests: []
     };
@@ -74,19 +81,27 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     result.project.order = index;
     result.project.created = collection.createdAt;
     result.project.updated = collection.updatedAt;
-    var requests = this._computeRequestsOrder(collection);
+    let requests = this._computeRequestsOrder(collection);
     result.requests = requests.map((item, index) =>
       this._createRequestObject(item, collection.id, index));
     return result;
   }
-
+  /**
+   * Creates ordered list of requests as defined in collection order property.
+   * This creates a flat structure of requests and order assumes ARC's flat
+   * structure.
+   *
+   * @param {Object} collection
+   * @return {Object} List of ordered Postman requests
+   */
   _computeRequestsOrder(collection) {
-    var ordered = [];
+    let ordered = [];
     if (collection.order && collection.order.length) {
       ordered = ordered.concat(collection.order);
     }
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    var folders = this._computeOrderedFolders(collection.folders, collection.folders_order);
+    let folders = this._computeOrderedFolders(collection.folders,
+      collection.folders_order);
     // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
     if (folders) {
       folders.forEach((folder) => {
@@ -95,14 +110,20 @@ class _PostmanBackupTransformer extends PostmanTransformer {
         }
       });
     }
-    var requests = collection.requests;
-    var result = ordered.map((id) => {
+    let requests = collection.requests;
+    let result = ordered.map((id) => {
       return requests.find((request) => request.id === id);
     });
     result = result.filter((item) => !!item);
     return result;
   }
-
+  /**
+   * Computes list of folders including sub-folders .
+   *
+   * @param {Array<Object>} folders Collection folders definition
+   * @param {Array<String>} orderIds Collection order info array
+   * @return {Array<Object>} Ordered list of folders.
+   */
   _computeOrderedFolders(folders, orderIds) {
     if (!folders || !folders.length) {
       return;
@@ -110,26 +131,32 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     if (!orderIds || !orderIds.length) {
       return folders;
     }
-    var result = orderIds.map((id) => {
+    let result = orderIds.map((id) => {
       return folders.find((folder) => folder.id === id);
     });
     result = result.filter((item) => !!item);
     return result;
   }
-
+  /**
+   * Transforms postman request to ARC request
+   * @param {Object} item Postman request object
+   * @param {String} projectId Id of the project of the request
+   * @param {Number} projectIndex Order index of the request in the project
+   * @return {Object} ARC request object
+   */
   _createRequestObject(item, projectId, projectIndex) {
     item.name = item.name || 'unnamed';
     item.url = item.url || 'http://';
     item.method = item.method || 'GET';
-    var body = this.computeBodyOld(item);
-    var headersModel = this.computeSimpleModel(item.headerData);
-    var queryModel = this.computeSimpleModel(item.queryParams);
-    var id = this.generateRequestId(item, projectId);
-    var created = Number(item.time);
+    let body = this.computeBodyOld(item);
+    let headersModel = this.computeSimpleModel(item.headerData);
+    let queryModel = this.computeSimpleModel(item.queryParams);
+    let id = this.generateRequestId(item, projectId);
+    let created = Number(item.time);
     if (created !== created) {
       created = Date.now();
     }
-    var result = {
+    let result = {
       _id: id,
       created: created,
       updated: Date.now(),
@@ -148,6 +175,9 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     }
     if (item.description) {
       result.description = item.description;
+    }
+    if (item.multipart) {
+      result.multipart = item.multipart;
     }
     return result;
   }
@@ -175,14 +205,14 @@ class _PostmanBackupTransformer extends PostmanTransformer {
    */
   _computeSetObject(item) {
     item = this._updateItemTimings(item, item.timestamp);
-    var value = '';
+    let value = '';
     item.headers.forEach((header) => {
       if (value) {
         value += '\n';
       }
       value += header.key + ': ' + header.value;
     });
-    var result = {
+    let result = {
       _id: this.uuid(),
       created: item.created,
       updated: item.updated,
@@ -199,7 +229,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
    * found.
    */
   _computeVariables(data) {
-    var result = [];
+    let result = [];
     if (data.globals && data.globals.length) {
       data.globals.forEach((item) => {
         let obj = this._computeVariableObject(item, 'default');
@@ -229,7 +259,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
    * @return {Object} ARC's variable definition.
    */
   _computeVariableObject(item, environment) {
-    var result = {
+    let result = {
       _id: this.uuid(),
       enabled: item.enabled || true,
       environment: environment,

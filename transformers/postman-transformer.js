@@ -13,11 +13,19 @@ if (isNode) {
  * @extends BaseTransformer
  */
 class _PostmanTransformer extends BaseTransformer {
-
+  /**
+   * @constructor
+   * @param {Object} data Import data object
+   */
   constructor(data) {
     super(data);
   }
-
+  /**
+   * Computes body value for Postman's v1 body definition.
+   *
+   * @param {Object} item Postam v1 model.
+   * @return {String} Body value
+   */
   computeBodyOld(item) {
     if (typeof item.data === 'string') {
       return item.data;
@@ -31,12 +39,18 @@ class _PostmanTransformer extends BaseTransformer {
       case 'binary': return '';
     }
   }
-
+  /**
+   * Computes body as a FormData data model.
+   * This function sets `multipart` property on the item.
+   *
+   * @param {Object} item Postam v1 model.
+   * @return {String} Body value. Always empty string.
+   */
   _computeFormDataBody(item) {
     if (!item.data || !item.data.length) {
       return '';
     }
-    var multipart = [];
+    let multipart = [];
     item.data.forEach((item) => {
       let obj = {
         enabled: item.enabled,
@@ -49,14 +63,19 @@ class _PostmanTransformer extends BaseTransformer {
     item.multipart = multipart;
     return '';
   }
-
+  /**
+   * Computes body as a URL encoded data model.
+   *
+   * @param {Object} item Postam v1 model.
+   * @return {String} Body value.
+   */
   _computeUrlEncodedBody(item) {
     if (!item.data || !item.data.length) {
       return '';
     }
     return item.data.map((item) => {
-      var name = this._paramValue(item.name);
-      var value = this._paramValue(item.value);
+      let name = this._paramValue(item.name);
+      let value = this._paramValue(item.value);
       return name + '=' + value;
     }).join('&');
   }
@@ -65,6 +84,7 @@ class _PostmanTransformer extends BaseTransformer {
    * Parse input string as a payload param key or value.
    *
    * @param {String} input An input to parse.
+   * @return {String} Trimmed string
    */
   _paramValue(input) {
     if (!input) {
@@ -82,7 +102,7 @@ class _PostmanTransformer extends BaseTransformer {
    * @return {Array<Object>} ARC params model.
    */
   computeSimpleModel(array) {
-    var result = [];
+    let result = [];
     if (!array || !array.length) {
       return result;
     }

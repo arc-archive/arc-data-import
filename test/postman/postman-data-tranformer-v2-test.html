@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+@license
+Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+    <script src="../../../iron-test-helpers/test-helpers.js"></script>
+    <script src="../../../iron-test-helpers/mock-interactions.js"></script>
+    <script src="../test-helper.js"></script>
+    <script src="../../transformers/base-transformer.js"></script>
+    <script src="../../transformers/postman-transformer.js"></script>
+    <script src="../../transformers/postman-v2-transformer.js"></script>
+    <link rel="import" href="../../../fetch-polyfill/fetch-polyfill.html">
+  </head>
+  <body>
+    <script>
+    /* global assert, DataTestHelper, PostmanV2Transformer */
+    suite('postman-v2-transformer (collection)', function() {
+
+      suite('_readProjectInfo()', function() {
+        var transformer;
+        var jsonData;
+        var result;
+        suiteSetup(function() {
+          return DataTestHelper.getFile('collection-v2.json')
+          .then(response => {
+            jsonData = JSON.parse(response);
+          });
+        });
+
+        setup(function() {
+          transformer = new PostmanV2Transformer(jsonData);
+          result = transformer._readProjectInfo();
+        });
+
+        test('Returns an object', function() {
+          assert.typeOf(result, 'object');
+        });
+
+        test('Contains _id', function() {
+          assert.equal(result._id, 'c0a9562a-e1a3-5ecd-ef63-a4512f4fce44');
+        });
+
+        test('name is set', function() {
+          assert.equal(result.name, 'TestCollection v2');
+        });
+
+        test('description is set', function() {
+          assert.equal(result.description, 'V2 description');
+        });
+
+        test('created is set', function() {
+          assert.typeOf(result.created, 'number');
+        });
+
+        test('updated is set', function() {
+          assert.typeOf(result.updated, 'number');
+        });
+
+        test('order is set', function() {
+          assert.equal(result.order, 0);
+        });
+      });
+
+      suite('Body computation', function() {
+        var transformer;
+        var jsonData;
+        var item;
+        suite('FormData - _computeFormDataBody()', function() {
+          suiteSetup(function() {
+            return DataTestHelper.getFile('collection-v2.json')
+            .then(response => {
+              jsonData = JSON.parse(response);
+              item = jsonData.item[3];
+            });
+          });
+          setup(function() {
+            transformer = new PostmanV2Transformer(jsonData);
+          });
+
+          test('Returns empty stirng', function() {
+            const arcItem = {};
+            const result = transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.equal(result, '');
+          });
+
+          test('Sets multipart model data', function() {
+            const arcItem = {};
+            transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.typeOf(arcItem.multipart, 'array');
+          });
+
+          test('Model includes all items', function() {
+            const arcItem = {};
+            transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.lengthOf(arcItem.multipart, 4);
+          });
+
+          test('Marks items enabled / disabled', function() {
+            const arcItem = {};
+            transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.isTrue(arcItem.multipart[0].enabled);
+            assert.isFalse(arcItem.multipart[1].enabled);
+            assert.isTrue(arcItem.multipart[2].enabled);
+            assert.isTrue(arcItem.multipart[3].enabled);
+          });
+
+          test('Sets names', function() {
+            const arcItem = {};
+            transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.equal(arcItem.multipart[0].name, 'fb1');
+            assert.equal(arcItem.multipart[1].name, 'fb2');
+            assert.equal(arcItem.multipart[2].name, 'fb3');
+            assert.equal(arcItem.multipart[3].name, 'fb4');
+          });
+
+          test('Sets values', function() {
+            const arcItem = {};
+            transformer._computeFormDataBody(item.request.body.formdata, arcItem);
+            assert.equal(arcItem.multipart[0].value, 'v1');
+            assert.equal(arcItem.multipart[1].value, 'v2');
+            assert.equal(arcItem.multipart[2].value, 'v3');
+            assert.equal(arcItem.multipart[3].value, '');
+          });
+        });
+      });
+
+    });
+    </script>
+
+  </body>
+</html>
