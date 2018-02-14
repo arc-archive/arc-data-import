@@ -21,29 +21,23 @@ the License.
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
     <script src="test-helper.js"></script>
-    <link rel="import" href="../dexie-data-tranformer.html">
+    <script src="../transformers/base-transformer.js"></script>
+    <script src="../transformers/arc-dexie-transformer.js"></script>
     <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
   </head>
   <body>
 
-    <test-fixture id="basic">
-      <template>
-        <dexie-data-tranformer></dexie-data-tranformer>
-      </template>
-    </test-fixture>
-
     <script>
-    /* global fixture, assert, DataTestHelper */
+    /* global assert, DataTestHelper, ArcDexieTransformer */
     suite('Dexie export', function() {
-      var data;
-      var element;
+      var jsonData;
       var result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-data-export.json')
         .then(response => {
-          data = JSON.parse(response);
-          element = fixture('basic');
-          return element.transform(data);
+          jsonData = JSON.parse(response);
+          const transformer = new ArcDexieTransformer(jsonData);
+          return transformer.transform();
         })
         .then(data => result = data);
       });
@@ -145,15 +139,14 @@ the License.
     });
 
     suite('Dexie history', function() {
-      var data;
-      var element;
+      var jsonData;
       var result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-history-export.json')
         .then(response => {
-          data = JSON.parse(response);
-          element = fixture('basic');
-          return element.transform(data);
+          jsonData = JSON.parse(response);
+          const transformer = new ArcDexieTransformer(jsonData);
+          return transformer.transform();
         })
         .then(data => result = data);
       });
@@ -191,15 +184,14 @@ the License.
     });
 
     suite('Dexie saved export', function() {
-      var data;
-      var element;
+      var jsonData;
       var result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-saved-export.json')
         .then(response => {
-          data = JSON.parse(response);
-          element = fixture('basic');
-          return element.transform(data);
+          jsonData = JSON.parse(response);
+          const transformer = new ArcDexieTransformer(jsonData);
+          return transformer.transform();
         })
         .then(data => result = data);
       });
@@ -233,7 +225,6 @@ the License.
         assert.equal(request.type, 'saved');
       });
     });
-
     </script>
 
   </body>

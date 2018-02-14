@@ -1,5 +1,13 @@
-/* global assert, chance */
+/* global chance, self */
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+var isNode = true;
+if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
+  isNode = false;
+}
+if (isNode) {
+  var assert = require('chai').assert;
+}
+
 const DataTestHelper = {};
 
 DataTestHelper.getFile = function(file) {
@@ -37,6 +45,8 @@ DataTestHelper.assertRequestObject = function(request) {
   assert.typeOf(request.type, 'string', 'type is a string');
   assert.typeOf(request.url, 'string', 'url is a string');
   assert.typeOf(request.payload, 'string', 'payload is a string');
+  assert.typeOf(request.queryModel, 'array', 'queryModel is array');
+  assert.typeOf(request.headersModel, 'array', 'headersModel is array');
 };
 
 DataTestHelper.assertHistoryObject = function(request) {
@@ -143,3 +153,7 @@ DataTestHelper.updateRequestRandom = function(obj) {
   obj.name = chance.word();
   return DataTestHelper.updateObject('saved-requests', obj);
 };
+
+if (isNode) {
+  exports.DataTestHelper = DataTestHelper;
+}

@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-    /* global fixture, assert, HTMLUnknownElement */
+    /* global fixture, assert, HTMLUnknownElement, ArcDataImport */
     suite('basic', function() {
 
       var element;
@@ -35,32 +35,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         element = fixture('basic');
       });
 
-      test('_legacyTransformer is an element', function() {
-        var transformer = element._legacyTransformer;
-        assert.ok(transformer, '_legacyTransformer exists');
-        assert.equal(transformer.nodeName.toLowerCase(), 'legacy-data-tranformer');
-        assert.isFalse(transformer instanceof HTMLUnknownElement);
-      });
-
-      test('_dexieTransformer is an element', function() {
-        var transformer = element._dexieTransformer;
-        assert.ok(transformer);
-        assert.equal(transformer.nodeName.toLowerCase(), 'dexie-data-tranformer');
-        assert.isFalse(transformer instanceof HTMLUnknownElement);
-      });
-
-      test('_pouchTransformer is an element', function() {
-        var transformer = element._pouchTransformer;
-        assert.ok(transformer);
-        assert.equal(transformer.nodeName.toLowerCase(), 'pouch-data-tranformer');
-        assert.isFalse(transformer instanceof HTMLUnknownElement);
-      });
-
-      test('_postmanTransformer is an element', function() {
-        var transformer = element._postmanTransformer;
-        assert.ok(transformer);
-        assert.equal(transformer.nodeName.toLowerCase(), 'postman-data-tranformer');
-        assert.isFalse(transformer instanceof HTMLUnknownElement);
+      test('ArcDataImport class is visible', function() {
+        assert.ok(ArcDataImport);
       });
 
       test('_dataStore is an element', function() {

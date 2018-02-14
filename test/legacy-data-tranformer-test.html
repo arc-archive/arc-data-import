@@ -22,30 +22,25 @@ the License.
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
     <script src="test-helper.js"></script>
-    <link rel="import" href="../legacy-data-tranformer.html">
+    <script src="../transformers/base-transformer.js"></script>
+    <script src="../transformers/arc-legacy-transformer.js"></script>
     <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
   </head>
   <body>
-
-    <test-fixture id="basic">
-      <template>
-        <legacy-data-tranformer></legacy-data-tranformer>
-      </template>
-    </test-fixture>
-
     <script>
-    /* global fixture, assert, DataTestHelper */
+    /* global assert, DataTestHelper, ArcLegacyTransformer */
     suite('Single request import', function() {
-      var data;
-      var element;
+      var jsonData;
       var result;
       suiteSetup(function() {
         return DataTestHelper.getFile('legacy-request-import.json')
         .then(response => {
-          data = JSON.parse(response);
-          element = fixture('basic');
-          return element.transform(data);
-        })
+          jsonData = JSON.parse(response);
+        });
+      });
+      setup(function() {
+        const transformer = new ArcLegacyTransformer(jsonData);
+        return transformer.transform()
         .then(data => result = data);
       });
 
@@ -94,16 +89,17 @@ the License.
     });
 
     suite('Multiple requests import', function() {
-      var data;
-      var element;
+      var jsonData;
       var result;
       suiteSetup(function() {
         return DataTestHelper.getFile('legacy-data-import.json')
         .then(response => {
-          data = JSON.parse(response);
-          element = fixture('basic');
-          return element.transform(data);
-        })
+          jsonData = JSON.parse(response);
+        });
+      });
+      setup(function() {
+        const transformer = new ArcLegacyTransformer(jsonData);
+        return transformer.transform()
         .then(data => result = data);
       });
 

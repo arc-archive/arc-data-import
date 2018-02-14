@@ -51,14 +51,50 @@
       "requests": [{
           "id": "1c895dcd-10d0-382a-ff17-8fe7dd629c0b",
           "headers": "Content-Type: application/json\n",
-          "headerData": [{
-            "key": "Content-Type",
-            "value": "application/json",
-            "description": "",
-            "enabled": true
-          }],
+          "headerData": [
+    				{
+    					"key": "h1",
+    					"value": "h1v",
+    					"description": "Test headers",
+    					"enabled": true
+    				},
+    				{
+    					"key": "h2",
+    					"value": "h2v",
+    					"description": null,
+    					"enabled": false
+    				},
+    				{
+    					"key": "h3",
+    					"value": "h3v",
+    					"description": "",
+    					"enabled": true
+    				}
+    			],
           "url": "https://httpbin.org/anything",
-          "queryParams": [],
+          "queryParams": [
+    				{
+    					"key": "p1",
+    					"value": "v1",
+    					"equals": true,
+    					"description": "Test description",
+    					"enabled": true
+    				},
+    				{
+    					"key": "p1",
+    					"value": "v2",
+    					"equals": true,
+    					"description": null,
+    					"enabled": false
+    				},
+    				{
+    					"key": "p3",
+    					"value": "v3",
+    					"equals": true,
+    					"description": "",
+    					"enabled": true
+    				}
+    			],
           "pathVariables": {},
           "pathVariableData": [],
           "preRequestScript": "",

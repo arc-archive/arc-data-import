@@ -1,0 +1,266 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Single level colection",
+		"_postman_id": "2dde2bb2-321d-f3d3-9d26-1f817fcbe6a5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sub-folder",
+			"description": "Sub description",
+			"item": [
+				{
+					"name": "Sub request",
+					"request": {
+						"auth": {
+							"type": "digest",
+							"digest": {
+								"algorithm": "MD5",
+								"username": "asd",
+								"realm": "",
+								"password": "asdasd",
+								"nonce": "",
+								"nonceCount": "",
+								"clientNonce": "",
+								"opaque": "",
+								"qop": "",
+								"disableRetryRequest": false
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "qwe",
+									"value": "qweqweqwe",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "qweqwe",
+									"value": "qweqweqweqw",
+									"description": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "qweqwe",
+									"value": "cqwed wed w wef sdf wd",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
+							"protocol": "https",
+							"host": [
+								"onet",
+								"pl"
+							],
+							"path": [
+								"{{$randomInt}}"
+							],
+							"query": [
+								{
+									"key": "a",
+									"value": "ase",
+									"equals": true,
+									"description": "asdasdasdasd"
+								},
+								{
+									"key": "assasdasdasdas",
+									"value": "asdasdasd",
+									"equals": true,
+									"disabled": true
+								},
+								{
+									"key": "sssss",
+									"value": "ddddddd",
+									"equals": true
+								}
+							]
+						},
+						"description": "Different description."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Single request",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": {
+						"algorithm": "MD5",
+						"username": "asd",
+						"realm": "",
+						"password": "asdasd",
+						"nonce": "",
+						"nonceCount": "",
+						"clientNonce": "",
+						"opaque": "",
+						"qop": "",
+						"disableRetryRequest": false
+					}
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "qwe",
+							"value": "qweqweqwe",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "qweqwe",
+							"value": "qweqweqweqw",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "qweqwe",
+							"value": "cqwed wed w wef sdf wd",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
+					"protocol": "https",
+					"host": [
+						"onet",
+						"pl"
+					],
+					"path": [
+						"{{$randomInt}}"
+					],
+					"query": [
+						{
+							"key": "a",
+							"value": "ase",
+							"equals": true,
+							"description": "asdasdasdasd"
+						},
+						{
+							"key": "assasdasdasdas",
+							"value": "asdasdasd",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "sssss",
+							"value": "ddddddd",
+							"equals": true
+						}
+					]
+				},
+				"description": "asdawdasdasd"
+			},
+			"response": []
+		},
+		{
+			"name": "Other request",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": {
+						"algorithm": "MD5",
+						"username": "asd",
+						"realm": "",
+						"password": "asdasd",
+						"nonce": "",
+						"nonceCount": "",
+						"clientNonce": "",
+						"opaque": "",
+						"qop": "",
+						"disableRetryRequest": false
+					}
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "qwe",
+							"value": "qweqweqwe",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "qweqwe",
+							"value": "qweqweqweqw",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "qweqwe",
+							"value": "cqwed wed w wef sdf wd",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://onet.pl/{{$randomInt}}?a=ase&sssss=ddddddd",
+					"protocol": "https",
+					"host": [
+						"onet",
+						"pl"
+					],
+					"path": [
+						"{{$randomInt}}"
+					],
+					"query": [
+						{
+							"key": "a",
+							"value": "ase",
+							"equals": true,
+							"description": "asdasdasdasd"
+						},
+						{
+							"key": "assasdasdasdas",
+							"value": "asdasdasd",
+							"equals": true,
+							"disabled": true
+						},
+						{
+							"key": "sssss",
+							"value": "ddddddd",
+							"equals": true
+						}
+					]
+				},
+				"description": "Different description."
+			},
+			"response": []
+		}
+	]
+}
