@@ -35,22 +35,19 @@ the License.
 
     <script>
     /* global fixture, assert, DataTestHelper, DataGenerator */
-    suite('Postamn import to datastore - v2', function() {
+    suite('Postamn import to datastore - environment', function() {
       var originalData;
       var element;
       var data;
       suiteSetup(function() {
-        return DataTestHelper.getFile('collection-v2.json')
+        return DataTestHelper.getFile('environment.json')
         .then(response => {
           originalData = JSON.parse(response);
         });
       });
 
       suiteTeardown(function() {
-        return DataGenerator.destroySavedRequestData()
-        .then(function() {
-          return DataGenerator.destroyHeadersData();
-        });
+        return DataGenerator.destroyVariablesData();
       });
 
       setup(function() {
@@ -60,40 +57,31 @@ the License.
 
       test('Stores the data', function() {
         return element.normalizeImportData(data)
-        .then(parsed => {
+        .then((parsed) => {
           return element.storeData(parsed);
         })
-        .then(errors => {
+        .then((errors) => {
           assert.isUndefined(errors);
-          return DataTestHelper.getDatastoreRequestData();
+          return DataTestHelper.getDatastoreVariablesData();
         })
-        .then(requests => {
-          assert.lengthOf(requests, 5);
-          return DataTestHelper.getDatastoreProjectsData();
-        })
-        .then(projects => {
-          assert.lengthOf(projects, 1);
+        .then((variables) => {
+          assert.lengthOf(variables, 3);
         });
       });
 
       test('Overrides all data', function() {
         return element.normalizeImportData(data)
-        .then(parsed => {
+        .then((parsed) => {
           return element.storeData(parsed);
         })
-        .then(errors => {
+        .then((errors) => {
           assert.isUndefined(errors);
-          return DataTestHelper.getDatastoreRequestData();
+          return DataTestHelper.getDatastoreVariablesData();
         })
-        .then(requests => {
-          assert.lengthOf(requests, 5);
-          return DataTestHelper.getDatastoreProjectsData();
-        })
-        .then(projects => {
-          assert.lengthOf(projects, 1);
+        .then((variables) => {
+          assert.lengthOf(variables, 3);
         });
       });
-
     });
     </script>
 

@@ -8,6 +8,7 @@ if (isNode) {
   var {PostmanBackupTransformer} = require('./postman-backup-transformer');
   var {PostmanV1Transformer} = require('./postman-v1-transformer');
   var {PostmanV2Transformer} = require('./postman-v2-transformer');
+  var {PostmanEnvTransformer} = require('./postman-env-transformer');
 }
 class _PostmanDataTransformer {
   transform(data) {
@@ -16,6 +17,9 @@ class _PostmanDataTransformer {
     switch (version) {
       case 'backup':
         instance = new PostmanBackupTransformer(data);
+        break;
+      case 'environment':
+        instance = new PostmanEnvTransformer(data);
         break;
       case 'collection':
         instance = new PostmanV1Transformer(data);
@@ -34,6 +38,9 @@ class _PostmanDataTransformer {
     }
     if (!data.info && data.name && data.folders) {
       return 'collection';
+    }
+    if (data._postman_variable_scope && data._postman_variable_scope === 'environment') {
+      return 'environment';
     }
     if (data.info.schema) {
       switch (data.info.schema) {

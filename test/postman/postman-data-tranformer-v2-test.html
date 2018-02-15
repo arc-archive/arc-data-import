@@ -427,11 +427,6 @@ the License.
           assert.typeOf(result.then, 'function');
         });
 
-        test('Returns Promise', function() {
-          const result = transformer.transform();
-          assert.typeOf(result.then, 'function');
-        });
-
         test('Contains export object properties', function() {
           return transformer.transform()
           .then(function(result) {

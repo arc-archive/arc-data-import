@@ -8,13 +8,7 @@ if (isNode) {
   var {PostmanTransformer} = require('./postman-transformer');
 }
 /**
- * So, the problem is that I've made this code sometime ago
- * based on some Chrome version export and I have no idea what it is.
- * I will just keep it here as a legacy code but apparently it doesn't support
- * v1, v2 or v2.1
- *
- * Postman authors, what is this?
- * Reference data: test/postman/postam-data.json
+ * Transforms Postamn v1 collections to ARC import object.
  * @extends BaseTransformer
  */
 class _PostmanV1Transformer extends PostmanTransformer {

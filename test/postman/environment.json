@@ -4,50 +4,20 @@
   "values": [
     {
       "enabled": true,
-      "key": "cloudhubApi",
-      "value": "https://domain.com/cloudhub/api",
+      "key": "var1",
+      "value": "value",
       "type": "text"
     },
     {
       "enabled": true,
-      "key": "accessManagementApi",
-      "value": "https://domain.com/accounts",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "YY",
-      "value": "01",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "username",
-      "value": "testUsernem",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "password",
-      "value": "testPassword",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "currentGroupCounter",
-      "value": "1",
-      "type": "text"
-    },
-    {
-      "enabled": true,
-      "key": "parentId",
-      "value": "abcd-efgh-ijkl-mnop-qrst",
+      "key": "var2",
+      "value": "test {{var1}}",
       "type": "text"
     },
     {
       "enabled": false,
-      "key": "disabledVariable",
-      "value": "i am disbaled variable.",
+      "key": "var3",
+      "value": "test-3",
       "type": "text"
     }
   ],

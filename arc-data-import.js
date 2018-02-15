@@ -181,6 +181,9 @@ class _ArcDataImport {
     if (data.folders && data.requests) {
       return true;
     }
+    if (data._postman_variable_scope) {
+      return 'environment';
+    }
     return false;
   }
 }
