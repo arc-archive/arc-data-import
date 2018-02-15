@@ -66,7 +66,13 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     });
     return result;
   }
-
+  /**
+   * Reads collections data.
+   *
+   * @param {Object} collection
+   * @param {Number} index
+   * @return {Object} Map of projects and requests.
+   */
   _readCollectionData(collection, index) {
     let result = {
       project: {},
@@ -184,7 +190,13 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     }
     return result;
   }
-  // Updates `created` and `updated` fileds of the object.
+  /**
+   * Updates `created` and `updated` fileds of the object.
+   *
+   * @param {Object} item Request object
+   * @param {Number} stamp Timestamp
+   * @return {Object} Request object
+   */
   _updateItemTimings(item, stamp) {
     if (!item.created) {
       if (stamp) {
@@ -196,7 +208,12 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     item.updated = Date.now();
     return item;
   }
-  // Comnputes list of ARC's headers sets from Postam data.
+  /**
+   * Comnputes list of ARC's headers sets from Postam data.
+   *
+   * @param {Array} sets
+   * @return {Array}
+   */
   _computeHeadersSets(sets) {
     return sets.map((set) => this._computeSetObject(set));
   }
