@@ -34,7 +34,7 @@ the License.
     </test-fixture>
 
     <script>
-    /* global fixture, assert, DataTestHelper, DataGenerator, sinon */
+    /* global fixture, assert, DataTestHelper, DataGenerator */
     suite('PouchDB import to datastore', function() {
       var originalData;
       var element;
@@ -53,15 +53,6 @@ the License.
       setup(function() {
         element = fixture('basic');
         data = DataTestHelper.clone(originalData);
-      });
-
-      test('Calls _normalizeArcPouchSystem function', function() {
-        var normalize = sinon.spy(element, '_normalizeArcPouchSystem');
-        return element.normalizeImportData(data)
-        .then(() => {
-          normalize.restore();
-          assert.isTrue(normalize.calledOnce);
-        });
       });
 
       var readProjects;
