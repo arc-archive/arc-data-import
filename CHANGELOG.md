@@ -1,3 +1,9 @@
+<a name="0.1.15"></a>
+## [0.1.15](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.14...0.1.15) (2018-02-15)
+
+
+
+
 <a name="0.1.14"></a>
 ## [0.1.14](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.13...0.1.14) (2018-02-15)
 
