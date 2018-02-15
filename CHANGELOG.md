@@ -1,3 +1,13 @@
+<a name="0.1.8"></a>
+## [0.1.8](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.7...0.1.8) (2018-02-15)
+
+
+### New
+
+* Adding postman environment export support ([c278aa48da23c62393ce3dda7cd1847b26816105](https://github.com/advanced-rest-client/arc-data-import/commit/c278aa48da23c62393ce3dda7cd1847b26816105))
+
+
+
 <a name="0.1.7"></a>
 ## [0.1.7](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.6...0.1.7) (2017-12-22)
 
