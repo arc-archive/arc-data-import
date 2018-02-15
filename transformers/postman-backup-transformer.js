@@ -25,10 +25,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
    * @return {Promise} Promise resolved when data are transformed.
    */
   transform() {
-    return this._readPostmanData(this._data);
-  }
-
-  _readPostmanData(data) {
+    let data = this._data;
     let collections = this._readRequestsData(data.collections);
     let result = {
       createdAt: new Date().toISOString(),
