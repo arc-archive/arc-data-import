@@ -269,8 +269,8 @@ class _PostmanBackupTransformer extends PostmanTransformer {
       _id: this.uuid(),
       enabled: item.enabled || true,
       environment: environment,
-      value: item.key,
-      variable: this.ensureVariablesSyntax(item.value)
+      value: this.ensureVariablesSyntax(item.value),
+      variable: item.key
     };
     return result;
   }
