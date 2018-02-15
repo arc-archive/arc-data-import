@@ -5,18 +5,21 @@
   "description": "An element that imports data into the ARC datastore",
   "devDependencies": {
     "bower": "^1.8.0",
-    "polymer-cli": "^1.2.0"
+    "polymer-cli": "^1.2.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   },
   "private": false,
-  "main": [
-    "arc-data-import.html"
-  ],
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "main": "index.js",
   "author": "The Advanced REST client authors <arc@mulesoft.com>",
   "scripts": {
     "serve": "node_modules/.bin/polymer serve",
     "lint": "node_modules/.bin/polymer lint arc-data-import.html --rules polymer-1",
     "test-sauce": "node_modules/.bin/polymer test --plugin sauce --job-name \"arc-data-import:local-test\"",
-    "test": "node_modules/.bin/polymer test --plugin local",
+    "test": "mocha test/*.test.js test/**/*.test.js",
     "deps": "npm install --quiet && bower install --quiet",
     "update-deps": "npm update --quiet && bower update --quiet"
   },
