@@ -1,3 +1,17 @@
+<a name="0.1.14"></a>
+## [0.1.14](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.13...0.1.14) (2018-02-15)
+
+
+### Docs
+
+* Updated documentation for the class ([cc291677ba44382a981897fbc2103b01bf09f1e1](https://github.com/advanced-rest-client/arc-data-import/commit/cc291677ba44382a981897fbc2103b01bf09f1e1))
+
+### Fix
+
+* Fixed wrong data mapping for variable object ([9f574329bcf51fbc46ed21abca258d726a5b79da](https://github.com/advanced-rest-client/arc-data-import/commit/9f574329bcf51fbc46ed21abca258d726a5b79da))
+
+
+
 <a name="0.1.13"></a>
 ## [0.1.13](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.12...0.1.13) (2018-02-15)
 
