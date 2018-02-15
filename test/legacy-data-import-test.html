@@ -34,7 +34,7 @@ the License.
     </test-fixture>
 
     <script>
-    /* global fixture, assert, DataTestHelper, DataGenerator, sinon */
+    /* global fixture, assert, DataTestHelper, DataGenerator */
     suite('Legacy import to datastore', function() {
       var originalData;
       var element;
@@ -55,14 +55,6 @@ the License.
         data = DataTestHelper.clone(originalData);
       });
 
-      test('Calls _normalizeArcLegacyData function', function() {
-        var normalize = sinon.spy(element, '_normalizeArcLegacyData');
-        return element.normalizeImportData(data)
-        .then(() => {
-          normalize.restore();
-          assert.isTrue(normalize.calledOnce);
-        });
-      });
       var readProjects;
       var readRequests;
 
@@ -125,15 +117,6 @@ the License.
       setup(function() {
         element = fixture('basic');
         data = DataTestHelper.clone(originalData);
-      });
-
-      test('Calls _normalizeArcLegacyData function', function() {
-        var normalize = sinon.spy(element, '_normalizeArcLegacyData');
-        return element.normalizeImportData(data)
-        .then(() => {
-          normalize.restore();
-          assert.isTrue(normalize.calledOnce);
-        });
       });
 
       test('Stores the data', function() {
