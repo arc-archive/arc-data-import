@@ -107,7 +107,7 @@ describe('Postman backup transformer', function() {
   });
 
   it('Variables are computed', function() {
-    assert.equal(result.variables[3].variable, 'test ${host}', 'Variable is transformed');
+    assert.equal(result.variables[3].value, 'test ${host}', 'Variable is transformed');
     assert.equal(result.requests[5].headers,
       'Content-Type: application/json\nx-var: ${var}',
       'Header is transformed');
