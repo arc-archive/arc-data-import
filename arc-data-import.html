@@ -146,7 +146,7 @@ Polymer({
     }
     var store = this._dataStore;
     return store.importData(importObject)
-    .then(result => {
+    .then((result) => {
       this.fire('data-imported');
       return result;
     });
