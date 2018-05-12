@@ -1,45 +1,29 @@
 <!doctype html>
-<!--
-@license
-Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
-Licensed under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License. You may obtain a copy of
-the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-License for the specific language governing permissions and limitations under
-the License.
--->
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
-    <script src="../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../iron-test-helpers/mock-interactions.js"></script>
     <script src="test-helper.js"></script>
     <script src="../transformers/base-transformer.js"></script>
     <script src="../transformers/arc-dexie-transformer.js"></script>
-    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
   </head>
   <body>
 
     <script>
     /* global assert, DataTestHelper, ArcDexieTransformer */
     suite('Dexie export', function() {
-      var jsonData;
-      var result;
+      let jsonData;
+      let result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-data-export.json')
-        .then(response => {
+        .then((response) => {
           jsonData = JSON.parse(response);
           const transformer = new ArcDexieTransformer(jsonData);
           return transformer.transform();
         })
-        .then(data => result = data);
+        .then((data) => result = data);
       });
 
       test('Normalizes the data', function() {
@@ -74,7 +58,7 @@ the License.
       });
 
       test('Request values are set', function() {
-        var request = result.requests[0];
+        let request = result.requests[0];
         assert.equal(request.url, 'hrttp://localhost:8080/url2');
         assert.equal(request.method, 'GET');
         assert.equal(request.headers, '');
@@ -108,7 +92,7 @@ the License.
       });
 
       test('Project values are set', function() {
-        var project = result.projects[0];
+        let project = result.projects[0];
         assert.equal(project.name, 'Project name', 'name is set');
         assert.equal(project.created, 1506365878724, 'created is set');
         assert.strictEqual(project.order, 0, 'order is set');
@@ -129,8 +113,8 @@ the License.
       });
 
       test('Project ID is set correctly', function() {
-        var p1id = result.projects[0]._id;
-        var p2id = result.projects[1]._id;
+        const p1id = result.projects[0]._id;
+        const p2id = result.projects[1]._id;
         assert.equal(result.requests[2].legacyProject, p1id);
         assert.equal(result.requests[3].legacyProject, p1id);
         assert.equal(result.requests[4].legacyProject, p1id);
@@ -139,16 +123,16 @@ the License.
     });
 
     suite('Dexie history', function() {
-      var jsonData;
-      var result;
+      let jsonData;
+      let result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-history-export.json')
-        .then(response => {
+        .then((response) => {
           jsonData = JSON.parse(response);
           const transformer = new ArcDexieTransformer(jsonData);
           return transformer.transform();
         })
-        .then(data => result = data);
+        .then((data) => result = data);
       });
 
       test('Normalizes the data', function() {
@@ -167,7 +151,7 @@ the License.
       });
 
       test('Request values are set', function() {
-        var request = result.history[0];
+        let request = result.history[0];
         assert.equal(request.url, 'http://wp.pl');
         assert.equal(request.method, 'GET');
         assert.equal(request.headers, '');
@@ -184,16 +168,16 @@ the License.
     });
 
     suite('Dexie saved export', function() {
-      var jsonData;
-      var result;
+      let jsonData;
+      let result;
       suiteSetup(function() {
         return DataTestHelper.getFile('dexie-saved-export.json')
-        .then(response => {
+        .then((response) => {
           jsonData = JSON.parse(response);
           const transformer = new ArcDexieTransformer(jsonData);
           return transformer.transform();
         })
-        .then(data => result = data);
+        .then((data) => result = data);
       });
 
       test('Requests contains 2 entries', function() {
@@ -206,7 +190,7 @@ the License.
       });
 
       test('Request values are set', function() {
-        var request = result.requests[0];
+        let request = result.requests[0];
         assert.equal(request.url, 'hrttp://localhost:8080/url2');
         assert.equal(request.method, 'GET');
         assert.equal(request.headers, '');

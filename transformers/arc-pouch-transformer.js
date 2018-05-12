@@ -1,24 +1,11 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {BaseTransformer} = require('./base-transformer');
-}
+/* global BaseTransformer */
+/*jshint -W098 */
 /**
  * Transforms Dexie system (legacy system) into current data model.
  * @extends BaseTransformer
  */
-class _ArcPouchTransformer extends BaseTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class ArcPouchTransformer extends BaseTransformer {
   /**
    * Transforms PouchDB ARC export object based into current export data model.
    *
@@ -35,29 +22,29 @@ class _ArcPouchTransformer extends BaseTransformer {
     if (data.history && data.history.length) {
       data.history = this._transformHistory(data.history);
     }
-    var socketUrls = data['websocket-url-history'];
+    const socketUrls = data['websocket-url-history'];
     if (socketUrls && socketUrls.length) {
       data['websocket-url-history'] = this._tranformSimpleObject(socketUrls);
     }
-    var urls = data['url-history'];
+    const urls = data['url-history'];
     if (urls && urls.length) {
       data['url-history'] = this._tranformSimpleObject(urls);
     }
     if (data.variables && data.variables.length) {
       data.variables = this._tranformSimpleObject(data.variables);
     }
-    var headersSets = data['headers-sets'];
+    const headersSets = data['headers-sets'];
     if (headersSets && headersSets.length) {
       data['headers-sets'] = this._tranformHeadersSets(headersSets);
     }
-    var authData = data['auth-data'];
+    const authData = data['auth-data'];
     if (authData && authData.length) {
       data['auth-data'] = this._tranformSimpleObject(authData);
     }
     if (data.cookies && data.cookies.length) {
       data.cookies = this._tranformSimpleObject(data.cookies);
     }
-    var hostRules = data['host-rules'];
+    const hostRules = data['host-rules'];
     if (hostRules && hostRules.length) {
       data['host-rules'] = this._tranformSimpleObject(hostRules);
     }
@@ -157,9 +144,4 @@ class _ArcPouchTransformer extends BaseTransformer {
       return item;
     });
   }
-}
-if (isNode) {
-  exports.ArcPouchTransformer = _ArcPouchTransformer;
-} else {
-  (window || self).ArcPouchTransformer = _ArcPouchTransformer;
 }

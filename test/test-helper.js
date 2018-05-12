@@ -1,15 +1,6 @@
-/* global chance, self */
+/* global chance */
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var assert = require('chai').assert;
-}
-
 const DataTestHelper = {};
-
 DataTestHelper.getFile = function(file) {
   return fetch(file).then(response => {
     if (!response.ok) {
@@ -20,17 +11,17 @@ DataTestHelper.getFile = function(file) {
 };
 
 DataTestHelper.assertRequestId = function(request) {
-  var id = request._id;
+  const id = request._id;
   assert.typeOf(id, 'string', '_id is a string');
-  var parts = id.split('/');
-  var size = request.legacyProject ? 4 : 3;
+  const parts = id.split('/');
+  const size = request.legacyProject ? 4 : 3;
   assert.lengthOf(parts, size, '_id has ' + size + ' parts');
 };
 
 DataTestHelper.assertHistoryId = function(request) {
-  var id = request._id;
+  const id = request._id;
   assert.typeOf(id, 'string', '_id is a string');
-  var parts = id.split('/');
+  const parts = id.split('/');
   assert.lengthOf(parts, 3, '_id has 3 parts');
   assert.isNotNaN(parts[0], 'First part is a number');
 };
@@ -71,7 +62,7 @@ DataTestHelper.assertProjectObject = function(project) {
 };
 
 DataTestHelper.clone = function(obj) {
-  var copy;
+  let copy;
   if (null === obj || 'object' !== typeof obj) {
     return obj;
   }
@@ -82,14 +73,14 @@ DataTestHelper.clone = function(obj) {
   }
   if (obj instanceof Array) {
     copy = [];
-    for (var i = 0, len = obj.length; i < len; i++) {
+    for (let i = 0, len = obj.length; i < len; i++) {
       copy[i] = DataTestHelper.clone(obj[i]);
     }
     return copy;
   }
   if (obj instanceof Object) {
     copy = {};
-    for (var attr in obj) {
+    for (let attr in obj) {
       if (obj.hasOwnProperty(attr)) {
         copy[attr] = DataTestHelper.clone(obj[attr]);
       }
@@ -100,7 +91,8 @@ DataTestHelper.clone = function(obj) {
 };
 
 DataTestHelper.getDatastoreData = function(name) {
-  var db = new PouchDB(name);
+  /* global PouchDB */
+  const db = new PouchDB(name);
   return db.allDocs({
     include_docs: true
   })
@@ -143,7 +135,7 @@ DataTestHelper.getDatastoreHostRulesData = function() {
   return DataTestHelper.getDatastoreData('host-rules');
 };
 DataTestHelper.updateObject = function(dbName, obj) {
-  var db = new PouchDB(name);
+  const db = new PouchDB(name);
   return db.put(obj, {
     force: true
   });
@@ -153,7 +145,3 @@ DataTestHelper.updateRequestRandom = function(obj) {
   obj.name = chance.word();
   return DataTestHelper.updateObject('saved-requests', obj);
 };
-
-if (isNode) {
-  exports.DataTestHelper = DataTestHelper;
-}

@@ -1,30 +1,14 @@
 <!doctype html>
-<!--
-@license
-Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
-Licensed under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License. You may obtain a copy of
-the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-License for the specific language governing permissions and limitations under
-the License.
--->
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../../../web-component-tester/browser.js"></script>
-    <script src="../../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../../iron-test-helpers/mock-interactions.js"></script>
     <script src="../test-helper.js"></script>
     <script src="../../transformers/base-transformer.js"></script>
     <script src="../../transformers/postman-transformer.js"></script>
     <script src="../../transformers/postman-v2-transformer.js"></script>
-    <link rel="import" href="../../../fetch-polyfill/fetch-polyfill.html">
   </head>
   <body>
     <script>
@@ -32,12 +16,12 @@ the License.
     suite('postman-v2-transformer (collection)', function() {
 
       suite('_readProjectInfo()', function() {
-        var transformer;
-        var jsonData;
-        var result;
+        let transformer;
+        let jsonData;
+        let result;
         suiteSetup(function() {
           return DataTestHelper.getFile('collection-v2.json')
-          .then(response => {
+          .then((response) => {
             jsonData = JSON.parse(response);
           });
         });
@@ -77,13 +61,13 @@ the License.
       });
 
       suite('Body computation', function() {
-        var transformer;
-        var jsonData;
-        var item;
+        let transformer;
+        let jsonData;
+        let item;
         suite('FormData - _computeFormDataBody()', function() {
           suiteSetup(function() {
             return DataTestHelper.getFile('collection-v2.json')
-            .then(response => {
+            .then((response) => {
               jsonData = JSON.parse(response);
               item = jsonData.item[3];
             });
@@ -140,12 +124,12 @@ the License.
         suite('URL encoded - _computeFormDataBody()', function() {
           suiteSetup(function() {
             return DataTestHelper.getFile('collection-v2.json')
-            .then(response => {
+            .then((response) => {
               jsonData = JSON.parse(response);
               item = jsonData.item[0].item[0].request.body.urlencoded;
             });
           });
-          var shalowCopy;
+          let shalowCopy;
           setup(function() {
             transformer = new PostmanV2Transformer(jsonData);
             shalowCopy = Array.from(item, (i) => Object.assign({}, i));
@@ -197,7 +181,7 @@ the License.
         suite('Binary - _computePayload()', function() {
           suiteSetup(function() {
             return DataTestHelper.getFile('collection-v2.json')
-            .then(response => {
+            .then((response) => {
               jsonData = JSON.parse(response);
               item = jsonData.item[1].request.body;
             });
@@ -216,7 +200,7 @@ the License.
         suite('Raw - _computePayload()', function() {
           suiteSetup(function() {
             return DataTestHelper.getFile('collection-v2.json')
-            .then(response => {
+            .then((response) => {
               jsonData = JSON.parse(response);
               item = jsonData.item[2].request.body;
             });
@@ -234,20 +218,20 @@ the License.
       });
 
       suite('Headers computation', function() {
-        var transformer;
-        var jsonData;
-        var headers;
-        var item;
+        let transformer;
+        let jsonData;
+        let headers;
+        let item;
         suiteSetup(function() {
           return DataTestHelper.getFile('collection-v2.json')
-          .then(response => {
+          .then((response) => {
             jsonData = JSON.parse(response);
             headers = jsonData.item[0].item[1].request.header;
             item = jsonData.item[0].item[1];
           });
         });
 
-        var shalowCopy;
+        let shalowCopy;
         suite('_computeHeaders()', function() {
           setup(function() {
             transformer = new PostmanV2Transformer(jsonData);
@@ -255,7 +239,7 @@ the License.
           });
 
           test('Computes headers value', function() {
-            var result = transformer._computeHeaders(shalowCopy);
+            let result = transformer._computeHeaders(shalowCopy);
             let compare = 'Content-Type: application/x-www-form-urlencoded\n';
             compare += 'Content-Length: 2\n';
             compare += 'x-test: {{host}}';
@@ -263,7 +247,7 @@ the License.
           });
 
           test('Computes variables from headers', function() {
-            var result = transformer.ensureVarsRecursevily(shalowCopy);
+            let result = transformer.ensureVarsRecursevily(shalowCopy);
             assert.equal(result[2].value, '${host}');
           });
         });
@@ -275,7 +259,7 @@ the License.
           });
 
           test('Computes headers value', function() {
-            var result = transformer._computeArcRequest(shalowCopy);
+            let result = transformer._computeArcRequest(shalowCopy);
             let compare = 'Content-Type: application/x-www-form-urlencoded\n';
             compare += 'Content-Length: 2\n';
             compare += 'x-test: ${host}';
@@ -283,26 +267,26 @@ the License.
           });
 
           test('headersModel is set', function() {
-            var result = transformer._computeArcRequest(shalowCopy);
+            let result = transformer._computeArcRequest(shalowCopy);
             assert.typeOf(result.headersModel, 'array');
             assert.lengthOf(result.headersModel, 4);
           });
 
           test('headersModel has computed variables', function() {
-            var result = transformer._computeArcRequest(shalowCopy);
+            let result = transformer._computeArcRequest(shalowCopy);
             assert.equal(result.headersModel[2].value, '${host}');
           });
         });
       });
 
       suite('URL and query parameters computation', function() {
-        var transformer;
-        var jsonData;
-        var item;
-        var shalowCopy;
+        let transformer;
+        let jsonData;
+        let item;
+        let shalowCopy;
         suiteSetup(function() {
           return DataTestHelper.getFile('collection-v2.json')
-          .then(response => {
+          .then((response) => {
             jsonData = JSON.parse(response);
             item = jsonData.item[0].item[0];
           });
@@ -334,13 +318,13 @@ the License.
       });
 
       suite('Generating the request object', function() {
-        var transformer;
-        var jsonData;
-        var item;
-        var shalowCopy;
+        let transformer;
+        let jsonData;
+        let item;
+        let shalowCopy;
         suiteSetup(function() {
           return DataTestHelper.getFile('collection-v2.json')
-          .then(response => {
+          .then((response) => {
             jsonData = JSON.parse(response);
             item = jsonData.item[0].item[0];
           });
@@ -411,12 +395,12 @@ the License.
       });
 
       suite('transform()', function() {
-        var transformer;
-        var jsonData;
+        let transformer;
+        let jsonData;
 
         setup(function() {
           return DataTestHelper.getFile('collection-v2.json')
-          .then(response => {
+          .then((response) => {
             jsonData = JSON.parse(response);
             transformer = new PostmanV2Transformer(jsonData);
           });

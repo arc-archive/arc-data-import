@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright 2017 The Advanced REST client authors <arc@mulesoft.com>
+Copyright 2018 The Advanced REST client authors <arc@mulesoft.com>
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this file except in compliance with the License. You may obtain a copy of
 the License at
@@ -11,63 +11,68 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../app-pouchdb/pouchdb.html">
 <link rel="import" href="import-data-store.html">
 <link rel="import" href="transformers-import.html">
-
-<!--
-An element that imports data into the ARC datastore.
-
-Supported data import types:
-
--   legacy (the first one) ARC data system
--   legacy Dexie and HAR based data system
--   current ARC export object
--   Postman data export
-
-To import data it must be first normalized by calling `normalizeImportData`
-function. It creates datastore objects that are resdy to be inserted into the
-datastore.
-
-Objects that are missing IDs will be assigned a new ID. Because of that data
-duplication may occur.
-Request objects will generate the same ID unless the request is assigned to a
-project and project has new ID generated.
-
-Conflicts are resolved by replacing existing data with new one.
-
-### Example
-```html
-<arc-data-import></arc-data-import>
 <script>
-var importer = document.querySelector('arc-data-import');
-var data = await getFileContent();
-data = await importer.normalizeImportData();
-var errors = await importer.storeData(data);
-if (errors && errors.length) {
-  console.log(errors);
-}
-</script>
-```
+/**
+ * An element that imports data into the ARC datastore.
+ *
+ * Supported data import types:
+ *
+ * -   legacy (the first one) ARC data system
+ * -   legacy Dexie and HAR based data system
+ * -   current ARC export object
+ * -   Postman data export
+ *
+ * To import data it must be first normalized by calling `normalizeImportData`
+ * function. It creates datastore objects that are resdy to be inserted into the
+ * datastore.
+ *
+ * Objects that are missing IDs will be assigned a new ID. Because of that data
+ * duplication may occur.
+ * Request objects will generate the same ID unless the request is assigned to a
+ * project and project has new ID generated.
+ *
+ * Conflicts are resolved by replacing existing data with new one.
+ *
+ * ### Example
+ *
+ * ```javascript
+ * const importer = document.querySelector('arc-data-import');
+ * const data = await getFileContent();
+ * data = await importer.normalizeImportData();
+ * const errors = await importer.storeData(data);
+ * if (errors && errors.length) {
+ *    console.log(errors);
+ * }
+ * ```
+ *
+ * @customElement
+ * @polymer
+ * @memberof LogicElements
+ */
+class ArcDataImport extends Polymer.Element {
+  static get is() { return 'arc-data-import'; }
 
-@group Logic Elements
-@element arc-data-import
-@demo demo/index.html
--->
-<script>
-Polymer({
-  is: 'arc-data-import',
-  /* global ArcDataImport */
-  attached: function() {
-    this.listen(window, 'import-normalize', '_normalizeHandler');
-    this.listen(window, 'import-data', '_importHandler');
-  },
+  constructor() {
+    super();
+    this._normalizeHandler = this._normalizeHandler.bind(this);
+    this._importHandler = this._importHandler.bind(this);
+  }
 
-  detached: function() {
-    this.unlisten(window, 'import-normalize', '_normalizeHandler');
-    this.unlisten(window, 'import-data', '_importHandler');
-  },
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('import-normalize', this._normalizeHandler);
+    window.addEventListener('import-data', this._importHandler);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('import-normalize', this._normalizeHandler);
+    window.removeEventListener('import-data', this._importHandler);
+  }
   /**
    * Handler for the `import-normalize`cutom event.
    * It sets `result` property on the event's detail object which is the result
@@ -76,30 +81,30 @@ Polymer({
    * The event is canceled so it's save to have more than one instance of this
    * element in the DOM.
    */
-  _normalizeHandler: function(e) {
+  _normalizeHandler(e) {
     if (!e.detail || e.defaultPrevented) {
       return;
     }
     e.preventDefault();
-    var data = e.detail.content;
+    const data = e.detail.content;
     if (!data) {
       e.detail.result = Promise.reject(new Error('Content property not set'));
       return;
     }
-
-    let importer = new ArcDataImport();
+    /* global ArcDataImportLogic */
+    let importer = new ArcDataImportLogic();
     e.detail.result = importer.normalizeImportData(data);
-  },
+  }
   /**
    * Normalizes import data object to single data model.
    *
    * @param {Object} data ARC or Postman data
    * @return {Promise} Normalized data.
    */
-  normalizeImportData: function(data) {
-    let importer = new ArcDataImport();
+  normalizeImportData(data) {
+    let importer = new ArcDataImportLogic();
     return importer.normalizeImportData(data);
-  },
+  }
   /**
    * Handler for the `import-data` cutom event.
    * It sets `result` property on the event's detail object which is a result
@@ -108,25 +113,25 @@ Polymer({
    * The event is canceled so it's save to have more than one instance of this
    * element in the DOM.
    */
-  _importHandler: function(e) {
+  _importHandler(e) {
     if (!e.detail || e.defaultPrevented) {
       return;
     }
     e.preventDefault();
-    var data = e.detail.content;
+    const data = e.detail.content;
     if (!data) {
       e.detail.result = Promise.reject(new Error('Content property not set'));
       return;
     }
     e.detail.result = this.storeData(data);
-  },
+  }
 
   get _dataStore() {
     if (!this.__dataStoreElement) {
       this.__dataStoreElement = document.createElement('import-data-store');
     }
     return this.__dataStoreElement;
-  },
+  }
 
   /**
    * Stores import data in the datastore.
@@ -137,19 +142,23 @@ Polymer({
    * @return {Promise} Resolved promise to list of errors or `undefined`
    * if error were not reported.
    */
-  storeData: function(importObject) {
+  storeData(importObject) {
     if (!importObject) {
       return Promise.reject(new Error('Missing required argument.'));
     }
     if (!importObject.kind || importObject.kind !== 'ARC#Import') {
       return Promise.reject(new Error('Data not normalized for import.'));
     }
-    var store = this._dataStore;
+    const store = this._dataStore;
     return store.importData(importObject)
     .then((result) => {
-      this.fire('data-imported');
+      this.dispatchEvent(new CustomEvent('data-imported', {
+        bubbles: true,
+        composed: true
+      }));
       return result;
     });
   }
-});
+}
+window.customElements.define(ArcDataImport.is, ArcDataImport);
 </script>

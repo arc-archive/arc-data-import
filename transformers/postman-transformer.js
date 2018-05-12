@@ -1,18 +1,12 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {BaseTransformer} = require('./base-transformer');
-}
+/* global BaseTransformer */
+/*jshint -W098 */
 /**
  * Base class for all Postman transformers
  *
  * @extends BaseTransformer
  */
-class _PostmanTransformer extends BaseTransformer {
+class PostmanTransformer extends BaseTransformer {
   /**
    * @constructor
    * @param {Object} data Import data object
@@ -170,9 +164,4 @@ class _PostmanTransformer extends BaseTransformer {
     }
     return obj;
   }
-}
-if (isNode) {
-  exports.PostmanTransformer = _PostmanTransformer;
-} else {
-  (window || self).PostmanTransformer = _PostmanTransformer;
 }

@@ -1,25 +1,12 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/*jshint -W098 */
 /**
  * Transforms environment export from postman to ARC variables.
  *
  * @extends BaseTransformer
  */
-class _PostmanEnvTransformer extends PostmanTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class PostmanEnvTransformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
@@ -67,9 +54,4 @@ class _PostmanEnvTransformer extends PostmanTransformer {
     result += encodeURIComponent(item.variable);
     return result;
   }
-}
-if (isNode) {
-  exports.PostmanEnvTransformer = _PostmanEnvTransformer;
-} else {
-  (window || self).PostmanEnvTransformer = _PostmanEnvTransformer;
 }

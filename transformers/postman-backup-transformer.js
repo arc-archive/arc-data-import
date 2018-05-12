@@ -1,25 +1,12 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/*jshint -W098 */
 /**
  * Transformer for Postamn backup file.
  *
  * @extends BaseTransformer
  */
-class _PostmanBackupTransformer extends PostmanTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class PostmanBackupTransformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
@@ -288,9 +275,4 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     };
     return result;
   }
-}
-if (isNode) {
-  exports.PostmanBackupTransformer = _PostmanBackupTransformer;
-} else {
-  (window || self).PostmanBackupTransformer = _PostmanBackupTransformer;
 }

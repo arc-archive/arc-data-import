@@ -1,17 +1,11 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/*jshint -W098 */
 /**
  * Transforms Postamn v2 collections to ARC import object.
  * @extends BaseTransformer
  */
-class _PostmanV2Transformer extends PostmanTransformer {
+class PostmanV2Transformer extends PostmanTransformer {
   /**
    * @constructor
    * @param {Object} data Import data object
@@ -112,7 +106,14 @@ class _PostmanV2Transformer extends PostmanTransformer {
   _computeArcRequest(item) {
     let request = item.request;
     let name = item.name || 'unnamed';
-    let url = request.url.raw || 'http://';
+    let url;
+    if (typeof request.url === 'string') {
+      url = request.url;
+    } else if (request.url && request.url.raw) {
+      url = request.url.raw;
+    } else {
+      url = 'http://';
+    }
     url = this.ensureVariablesSyntax(url);
     let method = request.method || 'GET';
     method = this.ensureVariablesSyntax(method);
@@ -227,9 +228,4 @@ class _PostmanV2Transformer extends PostmanTransformer {
     item.urlEncodedModel = model;
     return result.join('&');
   }
-}
-if (isNode) {
-  exports.PostmanV2Transformer = _PostmanV2Transformer;
-} else {
-  (window || self).PostmanV2Transformer = _PostmanV2Transformer;
 }

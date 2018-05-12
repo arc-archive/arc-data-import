@@ -1,24 +1,11 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {BaseTransformer} = require('./base-transformer');
-}
+/* global BaseTransformer */
+/*jshint -W098 */
 /**
  * Transforms Dexie system (legacy system) into current data model.
  * @extends BaseTransformer
  */
-class _ArcDexieTransformer extends BaseTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class ArcDexieTransformer extends BaseTransformer {
   /**
    * Transforms legacy ARC export object based on Dexie data store
    * into current export data model.
@@ -28,14 +15,14 @@ class _ArcDexieTransformer extends BaseTransformer {
   transform() {
     return this._parseRequests(this._data.requests)
     .then((result) => {
-      let projects = this._processProjects(this._data.projects);
+      const projects = this._processProjects(this._data.projects);
       return {
         projects: projects,
         data: this._associateProjects(result, projects)
       };
     })
-    .then(data => {
-      let result = {
+    .then((data) => {
+      const result = {
         createdAt: new Date().toISOString(),
         version: 'unknown',
         kind: 'ARC#Import',
@@ -58,8 +45,14 @@ class _ArcDexieTransformer extends BaseTransformer {
     if (!projects || !projects.length) {
       return [];
     }
-    let list = projects.map((item) => this._processProjectItem(item));
-    return list.filter((item) => !!item);
+    const list = [];
+    projects.forEach((item) => {
+      const result = this._processProjectItem(item);
+      if (result) {
+        list.push(result);
+      }
+    });
+    return list;
   }
   /**
    * Creates a pre-processed project data.
@@ -97,7 +90,7 @@ class _ArcDexieTransformer extends BaseTransformer {
     })
     .then((result) => {
       // remove duplicates from the history.
-      let ids = [];
+      const ids = [];
       result.history = result.history.filter((item) => {
         if (ids.indexOf(item.request._id) === -1) {
           ids[ids.length] = item.request._id;
@@ -128,7 +121,7 @@ class _ArcDexieTransformer extends BaseTransformer {
       });
       return;
     }
-    let len = Math.min(requests.length, 200);
+    const len = Math.min(requests.length, 200);
     // Up to 200 loop iteration at once.
     // Then the function return and release main loop.
     for (let i = 0; i < len; i++) {
@@ -302,9 +295,4 @@ class _ArcDexieTransformer extends BaseTransformer {
     }
     return data;
   }
-}
-if (isNode) {
-  exports.ArcDexieTransformer = _ArcDexieTransformer;
-} else {
-  (window || self).ArcDexieTransformer = _ArcDexieTransformer;
 }

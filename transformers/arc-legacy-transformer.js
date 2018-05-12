@@ -1,26 +1,11 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {
-    BaseTransformer
-  } = require('./base-transformer');
-}
+/* global BaseTransformer */
+/*jshint -W098 */
 /**
  * Transforms the first ARC data object to curent schema.
  * @extends BaseTransformer
  */
-class _ArcLegacyTransformer extends BaseTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class ArcLegacyTransformer extends BaseTransformer {
   /**
    * Transforms legacy ARC export object into current export data model.
    *
@@ -166,9 +151,4 @@ class _ArcLegacyTransformer extends BaseTransformer {
     projects = projects || [];
     return projects.find(item => item._oldId === projectId);
   }
-}
-if (isNode) {
-  exports.ArcLegacyTransformer = _ArcLegacyTransformer;
-} else {
-  (window || self).ArcLegacyTransformer = _ArcLegacyTransformer;
 }

@@ -1,12 +1,9 @@
 'use strict';
-/* global self, ArcLegacyTransformer, ArcDexieTransformer, ArcPouchTransformer,
+/* global ArcLegacyTransformer, ArcDexieTransformer, ArcPouchTransformer,
 PostmanDataTransformer */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
+/*jshint -W098 */
 
-class _ArcDataImport {
+class ArcDataImportLogic {
   /**
    * Transforms any previous ARC export file to current export object.
    *
@@ -71,46 +68,22 @@ class _ArcDataImport {
 
   // Normalizes export data from the GWT system.
   _normalizeArcLegacyData(data) {
-    let transformer;
-    if (isNode) {
-      const {ArcLegacyTransformer} = require('./arc-legacy-transformer');
-      transformer = new ArcLegacyTransformer(data);
-    } else {
-      transformer = new ArcLegacyTransformer(data);
-    }
+    let transformer = new ArcLegacyTransformer(data);
     return transformer.transform();
   }
   // Normalizes export data from Dexie powered data store.
   _normalizeArcDexieSystem(data) {
-    let transformer;
-    if (isNode) {
-      const {ArcDexieTransformer} = require('./arc-dexie-transformer');
-      transformer = new ArcDexieTransformer(data);
-    } else {
-      transformer = new ArcDexieTransformer(data);
-    }
+    let transformer = new ArcDexieTransformer(data);
     return transformer.transform();
   }
   // Normalizes ARC's data exported in PouchDB system
   _normalizeArcPouchSystem(data) {
-    let transformer;
-    if (isNode) {
-      const {ArcPouchTransformer} = require('./arc-pouch-transformer');
-      transformer = new ArcPouchTransformer(data);
-    } else {
-      transformer = new ArcPouchTransformer(data);
-    }
+    let transformer = new ArcPouchTransformer(data);
     return transformer.transform();
   }
   // Normalizes Postman data into ARC's data model.
   _normalizePostmap(data) {
-    let transformer;
-    if (isNode) {
-      const {PostmanDataTransformer} = require('./postman-data-transformer');
-      transformer = new PostmanDataTransformer();
-    } else {
-      transformer = new PostmanDataTransformer();
-    }
+    let transformer = new PostmanDataTransformer();
     return transformer.transform(data);
   }
 
@@ -131,7 +104,7 @@ class _ArcDataImport {
     }
     // Old export system does not have kind property.
     // Have to check if it has required properties.
-    var arcEntries = ['projects', 'requests', 'history', 'url-history',
+    const arcEntries = ['projects', 'requests', 'history', 'url-history',
       'websocket-url-history', 'variables', 'headers-sets', 'auth-data',
       'cookies'
     ];
@@ -186,10 +159,4 @@ class _ArcDataImport {
     }
     return false;
   }
-}
-
-if (isNode) {
-  exports.ArcDataImport = _ArcDataImport;
-} else {
-  (window || self).ArcDataImport = _ArcDataImport;
 }

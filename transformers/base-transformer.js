@@ -1,15 +1,10 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' ||
-  (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
+/*jshint -W098 */
 /**
  * Base class for all transformers.
  * Includes common functions.
  */
-class _BaseTransformer {
+class BaseTransformer {
   /**
    * @constructor
    * @param {Object} data Data to be transformed.
@@ -130,9 +125,4 @@ class _BaseTransformer {
     id += method;
     return id;
   }
-}
-if (isNode) {
-  exports.BaseTransformer = _BaseTransformer;
-} else {
-  (window || self).BaseTransformer = _BaseTransformer;
 }
