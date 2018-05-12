@@ -10,6 +10,12 @@
 
 
 
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.18...1.0.0) (2018-05-12)
+
+
+
+
 <a name="0.1.19"></a>
 ## [0.1.19](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.18...0.1.19) (2018-02-15)
 
