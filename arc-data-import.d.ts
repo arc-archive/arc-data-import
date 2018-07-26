@@ -10,7 +10,6 @@
  */
 
 /// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../app-pouchdb/pouchdb.d.ts" />
 /// <reference path="import-data-store.d.ts" />
 /// <reference path="transformers-import.d.ts" />
 
@@ -48,6 +47,10 @@ declare namespace LogicElements {
    *    console.log(errors);
    * }
    * ```
+   *
+   * ## Changes in version 2.x
+   * - The component no longer includes PouchDB. Use your own version of the
+   * library from Bower, npm, csd etc.
    */
   class ArcDataImport extends Polymer.Element {
     readonly _dataStore: any;

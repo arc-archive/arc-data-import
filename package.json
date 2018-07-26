@@ -4,20 +4,14 @@
   "license": "Apache-2.0",
   "description": "An element that imports data into the ARC datastore",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
     "@polymer/gen-typescript-declarations": "^1.1.1"
   },
   "private": false,
-  "engines": {
-    "node": ">=7.0.0"
-  },
   "main": "index.js",
   "scripts": {
     "lint": "polymer lint arc-data-import.html",
     "test-sauce": "polymer test --plugin sauce --job-name \"arc-data-import:local-test\"",
     "test": "polymer test --plugin local",
-    "update-deps": "npm update --quiet && bower update --quiet",
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
   "repository": {

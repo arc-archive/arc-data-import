@@ -9,7 +9,6 @@
  */
 
 /// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../app-pouchdb/pouchdb.d.ts" />
 
 declare namespace LogicElements {
 
