@@ -26,7 +26,8 @@
       let element;
       let data;
       suiteSetup(function() {
-        return DataTestHelper.getFile('dexie-data-export.json')
+        return DataGenerator.destroySavedRequestData()
+        .then(() => DataTestHelper.getFile('dexie-data-export.json'))
         .then((response) => {
           originalData = JSON.parse(response);
         });
@@ -41,9 +42,7 @@
         data = DataTestHelper.clone(originalData);
       });
 
-      let readProjects;
       let readRequests;
-
       test('Stores the data', function() {
         return element.normalizeImportData(data)
         .then((parsed) => {
@@ -60,15 +59,12 @@
         })
         .then((projects) => {
           assert.lengthOf(projects, 2);
-          readProjects = projects;
           return DataTestHelper.getDatastoreHistoryData();
         })
         .then((history) => {
           assert.lengthOf(history, 0);
         });
       });
-
-      let updatedRequests;
 
       test('Overrides (some) data', function() {
         return element.normalizeImportData(data)
@@ -84,9 +80,8 @@
           // and this import is missing project ID so it generates IDs again
           // so together it should give 6 from previous import + 4 new
           assert.lengthOf(requests, 10);
-          updatedRequests = requests;
           let oldId = readRequests[0]._id;
-          let oldRequest = requests.find(item => item._id === oldId);
+          let oldRequest = requests.find((item) => item._id === oldId);
           return DataTestHelper.updateRequestRandom(oldRequest);
         })
         .then(() => DataTestHelper.getDatastoreRequestData())
@@ -108,7 +103,6 @@
           assert.lengthOf(history, 0);
         });
       });
-
     });
     </script>
 
