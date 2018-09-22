@@ -19,7 +19,7 @@ class PostmanDataTransformer {
       case 'collection-v2':
         instance = new PostmanV2Transformer(data);
         break;
-      default: return Promise.reject('Unsupported Postman version.');
+      default: return Promise.reject(new Error('Unsupported Postman version.'));
     }
     return instance.transform();
   }
