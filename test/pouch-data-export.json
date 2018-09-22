@@ -30,7 +30,7 @@
       "name": "Sessions API endpoint 1",
       "type": "saved",
       "updated": 1506374000371,
-      "_referenceLegacyProject": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+      "_referenceLegacyProject": "c99b754d-74e4-44b0-a1b2-f5fe76f0180e",
       "kind": "ARC#RequestData"
     },
     {
@@ -41,7 +41,7 @@
       "payload": "",
       "url": "http://localhost:3000/sessions/users/",
       "updated": 1506374026004,
-      "_referenceLegacyProject": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+      "_referenceLegacyProject": "a9jb754d-74e4-44b0-af75-f5fe76f0180e",
       "kind": "ARC#RequestData"
     }
   ],
@@ -57,7 +57,7 @@
     "order": 0,
     "created": 1506223472295,
     "updated": 1506223472296,
-    "_referenceId": "c99b754d-74e4-44b0-af75-f5fe76f0180e",
+    "_referenceId": "a9jb754d-74e4-44b0-af75-f5fe76f0180e",
     "kind": "ARC#ProjectData"
   }],
   "history": [{

@@ -266,17 +266,6 @@
             compare += 'x-test: ${host}';
             assert.equal(result.headers, compare);
           });
-
-          test('headersModel is set', function() {
-            let result = transformer._computeArcRequest(shalowCopy);
-            assert.typeOf(result.headersModel, 'array');
-            assert.lengthOf(result.headersModel, 4);
-          });
-
-          test('headersModel has computed variables', function() {
-            let result = transformer._computeArcRequest(shalowCopy);
-            assert.equal(result.headersModel[2].value, '${host}');
-          });
         });
       });
 
@@ -301,20 +290,6 @@
           const result = transformer._computeArcRequest(shalowCopy);
           const compare = 'https://onet.pl/${random()}?${a}=${bb}&e=ff';
           assert.equal(result.url, compare);
-        });
-
-        test('Query model is computed', function() {
-          const result = transformer._computeArcRequest(shalowCopy);
-          assert.typeOf(result.queryModel, 'array');
-          assert.lengthOf(result.queryModel, 3);
-        });
-
-        test('Variables are computed', function() {
-          const result = transformer._computeArcRequest(shalowCopy).queryModel;
-
-          assert.equal(result[0].name, '${a}');
-          assert.equal(result[0].value, '${bb}');
-          assert.equal(result[1].name, '${c}');
         });
       });
 
@@ -376,14 +351,18 @@
           assert.equal(result.type, 'saved');
         });
 
-        test('projectOrder is set', function() {
+        test('project is set on request', function() {
           const result = transformer._computeArcRequest(shalowCopy);
-          assert.typeOf(result.projectOrder, 'number');
+          assert.equal(result.projects[0], jsonData.info._postman_id);
         });
 
-        test('legacyProject is set', function() {
-          const result = transformer._computeArcRequest(shalowCopy);
-          assert.equal(result.legacyProject, jsonData.info._postman_id);
+        test('request is set on project', function() {
+          return transformer.transform()
+          .then((result) => {
+            const project = result.projects[0];
+            assert.typeOf(project.requests, 'array');
+            assert.lengthOf(project.requests, 5);
+          });
         });
 
         test('_id is set', function() {
@@ -434,15 +413,6 @@
           return transformer.transform()
           .then(function(result) {
             assert.lengthOf(result.requests, 5);
-          });
-        });
-
-        test('Requests has order property set', function() {
-          return transformer.transform()
-          .then(function(result) {
-            for (let i = 0; i < 5; i++) {
-              assert.equal(result.requests[i].projectOrder, i);
-            }
           });
         });
       });

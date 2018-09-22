@@ -38,9 +38,9 @@ class BaseTransformer {
    * @return {String} Request ID value.
    */
   generateRequestId(item, projectId) {
-    let name = (item.name || 'unknown name').toLowerCase();
-    let url = (item.url || 'https://').toLowerCase();
-    let method = (item.method || 'GET').toLowerCase();
+    const name = (item.name || 'unknown name').toLowerCase();
+    const url = (item.url || 'https://').toLowerCase();
+    const method = (item.method || 'GET').toLowerCase();
 
     let id = encodeURIComponent(name) + '/';
     id += encodeURIComponent(url) + '/';
@@ -124,5 +124,37 @@ class BaseTransformer {
     id += encodeURIComponent(url) + '/';
     id += method;
     return id;
+  }
+  /**
+   * Adds project reference to a request object.
+   * @param {Object} request Request object to alter
+   * @param {String} id Project id
+   */
+  addProjectReference(request, id) {
+    if (!id) {
+      return;
+    }
+    if (!request.projects) {
+      request.projects = [];
+    }
+    if (request.projects.indexOf(id) === -1) {
+      request.projects.push(id);
+    }
+  }
+  /**
+   * Adds request reference to a project object.
+   * @param {Object} project Project object to alter
+   * @param {String} id Request id
+   */
+  addRequestReference(project, id) {
+    if (!id) {
+      return;
+    }
+    if (!project.requests) {
+      project.requests = [];
+    }
+    if (project.requests.indexOf(id) === -1) {
+      project.requests.push(id);
+    }
   }
 }

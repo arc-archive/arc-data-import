@@ -68,7 +68,6 @@
       test('Google Drive information is present', function() {
         const request = result.requests[0];
         assert.equal(request.driveId, '0Bzpy9PK_RiBOeWRYUEo0TmRyTzA');
-        assert.equal(request.type, 'google-drive');
       });
     });
 
@@ -124,9 +123,15 @@
       });
 
       test('Project information is set on the request', function() {
-        assert.equal(result.requests[0].legacyProject, result.projects[0]._id,
+        assert.equal(result.requests[0].projects[0], result.projects[0]._id,
           'Project ID is set');
-        assert.isUndefined(result.requests[1].legacyProject, 'Project id is undefined');
+        assert.isUndefined(result.requests[1].projects, 'Project id is undefined');
+      });
+
+      test('Project has request reference', () => {
+        const project = result.projects[0];
+        assert.typeOf(project.requests, 'array');
+        assert.lengthOf(project.requests, 1);
       });
     });
     </script>

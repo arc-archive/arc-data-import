@@ -80,19 +80,6 @@
           // and this import is missing project ID so it generates IDs again
           // so together it should give 6 from previous import + 4 new
           assert.lengthOf(requests, 10);
-          let oldId = readRequests[0]._id;
-          let oldRequest = requests.find((item) => item._id === oldId);
-          return DataTestHelper.updateRequestRandom(oldRequest);
-        })
-        .then(() => DataTestHelper.getDatastoreRequestData())
-        .then((requests) => {
-          for (let i = 0; i < requests.length; i++) {
-            if (requests[i].legacyProject) {
-              assert.notEqual(requests[i]._rev.indexOf('2'), 0);
-            } else {
-              assert.equal(requests[i]._rev.indexOf('2'), 0);
-            }
-          }
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then((projects) => {

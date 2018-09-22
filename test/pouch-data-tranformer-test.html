@@ -129,16 +129,28 @@
       });
 
       test('Associate requests with porojects', function() {
-        assert.isUndefined(result.requests[0].legacyProject);
-        assert.isUndefined(result.requests[1].legacyProject);
-        assert.typeOf(result.requests[2].legacyProject, 'string');
-        assert.typeOf(result.requests[3].legacyProject, 'string');
+        assert.isUndefined(result.requests[0].projects);
+        assert.isUndefined(result.requests[1].projects);
+        assert.typeOf(result.requests[2].projects, 'array');
+        assert.lengthOf(result.requests[2].projects, 1);
+        assert.typeOf(result.requests[3].projects, 'array');
+        assert.lengthOf(result.requests[3].projects, 1);
+      });
+
+      test('Associate porojects with requests', function() {
+        const p1 = result.projects[0];
+        assert.typeOf(p1.requests, 'array');
+        assert.lengthOf(p1.requests, 1);
+        const p2 = result.projects[0];
+        assert.typeOf(p2.requests, 'array');
+        assert.lengthOf(p2.requests, 1);
       });
 
       test('Project ID is set correctly', function() {
-        let p2id = result.projects[1]._id;
-        assert.equal(result.requests[2].legacyProject, p2id);
-        assert.equal(result.requests[3].legacyProject, p2id);
+        const p1id = result.projects[0]._id;
+        const p2id = result.projects[1]._id;
+        assert.equal(result.requests[2].projects[0], p1id);
+        assert.equal(result.requests[3].projects[0], p2id);
       });
 
       test('variable object has the `_id` property', function() {

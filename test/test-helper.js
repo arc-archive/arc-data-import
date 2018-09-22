@@ -2,7 +2,7 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 const DataTestHelper = {};
 DataTestHelper.getFile = function(file) {
-  return fetch(file).then(response => {
+  return fetch(file).then((response) => {
     if (!response.ok) {
       throw new Error('File ' + file + ' is unavailable');
     }
@@ -13,9 +13,6 @@ DataTestHelper.getFile = function(file) {
 DataTestHelper.assertRequestId = function(request) {
   const id = request._id;
   assert.typeOf(id, 'string', '_id is a string');
-  const parts = id.split('/');
-  const size = request.legacyProject ? 4 : 3;
-  assert.lengthOf(parts, size, '_id has ' + size + ' parts');
 };
 
 DataTestHelper.assertHistoryId = function(request) {
@@ -36,8 +33,6 @@ DataTestHelper.assertRequestObject = function(request) {
   assert.typeOf(request.type, 'string', 'type is a string');
   assert.typeOf(request.url, 'string', 'url is a string');
   assert.typeOf(request.payload, 'string', 'payload is a string');
-  assert.typeOf(request.queryModel, 'array', 'queryModel is array');
-  assert.typeOf(request.headersModel, 'array', 'headersModel is array');
 };
 
 DataTestHelper.assertHistoryObject = function(request) {

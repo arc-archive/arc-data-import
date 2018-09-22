@@ -13,9 +13,8 @@
   </head>
   <body>
     <script>
-    /* global assert, DataTestHelper, PostmanV1Transformer */
+    /* global DataTestHelper, PostmanV1Transformer */
     suite('postman-v1-transformer (collection)', function() {
-
       suite('_readProjectInfo()', function() {
         let transformer;
         let jsonData;
@@ -130,43 +129,18 @@
         test('Project data is set', function() {
           const project = result.projects[0];
           for (let i = 0; i < result.requests.length; i++) {
-            assert.typeOf(result.requests[i].projectOrder, 'number');
-            assert.equal(result.requests[i].legacyProject, project._id);
+            assert.equal(result.requests[i].projects[0], project._id);
           }
+        });
+
+        test('Projects have request data', function() {
+          const project = result.projects[0];
+          assert.typeOf(project.requests, 'array');
+          assert.lengthOf(project.requests, 2);
         });
 
         test('Project object is valid', function() {
           DataTestHelper.assertProjectObject(result.projects[0]);
-        });
-
-        test('Contains headersModel', function() {
-          const model = result.requests[1].headersModel;
-          assert.typeOf(model, 'array');
-          assert.lengthOf(model, 3);
-        });
-
-        test('headersModel contains properties', function() {
-          let model = result.requests[1].headersModel[0];
-          assert.equal(model.name, '${h1}');
-          assert.equal(model.value, '${h1v}');
-          assert.isTrue(model.enabled);
-          model = result.requests[1].headersModel[1];
-          assert.isFalse(model.enabled);
-        });
-
-        test('Contains queryModel', function() {
-          const model = result.requests[1].queryModel;
-          assert.typeOf(model, 'array');
-          assert.lengthOf(model, 3);
-        });
-
-        test('queryModel contains properties', function() {
-          let model = result.requests[1].queryModel[0];
-          assert.equal(model.name, '${p1}');
-          assert.equal(model.value, '${v1}');
-          assert.isTrue(model.enabled);
-          model = result.requests[1].queryModel[1];
-          assert.isFalse(model.enabled);
         });
 
         test('Variables are processed', function() {

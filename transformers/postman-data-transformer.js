@@ -1,9 +1,10 @@
 'use strict';
-/* global PostmanBackupTransformer, PostmanEnvTransformer, PostmanV1Transformer, PostmanV2Transformer */
-/*jshint -W098 */
+/* global PostmanBackupTransformer, PostmanEnvTransformer, PostmanV1Transformer,
+  PostmanV2Transformer */
+/* jshint -W098 */
 class PostmanDataTransformer {
   transform(data) {
-    let version = this.recognizeVersion(data);
+    const version = this.recognizeVersion(data);
     let instance;
     switch (version) {
       case 'backup':

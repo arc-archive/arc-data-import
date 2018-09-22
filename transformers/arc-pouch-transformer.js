@@ -1,9 +1,8 @@
 'use strict';
 /* global BaseTransformer */
-/*jshint -W098 */
+/* jshint -W098 */
 /**
  * Transforms Dexie system (legacy system) into current data model.
- * @extends BaseTransformer
  */
 class ArcPouchTransformer extends BaseTransformer {
   /**
@@ -12,7 +11,7 @@ class ArcPouchTransformer extends BaseTransformer {
    * @return {Object} New data model object.
    */
   transform() {
-    let data = this._data;
+    const data = this._data;
     if (data.projects && data.projects.length) {
       data.projects = this._transformProjects(data.projects);
     }
@@ -70,6 +69,9 @@ class ArcPouchTransformer extends BaseTransformer {
       if (project._referenceId) {
         project._id = project._referenceId;
         delete project._referenceId;
+      } else if (project.key) {
+        project._id = project.key;
+        delete project.key;
       }
       project = this._updateItemTimings(project);
       delete project.kind;
@@ -80,12 +82,21 @@ class ArcPouchTransformer extends BaseTransformer {
   _transformRequests(requests, projects) {
     projects = projects || [];
     return requests.map((request) => {
-      let refId = request._referenceLegacyProject;
+      if (request.key) {
+        request._id = request.key;
+        delete request.key;
+      }
+      const refId = request._referenceLegacyProject || request.legacyProject;
+      // This is not the latest id structure but will avoid duplicates
+      if (!request._id) {
+        request._id = this.generateRequestId(request, refId);
+      }
       if (refId) {
         delete request._referenceLegacyProject;
-        let project = projects.find((item) => item._id === refId);
+        const project = projects.find((item) => item._id === refId);
         if (project) {
-          request.legacyProject = refId;
+          this.addProjectReference(request, project._id);
+          this.addRequestReference(project, request._id);
         }
       }
       delete request.kind;
@@ -94,16 +105,7 @@ class ArcPouchTransformer extends BaseTransformer {
       request.method = request.method || 'GET';
       request.headers = request.headers || '';
       request.payload = request.payload || '';
-      if (!request._id) {
-        request._id = this.generateRequestId(request, request.legacyProject);
-      }
       request = this._updateItemTimings(request);
-      if (!request.queryModel) {
-        request.queryModel = [];
-      }
-      if (!request.headersModel) {
-        request.headersModel = [];
-      }
       return request;
     });
   }

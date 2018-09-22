@@ -19,7 +19,7 @@
     </test-fixture>
 
     <script>
-    /* global fixture, assert, DataTestHelper, DataGenerator */
+    /* global DataTestHelper, DataGenerator */
     suite('Postamn import to datastore - backup data', function() {
       let originalData;
       let element;
@@ -46,9 +46,6 @@
         data = DataTestHelper.clone(originalData);
       });
 
-      let readProjects;
-      let readRequests;
-
       test('Stores the data', function() {
         return element.normalizeImportData(data)
         .then((parsed) => {
@@ -60,12 +57,10 @@
         })
         .then((requests) => {
           assert.lengthOf(requests, 46);
-          readRequests = requests;
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then((projects) => {
           assert.lengthOf(projects, 2);
-          readProjects = projects;
           return DataTestHelper.getDatastoreVariablesData();
         })
         .then((variables) => {

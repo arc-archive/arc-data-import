@@ -1,10 +1,8 @@
 'use strict';
 /* global BaseTransformer */
-/*jshint -W098 */
+/* jshint -W098 */
 /**
  * Base class for all Postman transformers
- *
- * @extends BaseTransformer
  */
 class PostmanTransformer extends BaseTransformer {
   /**
@@ -90,28 +88,6 @@ class PostmanTransformer extends BaseTransformer {
     input = String(input);
     input = input.trim();
     return input;
-  }
-  /**
-   * Computes ARC simple model from Postam simple params model.
-   * The ondly difference is to use of `name` instead of `key`.
-   *
-   * @param {Array<Object>} array Postman params model.
-   * @return {Array<Object>} ARC params model.
-   */
-  computeSimpleModel(array) {
-    let result = [];
-    if (!array || !array.length) {
-      return result;
-    }
-    result = array.map((item) => {
-      let enabled = typeof item.enabled === 'undefined' ? true : item.enabled;
-      return {
-        name: item.key,
-        value: item.value,
-        enabled: enabled
-      };
-    });
-    return result;
   }
   /**
    * Replacer function for regex replace to be used to replace variables

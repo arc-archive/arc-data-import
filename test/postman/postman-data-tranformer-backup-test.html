@@ -60,8 +60,7 @@
 
       test('Project data is set', function() {
         for (let i = 0; i < result.requests.length; i++) {
-          assert.typeOf(result.requests[i].projectOrder, 'number');
-          assert.typeOf(result.requests[i].legacyProject, 'string');
+          assert.typeOf(result.requests[i].projects, 'array');
         }
       });
 
@@ -71,10 +70,16 @@
 
       test('Project exists in the projects list', function() {
         for (let i = 0; i < result.requests.length; i++) {
-          const id = result.requests[i].legacyProject;
+          const id = result.requests[i].projects[0];
           const project = findProject(result.projects, id);
           assert.ok(project);
         }
+      });
+
+      test('Projects have request data', function() {
+        const project = result.projects[0];
+        assert.typeOf(project.requests, 'array');
+        assert.lengthOf(project.requests, 9);
       });
 
       test('Project objects are valid', function() {
@@ -92,48 +97,14 @@
         assert.strictEqual(value.name, 'headers-preset');
       });
 
-      test('Contains headersModel', function() {
-        const model = result.requests[5].headersModel;
-        assert.typeOf(model, 'array');
-        assert.lengthOf(model, 3);
-      });
-
-      test('headersModel contains properties', function() {
-        let model = result.requests[5].headersModel[0];
-        assert.equal(model.name, '${h1}');
-        assert.equal(model.value, '${h1v}');
-        assert.isTrue(model.enabled);
-        model = result.requests[5].headersModel[1];
-        assert.isFalse(model.enabled);
-      });
-
-      test('Contains queryModel', function() {
-        const model = result.requests[5].queryModel;
-        assert.typeOf(model, 'array');
-        assert.lengthOf(model, 3);
-      });
-
-      test('queryModel contains properties', function() {
-        let model = result.requests[5].queryModel[0];
-        assert.equal(model.name, '${p1}');
-        assert.equal(model.value, '${v1}');
-        assert.isTrue(model.enabled);
-        model = result.requests[5].queryModel[1];
-        assert.isFalse(model.enabled);
-      });
-
       test('Variables are computed', function() {
         assert.equal(result.variables[3].value, 'test ${host}', 'Variable is transformed');
         assert.equal(result.requests[5].headers,
           'Content-Type: application/json\nx-var: ${var}',
           'Header is transformed');
-        assert.equal(result.requests[5].headersModel[0].name, '${h1}', 'headersModel is transformed');
-        assert.equal(result.requests[5].headersModel[0].value, '${h1v}', 'headersModel is transformed');
         assert.equal(result.requests[5].url,
           'https://httpbin.org/anything/${param}',
           'URL is transformed');
-        assert.equal(result.requests[5].queryModel[0].name, '${p1}', 'queryModel is transformed');
-        assert.equal(result.requests[5].queryModel[0].value, '${v1}', 'queryModel is transformed');
 
         assert.equal(result.requests[2].multipart[0].value, '${bodyValue}', 'multipart is transformed');
         assert.equal(result.requests[3].payload,

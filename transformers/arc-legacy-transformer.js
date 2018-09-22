@@ -1,9 +1,8 @@
 'use strict';
 /* global BaseTransformer */
-/*jshint -W098 */
+/* jshint -W098 */
 /**
  * Transforms the first ARC data object to curent schema.
- * @extends BaseTransformer
  */
 class ArcLegacyTransformer extends BaseTransformer {
   /**
@@ -27,7 +26,7 @@ class ArcLegacyTransformer extends BaseTransformer {
       return item;
     });
 
-    let result = {
+    const result = {
       createdAt: new Date().toISOString(),
       version: 'unknown',
       kind: 'ARC#Import',
@@ -82,12 +81,16 @@ class ArcLegacyTransformer extends BaseTransformer {
   }
   /**
    * Transform the list of requests into new data model.
+   *
+   * @param {Array<Object>} requests
+   * @param {Array<Object>} projects
+   * @return {Array<Object>}
    */
   _transformRequests(requests, projects) {
     if (!requests || !(requests instanceof Array) || !requests.length) {
       return [];
     }
-    return requests.map(item => this._transformRequest(item, projects));
+    return requests.map((item) => this._transformRequest(item, projects));
   }
   /**
    * Transforms a single request object into current data model.
@@ -106,14 +109,14 @@ class ArcLegacyTransformer extends BaseTransformer {
     item.url = item.url || 'http://';
     item.method = item.method || 'GET';
 
-    let project = projects ? this._findProject(item.project, projects) : undefined;
-    let projectId = project ? project._id : undefined;
-    let id = this.generateRequestId(item, projectId);
+    const project = projects ? this._findProject(item.project, projects) : undefined;
+    const projectId = project ? project._id : undefined;
+    const id = this.generateRequestId(item, projectId);
     let created = Number(item.time);
     if (created !== created) {
       created = Date.now();
     }
-    let result = {
+    const result = {
       _id: id,
       created: created,
       updated: Date.now(),
@@ -127,11 +130,11 @@ class ArcLegacyTransformer extends BaseTransformer {
       headersModel: []
     };
     if (projectId) {
-      result.legacyProject = projectId;
+      result.projects = [projectId];
+      this.addRequestReference(project, id);
     }
     if (item.driveId) {
       result.driveId = item.driveId;
-      result.type = 'google-drive';
     }
     return result;
   }
@@ -148,7 +151,14 @@ class ArcLegacyTransformer extends BaseTransformer {
     if (!projectId) {
       return;
     }
-    projects = projects || [];
-    return projects.find(item => item._oldId === projectId);
+    if (!projects || !projects.length) {
+      return;
+    }
+    for (let i = 0, len = projects.length; i < len; i++) {
+      const p = projects[i];
+      if (p._oldId === projectId) {
+        return p;
+      }
+    }
   }
 }

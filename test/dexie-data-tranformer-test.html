@@ -105,21 +105,30 @@
       });
 
       test('Associate requests with porojects', function() {
-        assert.isUndefined(result.requests[0].legacyProject);
-        assert.isUndefined(result.requests[1].legacyProject);
-        assert.typeOf(result.requests[2].legacyProject, 'string');
-        assert.typeOf(result.requests[3].legacyProject, 'string');
-        assert.typeOf(result.requests[4].legacyProject, 'string');
-        assert.typeOf(result.requests[5].legacyProject, 'string');
+        assert.isUndefined(result.requests[0].projects);
+        assert.isUndefined(result.requests[1].projects);
+        assert.typeOf(result.requests[2].projects[0], 'string');
+        assert.typeOf(result.requests[3].projects[0], 'string');
+        assert.typeOf(result.requests[4].projects[0], 'string');
+        assert.typeOf(result.requests[5].projects[0], 'string');
       });
 
       test('Project ID is set correctly', function() {
         const p1id = result.projects[0]._id;
         const p2id = result.projects[1]._id;
-        assert.equal(result.requests[2].legacyProject, p1id);
-        assert.equal(result.requests[3].legacyProject, p1id);
-        assert.equal(result.requests[4].legacyProject, p1id);
-        assert.equal(result.requests[5].legacyProject, p2id);
+        assert.equal(result.requests[2].projects[0], p1id);
+        assert.equal(result.requests[3].projects[0], p1id);
+        assert.equal(result.requests[4].projects[0], p1id);
+        assert.equal(result.requests[5].projects[0], p2id);
+      });
+
+      test('Project has request reference', () => {
+        const p1 = result.projects[0];
+        const p2 = result.projects[1];
+        assert.typeOf(p1.requests, 'array');
+        assert.lengthOf(p1.requests, 4);
+        assert.typeOf(p2.requests, 'array');
+        assert.lengthOf(p2.requests, 1);
       });
     });
 

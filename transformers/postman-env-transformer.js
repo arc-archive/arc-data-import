@@ -1,10 +1,8 @@
 'use strict';
 /* global PostmanTransformer */
-/*jshint -W098 */
+/* jshint -W098 */
 /**
  * Transforms environment export from postman to ARC variables.
- *
- * @extends BaseTransformer
  */
 class PostmanEnvTransformer extends PostmanTransformer {
   /**
@@ -12,7 +10,7 @@ class PostmanEnvTransformer extends PostmanTransformer {
    * @return {Promise} Promise resolved when data are transformed.
    */
   transform() {
-    let result = {
+    const result = {
       createdAt: new Date().toISOString(),
       version: 'postman-environment',
       kind: 'ARC#Import',
@@ -33,7 +31,7 @@ class PostmanEnvTransformer extends PostmanTransformer {
     }
     envName = envName || 'default';
     return vars.map((item) => {
-      let result = {
+      const result = {
         environment: envName,
         enabled: !!item.enabled,
         variable: item.key,
