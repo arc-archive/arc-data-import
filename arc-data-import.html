@@ -366,6 +366,10 @@ class ArcDataImport extends Polymer.Element {
     if (file.type === 'application/zip' || file.type === 'application/yaml') {
       return this._notifyApiParser(file);
     }
+    // RAML files
+    if (file.name.indexOf('.raml') !== -1) {
+      return this._notifyApiParser(file);
+    }
     const id = Date.now();
     this._fire('process-loading-start', {
       message: 'Procerssing file data',
@@ -373,6 +377,10 @@ class ArcDataImport extends Polymer.Element {
     });
     return this._readFile(file)
     .then((content) => {
+      content = content.trim();
+      if (content[0] === '#' && content.indexOf('#%RAML') === 0) {
+        return this._notifyApiParser(file);
+      }
       let data;
       try {
         data = JSON.parse(content);
