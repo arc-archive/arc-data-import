@@ -367,7 +367,7 @@ class ArcDataImport extends Polymer.Element {
       return this._notifyApiParser(file);
     }
     // RAML files
-    if (file.name.indexOf('.raml') !== -1) {
+    if (file.name && file.name.indexOf('.raml') !== -1) {
       return this._notifyApiParser(file);
     }
     const id = Date.now();
