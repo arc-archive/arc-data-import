@@ -363,11 +363,15 @@ class ArcDataImport extends Polymer.Element {
    * @return {Promise}
    */
   _processFileData(file, opts) {
-    if (file.type === 'application/zip' || file.type === 'application/yaml') {
+    const apiTypes = [
+      'application/zip', 'application/yaml', 'application/x-yaml',
+      'application/raml', 'application/x-raml'
+    ];
+    if (apiTypes.indexOf(file.type) !== -1) {
       return this._notifyApiParser(file);
     }
     // RAML files
-    if (file.name && file.name.indexOf('.raml') !== -1) {
+    if (file.name && (file.name.indexOf('.raml') !== -1 || file.name.indexOf('.yaml') !== -1)) {
       return this._notifyApiParser(file);
     }
     const id = Date.now();
@@ -465,7 +469,8 @@ class ArcDataImport extends Polymer.Element {
     return e.detail.result
     .then((api) => {
       this._fire('api-data-ready', {
-        api
+        model: api.model,
+        type: api.type
       });
     });
   }
