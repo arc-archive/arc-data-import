@@ -166,10 +166,12 @@ class ArcDataImport extends Polymer.Element {
     const store = this._dataStore;
     return store.importData(importObject)
     .then((result) => {
-      this.dispatchEvent(new CustomEvent('data-imported', {
-        bubbles: true,
-        composed: true
-      }));
+      setTimeout(() => {
+        this.dispatchEvent(new CustomEvent('data-imported', {
+          bubbles: true,
+          composed: true
+        }));
+      }, 60);
       return result;
     });
   }
