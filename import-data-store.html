@@ -21,7 +21,9 @@ the License.
  * @memberof LogicElements
  */
 class ImportDataStore extends Polymer.Element {
-  static get is() { return 'import-data-store'; }
+  static get is() {
+    return 'import-data-store';
+  }
 
   get _savedDb() {
     /* global PouchDB */
@@ -178,7 +180,7 @@ class ImportDataStore extends Polymer.Element {
   importUrls(urls) {
     const db = this._urlDb;
     return db.bulkDocs(urls)
-    .then(result => this._handleInsertResponse(result, urls, db));
+    .then((result) => this._handleInsertResponse(result, urls, db));
   }
 
   importCookies(data) {
