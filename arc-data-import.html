@@ -65,7 +65,10 @@ class ArcDataImport extends Polymer.Element {
     super();
     this._normalizeHandler = this._normalizeHandler.bind(this);
     this._importHandler = this._importHandler.bind(this);
+    // A handler for when a file is selected
     this._importFileHandler = this._importFileHandler.bind(this);
+    // A case when JSON file is already parsed and is ready to be processed.
+    this._importDataHandler = this._importDataHandler.bind(this);
   }
 
   connectedCallback() {
@@ -73,6 +76,7 @@ class ArcDataImport extends Polymer.Element {
     window.addEventListener('import-normalize', this._normalizeHandler);
     window.addEventListener('import-data', this._importHandler);
     window.addEventListener('import-process-file', this._importFileHandler);
+    window.addEventListener('import-process-data', this._importDataHandler);
   }
 
   disconnectedCallback() {
@@ -80,6 +84,7 @@ class ArcDataImport extends Polymer.Element {
     window.removeEventListener('import-normalize', this._normalizeHandler);
     window.removeEventListener('import-data', this._importHandler);
     window.removeEventListener('import-process-file', this._importFileHandler);
+    window.removeEventListener('import-process-data', this._importDataHandler);
   }
   /**
    * Handler for the `import-normalize`cutom event.
@@ -120,7 +125,7 @@ class ArcDataImport extends Polymer.Element {
     e.preventDefault();
     const data = e.detail.content;
     if (!data) {
-      e.detail.result = Promise.reject(new Error('Content property not set'));
+      e.detail.result = Promise.reject(new Error('The "content" property not set'));
       return;
     }
     e.detail.result = this.storeData(data);
@@ -136,13 +141,30 @@ class ArcDataImport extends Polymer.Element {
     e.preventDefault();
     const data = e.detail.file;
     if (!data) {
-      e.detail.result = Promise.reject(new Error('Content property not set'));
+      e.detail.result = Promise.reject(new Error('The "file" property not set'));
       return;
     }
     e.detail.result = this._processFileData(data, {
       diveId: e.detail.diveId
     });
   }
+
+  _importDataHandler(e) {
+    if (!e.detail || e.defaultPrevented) {
+      return;
+    }
+    e.preventDefault();
+    const {data} = e.detail;
+    if (!data) {
+      e.detail.result = Promise.reject(new Error('The "data" property not set'));
+      return;
+    }
+    e.detail.result = this.normalizeImportData(data)
+    .then((data) => {
+      return this._handleNormalizedFileData(data);
+    });
+  }
+
   get _dataStore() {
     if (!this.__dataStoreElement) {
       this.__dataStoreElement = document.createElement('import-data-store');
@@ -383,8 +405,13 @@ class ArcDataImport extends Polymer.Element {
       message: 'Procerssing file data',
       id
     });
-    return this._readFile(file)
-    .then((content) => {
+    let p;
+    if (file instanceof Uint8Array) {
+      p = Promise.resolve(file.toString());
+    } else {
+      p = this._readFile(file);
+    }
+    return p.then((content) => {
       content = content.trim();
       if (content[0] === '#' && content.indexOf('#%RAML') === 0) {
         return this._notifyApiParser(file);
