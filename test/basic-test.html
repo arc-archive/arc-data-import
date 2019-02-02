@@ -17,9 +17,8 @@
     </test-fixture>
 
     <script>
-    /* global fixture, assert, HTMLUnknownElement, ArcDataImport */
-    suite('basic', function() {
-
+    /* global HTMLUnknownElement, ArcDataImport */
+    suite('Basics', function() {
       let element;
       setup(function() {
         element = fixture('basic');
@@ -34,6 +33,233 @@
         assert.ok(transformer);
         assert.equal(transformer.nodeName.toLowerCase(), 'import-data-store');
         assert.isFalse(transformer instanceof HTMLUnknownElement);
+      });
+    });
+
+    suite('_normalizeHandler()', function() {
+      let element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Does nothing when no detail object', () => {
+        const e = new CustomEvent('test', {cancelable: true});
+        element._normalizeHandler(e);
+        assert.equal(e.detail, null);
+      });
+
+      test('Does nothing event is canelled', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        e.preventDefault();
+        const spy = sinon.spy(element, 'normalizeImportData');
+        element._normalizeHandler(e);
+        assert.isFalse(spy.called);
+      });
+
+      test('Cancels the event', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._normalizeHandler(e);
+        e.detail.result.catch(() => {});
+        assert.isTrue(e.defaultPrevented);
+      });
+
+      test('Rejects result when no data', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._normalizeHandler(e);
+        assert.typeOf(e.detail.result.then, 'function');
+        return e.detail.result
+        .then(() => {
+          throw new Error('Should reject');
+        })
+        .catch((cause) => {
+          assert.typeOf(cause.message, 'string');
+          assert.equal(cause.message, 'Content property not set');
+        });
+      });
+
+      test('Calls normalizeImportData()', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {content: {}}});
+        const spy = sinon.spy(element, 'normalizeImportData');
+        element._normalizeHandler(e);
+        return e.detail.result
+        .catch(() => {})
+        .then(() => {
+          assert.isTrue(spy.called);
+        });
+      });
+    });
+
+    suite('_importHandler()', function() {
+      let element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Does nothing when no detail object', () => {
+        const e = new CustomEvent('test', {cancelable: true});
+        element._importHandler(e);
+        assert.equal(e.detail, null);
+      });
+
+      test('Does nothing event is canelled', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        e.preventDefault();
+        const spy = sinon.spy(element, 'storeData');
+        element._importHandler(e);
+        assert.isFalse(spy.called);
+      });
+
+      test('Cancels the event', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importHandler(e);
+        e.detail.result.catch(() => {});
+        assert.isTrue(e.defaultPrevented);
+      });
+
+      test('Rejects result when no data', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importHandler(e);
+        assert.typeOf(e.detail.result.then, 'function');
+        return e.detail.result
+        .then(() => {
+          throw new Error('Should reject');
+        })
+        .catch((cause) => {
+          assert.typeOf(cause.message, 'string');
+          assert.equal(cause.message, 'The "content" property not set');
+        });
+      });
+
+      test('Calls storeData()', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {content: {}}});
+        const spy = sinon.spy(element, 'storeData');
+        element._importHandler(e);
+        return e.detail.result
+        .catch(() => {})
+        .then(() => {
+          assert.isTrue(spy.called);
+        });
+      });
+    });
+
+    suite('_importFileHandler()', function() {
+      let element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Does nothing when no detail object', () => {
+        const e = new CustomEvent('test', {cancelable: true});
+        element._importFileHandler(e);
+        assert.equal(e.detail, null);
+      });
+
+      test('Does nothing event is canelled', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        e.preventDefault();
+        const spy = sinon.spy(element, '_processFileData');
+        element._importFileHandler(e);
+        assert.isFalse(spy.called);
+      });
+
+      test('Cancels the event', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importFileHandler(e);
+        e.detail.result.catch(() => {});
+        assert.isTrue(e.defaultPrevented);
+      });
+
+      test('Rejects result when no file', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importFileHandler(e);
+        assert.typeOf(e.detail.result.then, 'function');
+        return e.detail.result
+        .then(() => {
+          throw new Error('Should reject');
+        })
+        .catch((cause) => {
+          assert.typeOf(cause.message, 'string');
+          assert.notEqual(cause.message, 'Should reject');
+        });
+      });
+
+      test('Calls _processFileData()', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {file: new Blob(['test'])}});
+        const spy = sinon.spy(element, '_processFileData');
+        element._importFileHandler(e);
+        return e.detail.result
+        .catch(() => {})
+        .then(() => {
+          assert.isTrue(spy.called);
+          assert.typeOf(spy.args[0][0], 'blob');
+        });
+      });
+
+      test('Adds driveId when set', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {
+          file: new Blob(['test']),
+          diveId: 'test-id'
+        }});
+        const spy = sinon.spy(element, '_processFileData');
+        element._importFileHandler(e);
+        return e.detail.result
+        .catch(() => {})
+        .then(() => {
+          assert.deepEqual(spy.args[0][1], {diveId: 'test-id'});
+        });
+      });
+    });
+
+    suite('_importDataHandler()', function() {
+      let element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Does nothing when no detail object', () => {
+        const e = new CustomEvent('test', {cancelable: true});
+        element._importDataHandler(e);
+        assert.equal(e.detail, null);
+      });
+
+      test('Does nothing event is canelled', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        e.preventDefault();
+        const spy = sinon.spy(element, 'normalizeImportData');
+        element._importDataHandler(e);
+        assert.isFalse(spy.called);
+      });
+
+      test('Cancels the event', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importDataHandler(e);
+        e.detail.result.catch(() => {});
+        assert.isTrue(e.defaultPrevented);
+      });
+
+      test('Rejects result when no data', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {}});
+        element._importDataHandler(e);
+        assert.typeOf(e.detail.result.then, 'function');
+        return e.detail.result
+        .then(() => {
+          throw new Error('Should reject');
+        })
+        .catch((cause) => {
+          assert.typeOf(cause.message, 'string');
+          assert.equal(cause.message, 'The "data" property not set');
+        });
+      });
+
+      test('Calls normalizeImportData()', () => {
+        const e = new CustomEvent('test', {cancelable: true, detail: {data: {}}});
+        const spy = sinon.spy(element, 'normalizeImportData');
+        element._importDataHandler(e);
+        return e.detail.result
+        .catch(() => {})
+        .then(() => {
+          assert.isTrue(spy.called);
+        });
       });
     });
     </script>

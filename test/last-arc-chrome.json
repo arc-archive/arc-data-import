@@ -1,0 +1,125 @@
+{
+  "createdAt": "2019-02-02T06:52:42.854Z",
+  "version": "10.0.12",
+  "kind": "ARC#AllDataExport",
+  "requests": [{
+    "type": "saved",
+    "headers": "content-type: application/json",
+    "method": "PUT",
+    "name": "CamelCase",
+    "payload": "{\n  \"a\":\"b\",\n  \"CamelValue\": \"test\"\n}",
+    "url": "http://httpbin.org/put?cAmElCaSe=TrUe",
+    "description": "A request with cAMELcASE",
+    "updated": 1549090067455,
+    "_referenceLegacyProject": "f2ad04f0-8f1f-4727-b3f7-490e00336ca9",
+    "kind": "ARC#RequestData"
+  }],
+  "projects": [{
+    "name": "cAMEL pROJECT",
+    "order": 0,
+    "created": 1549090067440,
+    "updated": 1549090067440,
+    "_referenceId": "f2ad04f0-8f1f-4727-b3f7-490e00336ca9",
+    "kind": "ARC#ProjectData"
+  }],
+  "history": [{
+    "created": 1549089980225,
+    "updated": 1549089980225,
+    "headers": "",
+    "method": "GET",
+    "payload": "",
+    "url": "http://httpbin.org/get",
+    "kind": "ARC#HistoryData"
+  }, {
+    "created": 1549090032836,
+    "updated": 1549090032836,
+    "headers": "content-type: application/json",
+    "method": "PUT",
+    "payload": "{\n  \"a\":\"b\",\n  \"CamelValue\": \"test\"\n}",
+    "url": "http://httpbin.org/put?cAmElCaSe=TrUe",
+    "kind": "ARC#HistoryData"
+  }, {
+    "created": 1549090350399,
+    "updated": 1549090350399,
+    "headers": "",
+    "method": "GET",
+    "payload": "",
+    "url": "https://google.com",
+    "kind": "ARC#HistoryData"
+  }],
+  "websocket-url-history": [{
+    "cnt": 1,
+    "time": 1549090172112,
+    "key": "ws://echo.websocket.org",
+    "kind": "ARC#WebsocketHistoryData"
+  }, {
+    "cnt": 2,
+    "time": 1549090169029,
+    "key": "wss://echo.websockets.org",
+    "kind": "ARC#WebsocketHistoryData"
+  }],
+  "url-history": [{
+    "cnt": 1,
+    "time": 1549089980224,
+    "key": "http://httpbin.org/get",
+    "kind": "ARC#UrlHistoryData"
+  }, {
+    "cnt": 1,
+    "time": 1549090032836,
+    "key": "http://httpbin.org/put?cAmElCaSe=TrUe",
+    "kind": "ARC#UrlHistoryData"
+  }, {
+    "cnt": 1,
+    "time": 1549090350306,
+    "key": "https://google.com",
+    "kind": "ARC#UrlHistoryData"
+  }],
+  "variables": [{
+    "environment": "default",
+    "enabled": true,
+    "variable": "Inception",
+    "value": "A plus ${CamelCase}",
+    "key": "b65753c2-2be9-48fc-8853-c426529ed1d0",
+    "kind": "ARC#Variable"
+  }, {
+    "environment": "default",
+    "enabled": true,
+    "variable": "CamelName",
+    "value": "CamelValue",
+    "key": "c21b54d8-420f-416a-b4df-a9f5206bea69",
+    "kind": "ARC#Variable"
+  }, {
+    "environment": "Additional environment",
+    "enabled": true,
+    "variable": "AdditionaVariable",
+    "value": "and value",
+    "key": "cefbe796-8ca0-4226-a2a3-5b2223e7ea0b",
+    "kind": "ARC#Variable"
+  }],
+  "cookies": [{
+    "name": "1P_JAR",
+    "value": "2019-02-02-06",
+    "created": 1549090350565,
+    "lastAccess": 1549090350565,
+    "persistent": true,
+    "hostOnly": true,
+    "path": "/",
+    "domain": ".google.com",
+    "expires": 1551682350000,
+    "key": ".google.com/1P_JAR/%2F",
+    "kind": "ARC#Cookie"
+  }, {
+    "name": "NID",
+    "value": "158",
+    "created": 1549090350565,
+    "lastAccess": 1549090350565,
+    "persistent": true,
+    "hostOnly": true,
+    "path": "/",
+    "httponly": null,
+    "domain": ".google.com",
+    "expires": 1564901550000,
+    "key": ".google.com/NID/%2F",
+    "kind": "ARC#Cookie"
+  }]
+}
