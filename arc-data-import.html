@@ -145,7 +145,7 @@ class ArcDataImport extends Polymer.Element {
       return;
     }
     e.detail.result = this._processFileData(data, {
-      diveId: e.detail.diveId
+      driveId: e.detail.driveId
     });
   }
 
@@ -454,9 +454,12 @@ class ArcDataImport extends Polymer.Element {
     }
     if (this._isSingleRequest(data)) {
       const obj = data.requests[0];
-      if (opts && opts.diveId) {
-        obj.driveId = opts.diveId;
+      if (opts && opts.driveId) {
+        obj.driveId = opts.driveId;
       }
+      delete obj.kind;
+      obj._id = obj.key;
+      delete obj.key;
       this._fire('request-workspace-append', {
         request: obj
       });

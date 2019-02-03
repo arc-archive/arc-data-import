@@ -53,16 +53,16 @@
           return DataTestHelper.getDatastoreRequestData();
         })
         .then((requests) => {
-          assert.lengthOf(requests, 6);
+          assert.lengthOf(requests, 6, 'Has 6 requests');
           readRequests = requests;
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then((projects) => {
-          assert.lengthOf(projects, 2);
+          assert.lengthOf(projects, 2, 'Has 2 projects');
           return DataTestHelper.getDatastoreHistoryData();
         })
         .then((history) => {
-          assert.lengthOf(history, 0);
+          assert.lengthOf(history, 0, 'Has no history');
         });
       });
 

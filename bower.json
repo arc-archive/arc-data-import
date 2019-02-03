@@ -27,7 +27,8 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11",
     "app-pouchdb": "PolymerElements/app-pouchdb#^2.1.1",
-    "arc-data-generator": "advanced-rest-client/arc-data-generator#^1.0.0"
+    "arc-data-generator": "advanced-rest-client/arc-data-generator#^1.0.0",
+    "pouchdb": "^7.0.0"
   },
   "ignore": [
     "**/.*",
@@ -35,5 +36,8 @@
     "bower_components",
     "test",
     "tasks"
-  ]
+  ],
+  "resolutions": {
+    "pouchdb": "^7.0.0"
+  }
 }

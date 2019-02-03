@@ -52,14 +52,12 @@ class ArcPouchTransformer extends BaseTransformer {
   }
 
   _updateItemTimings(item) {
-    if (!item.created) {
-      if (item.updated) {
-        item.created = item.updated;
-      } else {
-        item.created = Date.now();
-      }
+    if (!item.updated || isNaN(item.updated)) {
+      item.updated = Date.now();
     }
-    item.updated = Date.now();
+    if (!item.created) {
+      item.created = item.updated;
+    }
     return item;
   }
 

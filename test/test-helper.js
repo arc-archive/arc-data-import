@@ -91,8 +91,8 @@ DataTestHelper.getDatastoreData = function(name) {
   return db.allDocs({
     include_docs: true
   })
-  .then(response => {
-    return response.rows.map(item => item.doc);
+  .then((response) => {
+    return response.rows.map((item) => item.doc);
   });
 };
 
