@@ -37,6 +37,86 @@
       });
     });
 
+    suite('_notifyDataImported()', () => {
+      let element;
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Dispatches the event', () => {
+        const spy = sinon.spy();
+        element.addEventListener('data-imported', spy);
+        element._notifyDataImported();
+        assert.isTrue(spy.called);
+      });
+
+      test('Event bubbles', () => {
+        const spy = sinon.spy();
+        element.addEventListener('data-imported', spy);
+        element._notifyDataImported();
+        assert.isTrue(spy.args[0][0].bubbles);
+      });
+    });
+
+    suite('_notifyIndexer()', () => {
+      let element;
+      let saved;
+      let history;
+      setup(function() {
+        element = fixture('basic');
+        saved = [{id: 1, type: 'saved', url: 'https://domain.com'}];
+        history = [{id: 2, type: 'history', url: 'https://api.com'}];
+      });
+
+      test('Dispatches the event', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer(saved, history);
+        assert.isTrue(spy.called);
+      });
+
+      test('Event bubbles', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer(saved, history);
+        assert.isTrue(spy.args[0][0].bubbles);
+      });
+
+      test('Event has indexes', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer(saved, history);
+        const data = spy.args[0][0].detail.data;
+        assert.typeOf(data, 'array');
+        assert.lengthOf(data, 2);
+      });
+
+      test('Passes "saved" indexes only', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer(saved);
+        const data = spy.args[0][0].detail.data;
+        assert.typeOf(data, 'array');
+        assert.lengthOf(data, 1);
+      });
+
+      test('Passes "history" indexes only', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer(undefined, history);
+        const data = spy.args[0][0].detail.data;
+        assert.typeOf(data, 'array');
+        assert.lengthOf(data, 1);
+      });
+
+      test('Event is not dispatched when no indexes', () => {
+        const spy = sinon.spy();
+        element.addEventListener('url-index-update', spy);
+        element._notifyIndexer();
+        assert.isFalse(spy.called);
+      });
+    });
+
     suite('_normalizeHandler()', function() {
       let element;
       setup(function() {

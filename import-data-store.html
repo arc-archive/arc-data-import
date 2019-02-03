@@ -156,7 +156,10 @@ class ImportDataStore extends Polymer.Element {
   importRequests(requests) {
     const db = this._savedDb;
     return db.bulkDocs(requests)
-    .then((result) => this._handleInsertResponse(result, requests, db));
+    .then((result) => {
+      this.savedIndexes = this._listRequestIndex(result, requests, 'saved');
+      return this._handleInsertResponse(result, requests, db);
+    });
   }
 
   importProjects(projects) {
@@ -168,7 +171,10 @@ class ImportDataStore extends Polymer.Element {
   importHistory(history) {
     const db = this._historyDb;
     return db.bulkDocs(history)
-    .then((result) => this._handleInsertResponse(result, history, db));
+    .then((result) => {
+      this.historyIndexes = this._listRequestIndex(result, history, 'history');
+      return this._handleInsertResponse(result, history, db);
+    });
   }
 
   importWebsocketUrls(urls) {
@@ -329,6 +335,30 @@ class ImportDataStore extends Polymer.Element {
     }
     conflicted[index]._rev = item.value.rev;
     return Promise.resolve(conflicted[index]);
+  }
+  /**
+   * Lists all requests that should be added to URL index.
+   * It builds an array of requests are required by `arc-models/url-indexer`
+   * element.
+   *
+   * @param {Array<Object>} result PouchDB bulk insert response
+   * @param {Array<Object>} requests Inserted requests
+   * @param {String} type Request type, `saved` or `history`
+   * @return {Array<Object>|undefined}
+   */
+  _listRequestIndex(result, requests, type) {
+    const index = [];
+    result.forEach((item, i) => {
+      if (item.error) {
+        return;
+      }
+      index[index.length] = {
+        id: item.id,
+        url: requests[i].url,
+        type
+      };
+    });
+    return index.length ? index : undefined;
   }
 }
 window.customElements.define(ImportDataStore.is, ImportDataStore);

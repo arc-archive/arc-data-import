@@ -190,16 +190,47 @@ class ArcDataImport extends Polymer.Element {
     const store = this._dataStore;
     return store.importData(importObject)
     .then((result) => {
+      const savedIndexes = store.savedIndexes;
+      const historyIndexes = store.historyIndexes;
       setTimeout(() => {
-        this.dispatchEvent(new CustomEvent('data-imported', {
-          bubbles: true,
-          composed: true
-        }));
-      }, 60);
+        this._notifyIndexer(savedIndexes, historyIndexes);
+        this._notifyDataImported();
+      }, 100);
       return result;
     });
   }
 
+  _notifyDataImported() {
+    this.dispatchEvent(new CustomEvent('data-imported', {
+      bubbles: true,
+      composed: true
+    }));
+  }
+  /**
+   * Dispatches `url-index-update` event handled by `arc-models/url-indexer`.
+   * It will index URL data for search function.
+   * @param {?Array<Object>} saved List of saved requests indexes
+   * @param {?Array<Object>} history List of history requests indexes
+   */
+  _notifyIndexer(saved, history) {
+    let indexes = [];
+    if (saved) {
+      indexes = indexes.concat(saved);
+    }
+    if (history) {
+      indexes = indexes.concat(history);
+    }
+    if (!indexes.length) {
+      return;
+    }
+    this.dispatchEvent(new CustomEvent('url-index-update', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        data: indexes
+      }
+    }));
+  }
   /**
    * Transforms any previous ARC export file to current export object.
    *
