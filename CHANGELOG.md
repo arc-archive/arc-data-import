@@ -201,3 +201,29 @@
 
 
 
+## [2.0.1](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.18...2.0.1) (2019-02-03)
+
+
+### Docs
+
+* Adding documentation. ([ca96222def8fafd9aced8a9c9eac772be57477ea](https://github.com/advanced-rest-client/arc-data-import/commit/ca96222def8fafd9aced8a9c9eac772be57477ea))
+* Updating Polymer docs ([656b09502d0390cb5ac7a0053f781239b55c42c3](https://github.com/advanced-rest-client/arc-data-import/commit/656b09502d0390cb5ac7a0053f781239b55c42c3))
+
+### Fix
+
+* Adding null check for file name ([eef3251eb1e35a0baccd2bc01da820bb5019608f](https://github.com/advanced-rest-client/arc-data-import/commit/eef3251eb1e35a0baccd2bc01da820bb5019608f))
+
+### New
+
+* Adding support for parsed JSON file processing ([f2d0a672d6b5ded906788b3455a3db82957d87a1](https://github.com/advanced-rest-client/arc-data-import/commit/f2d0a672d6b5ded906788b3455a3db82957d87a1))
+
+### Update
+
+* Adding delayed import event dispatch so the indexedDb can commit all changes ([38eb8308aed5b9ef065be41c1acbb0da76301b6f](https://github.com/advanced-rest-client/arc-data-import/commit/38eb8308aed5b9ef065be41c1acbb0da76301b6f))
+* Adding URL indexer event ([2e851c5def4f87c79a0479a0655cff1c7e6663bb](https://github.com/advanced-rest-client/arc-data-import/commit/2e851c5def4f87c79a0479a0655cff1c7e6663bb))
+* Error is now an instance of error ([cc75240c13333d982213a1c8dfa049048071f99d](https://github.com/advanced-rest-client/arc-data-import/commit/cc75240c13333d982213a1c8dfa049048071f99d))
+* Updating import object to work with new data structure ([6fdbefbe6b2e17391afc352d52d6a7fab9afd5ae](https://github.com/advanced-rest-client/arc-data-import/commit/6fdbefbe6b2e17391afc352d52d6a7fab9afd5ae))
+* Updating tests ([c24c02d2a2cfb371aebda339114b4ef8fb165e80](https://github.com/advanced-rest-client/arc-data-import/commit/c24c02d2a2cfb371aebda339114b4ef8fb165e80))
+
+
+
