@@ -1,18 +1,10 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanBackupTransformer} = require('./postman-backup-transformer');
-  var {PostmanV1Transformer} = require('./postman-v1-transformer');
-  var {PostmanV2Transformer} = require('./postman-v2-transformer');
-  var {PostmanEnvTransformer} = require('./postman-env-transformer');
-}
-class _PostmanDataTransformer {
+/* global PostmanBackupTransformer, PostmanEnvTransformer, PostmanV1Transformer,
+  PostmanV2Transformer */
+/* jshint -W098 */
+class PostmanDataTransformer {
   transform(data) {
-    let version = this.recognizeVersion(data);
+    const version = this.recognizeVersion(data);
     let instance;
     switch (version) {
       case 'backup':
@@ -27,7 +19,7 @@ class _PostmanDataTransformer {
       case 'collection-v2':
         instance = new PostmanV2Transformer(data);
         break;
-      default: return Promise.reject('Unsupported Postman version.');
+      default: return Promise.reject(new Error('Unsupported Postman version.'));
     }
     return instance.transform();
   }
@@ -51,9 +43,4 @@ class _PostmanDataTransformer {
       }
     }
   }
-}
-if (isNode) {
-  exports.PostmanDataTransformer = _PostmanDataTransformer;
-} else {
-  (window || self).PostmanDataTransformer = _PostmanDataTransformer;
 }

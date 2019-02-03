@@ -1,31 +1,17 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {BaseTransformer} = require('./base-transformer');
-}
+/* global BaseTransformer */
+/* jshint -W098 */
 /**
  * Transforms Dexie system (legacy system) into current data model.
- * @extends BaseTransformer
  */
-class _ArcPouchTransformer extends BaseTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class ArcPouchTransformer extends BaseTransformer {
   /**
    * Transforms PouchDB ARC export object based into current export data model.
    *
    * @return {Object} New data model object.
    */
   transform() {
-    let data = this._data;
+    const data = this._data;
     if (data.projects && data.projects.length) {
       data.projects = this._transformProjects(data.projects);
     }
@@ -35,29 +21,29 @@ class _ArcPouchTransformer extends BaseTransformer {
     if (data.history && data.history.length) {
       data.history = this._transformHistory(data.history);
     }
-    var socketUrls = data['websocket-url-history'];
+    const socketUrls = data['websocket-url-history'];
     if (socketUrls && socketUrls.length) {
       data['websocket-url-history'] = this._tranformSimpleObject(socketUrls);
     }
-    var urls = data['url-history'];
+    const urls = data['url-history'];
     if (urls && urls.length) {
       data['url-history'] = this._tranformSimpleObject(urls);
     }
     if (data.variables && data.variables.length) {
       data.variables = this._tranformSimpleObject(data.variables);
     }
-    var headersSets = data['headers-sets'];
+    const headersSets = data['headers-sets'];
     if (headersSets && headersSets.length) {
       data['headers-sets'] = this._tranformHeadersSets(headersSets);
     }
-    var authData = data['auth-data'];
+    const authData = data['auth-data'];
     if (authData && authData.length) {
       data['auth-data'] = this._tranformSimpleObject(authData);
     }
     if (data.cookies && data.cookies.length) {
       data.cookies = this._tranformSimpleObject(data.cookies);
     }
-    var hostRules = data['host-rules'];
+    const hostRules = data['host-rules'];
     if (hostRules && hostRules.length) {
       data['host-rules'] = this._tranformSimpleObject(hostRules);
     }
@@ -66,14 +52,12 @@ class _ArcPouchTransformer extends BaseTransformer {
   }
 
   _updateItemTimings(item) {
-    if (!item.created) {
-      if (item.updated) {
-        item.created = item.updated;
-      } else {
-        item.created = Date.now();
-      }
+    if (!item.updated || isNaN(item.updated)) {
+      item.updated = Date.now();
     }
-    item.updated = Date.now();
+    if (!item.created) {
+      item.created = item.updated;
+    }
     return item;
   }
 
@@ -83,6 +67,9 @@ class _ArcPouchTransformer extends BaseTransformer {
       if (project._referenceId) {
         project._id = project._referenceId;
         delete project._referenceId;
+      } else if (project.key) {
+        project._id = project.key;
+        delete project.key;
       }
       project = this._updateItemTimings(project);
       delete project.kind;
@@ -93,12 +80,21 @@ class _ArcPouchTransformer extends BaseTransformer {
   _transformRequests(requests, projects) {
     projects = projects || [];
     return requests.map((request) => {
-      let refId = request._referenceLegacyProject;
+      if (request.key) {
+        request._id = request.key;
+        delete request.key;
+      }
+      const refId = request._referenceLegacyProject || request.legacyProject;
+      // This is not the latest id structure but will avoid duplicates
+      if (!request._id) {
+        request._id = this.generateRequestId(request, refId);
+      }
       if (refId) {
         delete request._referenceLegacyProject;
-        let project = projects.find((item) => item._id === refId);
+        const project = projects.find((item) => item._id === refId);
         if (project) {
-          request.legacyProject = refId;
+          this.addProjectReference(request, project._id);
+          this.addRequestReference(project, request._id);
         }
       }
       delete request.kind;
@@ -107,16 +103,7 @@ class _ArcPouchTransformer extends BaseTransformer {
       request.method = request.method || 'GET';
       request.headers = request.headers || '';
       request.payload = request.payload || '';
-      if (!request._id) {
-        request._id = this.generateRequestId(request, request.legacyProject);
-      }
       request = this._updateItemTimings(request);
-      if (!request.queryModel) {
-        request.queryModel = [];
-      }
-      if (!request.headersModel) {
-        request.headersModel = [];
-      }
       return request;
     });
   }
@@ -157,9 +144,4 @@ class _ArcPouchTransformer extends BaseTransformer {
       return item;
     });
   }
-}
-if (isNode) {
-  exports.ArcPouchTransformer = _ArcPouchTransformer;
-} else {
-  (window || self).ArcPouchTransformer = _ArcPouchTransformer;
 }

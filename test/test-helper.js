@@ -1,17 +1,8 @@
-/* global chance, self */
+/* global chance */
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var assert = require('chai').assert;
-}
-
 const DataTestHelper = {};
-
 DataTestHelper.getFile = function(file) {
-  return fetch(file).then(response => {
+  return fetch(file).then((response) => {
     if (!response.ok) {
       throw new Error('File ' + file + ' is unavailable');
     }
@@ -20,17 +11,14 @@ DataTestHelper.getFile = function(file) {
 };
 
 DataTestHelper.assertRequestId = function(request) {
-  var id = request._id;
+  const id = request._id;
   assert.typeOf(id, 'string', '_id is a string');
-  var parts = id.split('/');
-  var size = request.legacyProject ? 4 : 3;
-  assert.lengthOf(parts, size, '_id has ' + size + ' parts');
 };
 
 DataTestHelper.assertHistoryId = function(request) {
-  var id = request._id;
+  const id = request._id;
   assert.typeOf(id, 'string', '_id is a string');
-  var parts = id.split('/');
+  const parts = id.split('/');
   assert.lengthOf(parts, 3, '_id has 3 parts');
   assert.isNotNaN(parts[0], 'First part is a number');
 };
@@ -45,8 +33,6 @@ DataTestHelper.assertRequestObject = function(request) {
   assert.typeOf(request.type, 'string', 'type is a string');
   assert.typeOf(request.url, 'string', 'url is a string');
   assert.typeOf(request.payload, 'string', 'payload is a string');
-  assert.typeOf(request.queryModel, 'array', 'queryModel is array');
-  assert.typeOf(request.headersModel, 'array', 'headersModel is array');
 };
 
 DataTestHelper.assertHistoryObject = function(request) {
@@ -71,7 +57,7 @@ DataTestHelper.assertProjectObject = function(project) {
 };
 
 DataTestHelper.clone = function(obj) {
-  var copy;
+  let copy;
   if (null === obj || 'object' !== typeof obj) {
     return obj;
   }
@@ -82,14 +68,14 @@ DataTestHelper.clone = function(obj) {
   }
   if (obj instanceof Array) {
     copy = [];
-    for (var i = 0, len = obj.length; i < len; i++) {
+    for (let i = 0, len = obj.length; i < len; i++) {
       copy[i] = DataTestHelper.clone(obj[i]);
     }
     return copy;
   }
   if (obj instanceof Object) {
     copy = {};
-    for (var attr in obj) {
+    for (let attr in obj) {
       if (obj.hasOwnProperty(attr)) {
         copy[attr] = DataTestHelper.clone(obj[attr]);
       }
@@ -100,12 +86,13 @@ DataTestHelper.clone = function(obj) {
 };
 
 DataTestHelper.getDatastoreData = function(name) {
-  var db = new PouchDB(name);
+  /* global PouchDB */
+  const db = new PouchDB(name);
   return db.allDocs({
     include_docs: true
   })
-  .then(response => {
-    return response.rows.map(item => item.doc);
+  .then((response) => {
+    return response.rows.map((item) => item.doc);
   });
 };
 
@@ -143,7 +130,7 @@ DataTestHelper.getDatastoreHostRulesData = function() {
   return DataTestHelper.getDatastoreData('host-rules');
 };
 DataTestHelper.updateObject = function(dbName, obj) {
-  var db = new PouchDB(name);
+  const db = new PouchDB(name);
   return db.put(obj, {
     force: true
   });
@@ -153,7 +140,3 @@ DataTestHelper.updateRequestRandom = function(obj) {
   obj.name = chance.word();
   return DataTestHelper.updateObject('saved-requests', obj);
 };
-
-if (isNode) {
-  exports.DataTestHelper = DataTestHelper;
-}

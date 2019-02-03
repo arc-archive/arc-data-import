@@ -1,31 +1,17 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/* jshint -W098 */
 /**
  * Transforms Postamn v1 collections to ARC import object.
- * @extends BaseTransformer
  */
-class _PostmanV1Transformer extends PostmanTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class PostmanV1Transformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
    */
   transform() {
     const project = this._readProjectInfo();
-    const requests = this._readRequestsData();
+    const requests = this._readRequestsData(project);
 
     let result = {
       createdAt: new Date().toISOString(),
@@ -60,16 +46,17 @@ class _PostmanV1Transformer extends PostmanTransformer {
    * Iterates over collection requests array and transforms objects
    * to ARC requests.
    *
+   * @param {Object} project Project object
    * @return {Array} List of ARC request objects.
    */
-  _readRequestsData() {
+  _readRequestsData(project) {
     let result = [];
     if (!this._data.requests || !this._data.requests.length) {
       return result;
     }
     const requests = this._computeRequestsInOrder();
     result = requests.map((postmanRequest) =>
-      this._postmanRequestToArc(postmanRequest));
+      this._postmanRequestToArc(postmanRequest, project));
     return result;
   }
   /**
@@ -116,36 +103,38 @@ class _PostmanV1Transformer extends PostmanTransformer {
     if (!orderIds || !orderIds.length) {
       return folders;
     }
-    let result = orderIds.map((id) => {
-      return folders.find((folder) => folder.id === id);
-    });
-    result = result.filter((item) => !!item);
+    const result = [];
+    for (let i = 0, iLen = orderIds.length; i < iLen; i++) {
+      const id = orderIds[i];
+      for (let j = 0, jLen = folders.length; j < jLen; j++) {
+        if (folders[j].id === id) {
+          result[result.length] = folders[j];
+        }
+      }
+    }
     return result;
   }
   /**
    * Transforms postman request to ARC request
    * @param {Object} item Postman request object
+   * @param {Object} project Project object
    * @return {Object} ARC request object
    */
-  _postmanRequestToArc(item) {
+  _postmanRequestToArc(item, project) {
     item.name = item.name || 'unnamed';
     let url = item.url || 'http://';
     url = this.ensureVariablesSyntax(url);
     let method = item.method || 'GET';
     method = this.ensureVariablesSyntax(method);
-    const header = this.ensureVarsRecursevily(item.headerData);
-    const query = this.ensureVarsRecursevily(item.queryParams);
     let headers = item.headers || '';
     headers = this.ensureVariablesSyntax(headers);
-    let body = this.computeBodyOld(item);
-    let headersModel = this.computeSimpleModel(header);
-    let queryModel = this.computeSimpleModel(query);
+    const body = this.computeBodyOld(item);
     let id = this.generateRequestId(item, this._data.id);
     let created = Number(item.time);
     if (created !== created) {
       created = Date.now();
     }
-    let result = {
+    const result = {
       _id: id,
       created: created,
       updated: Date.now(),
@@ -154,12 +143,12 @@ class _PostmanV1Transformer extends PostmanTransformer {
       name: item.name,
       payload: body,
       type: 'saved',
-      url: url,
-      projectOrder: 0,
-      queryModel: queryModel,
-      headersModel: headersModel
+      url: url
     };
-    result.legacyProject = this._data.id;
+    if (project) {
+      this.addProjectReference(result, project._id);
+      this.addRequestReference(project, id);
+    }
     if (item.description) {
       result.description = item.description;
     }
@@ -168,9 +157,4 @@ class _PostmanV1Transformer extends PostmanTransformer {
     }
     return result;
   }
-}
-if (isNode) {
-  exports.PostmanV1Transformer = _PostmanV1Transformer;
-} else {
-  (window || self).PostmanV1Transformer = _PostmanV1Transformer;
 }

@@ -1,33 +1,18 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/* jshint -W098 */
 /**
  * Transformer for Postamn backup file.
- *
- * @extends BaseTransformer
  */
-class _PostmanBackupTransformer extends PostmanTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class PostmanBackupTransformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
    */
   transform() {
-    let data = this._data;
-    let collections = this._readRequestsData(data.collections);
-    let result = {
+    const data = this._data;
+    const collections = this._readRequestsData(data.collections);
+    const result = {
       createdAt: new Date().toISOString(),
       version: 'postman-backup',
       kind: 'ARC#Import',
@@ -37,7 +22,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     if (data.headerPresets && data.headerPresets.length) {
       result['headers-sets'] = this._computeHeadersSets(data.headerPresets);
     }
-    let variables = this._computeVariables(data);
+    const variables = this._computeVariables(data);
     if (variables && variables.length) {
       result.variables = variables;
     }
@@ -84,9 +69,9 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     result.project.order = index;
     result.project.created = collection.createdAt;
     result.project.updated = collection.updatedAt;
-    let requests = this._computeRequestsOrder(collection);
+    const requests = this._computeRequestsOrder(collection);
     result.requests = requests.map((item, index) =>
-      this._createRequestObject(item, collection.id, index));
+      this._createRequestObject(item, result.project, index));
     return result;
   }
   /**
@@ -103,7 +88,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
       ordered = ordered.concat(collection.order);
     }
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    let folders = this._computeOrderedFolders(collection.folders,
+    const folders = this._computeOrderedFolders(collection.folders,
       collection.folders_order);
     // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
     if (folders) {
@@ -113,7 +98,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
         }
       });
     }
-    let requests = collection.requests;
+    const requests = collection.requests;
     let result = ordered.map((id) => {
       return requests.find((request) => request.id === id);
     });
@@ -143,29 +128,25 @@ class _PostmanBackupTransformer extends PostmanTransformer {
   /**
    * Transforms postman request to ARC request
    * @param {Object} item Postman request object
-   * @param {String} projectId Id of the project of the request
+   * @param {Object} project Project object
    * @param {Number} projectIndex Order index of the request in the project
    * @return {Object} ARC request object
    */
-  _createRequestObject(item, projectId, projectIndex) {
+  _createRequestObject(item, project, projectIndex) {
     item.name = item.name || 'unnamed';
     let url = item.url || 'http://';
     url = this.ensureVariablesSyntax(url);
     let method = item.method || 'GET';
     method = this.ensureVariablesSyntax(method);
-    const header = this.ensureVarsRecursevily(item.headerData);
-    const query = this.ensureVarsRecursevily(item.queryParams);
     let headers = item.headers || '';
     headers = this.ensureVariablesSyntax(headers);
-    let body = this.computeBodyOld(item);
-    let headersModel = this.computeSimpleModel(header);
-    let queryModel = this.computeSimpleModel(query);
-    let id = this.generateRequestId(item, projectId);
+    const body = this.computeBodyOld(item);
+    const id = this.generateRequestId(item, project && project._id);
     let created = Number(item.time);
     if (created !== created) {
       created = Date.now();
     }
-    let result = {
+    const result = {
       _id: id,
       created: created,
       updated: Date.now(),
@@ -174,13 +155,11 @@ class _PostmanBackupTransformer extends PostmanTransformer {
       name: item.name,
       payload: body,
       type: 'saved',
-      url: url,
-      projectOrder: projectIndex,
-      queryModel: queryModel,
-      headersModel: headersModel
+      url: url
     };
-    if (projectId) {
-      result.legacyProject = projectId;
+    if (project) {
+      this.addProjectReference(result, project._id);
+      this.addRequestReference(project, id);
     }
     if (item.description) {
       result.description = item.description;
@@ -232,7 +211,7 @@ class _PostmanBackupTransformer extends PostmanTransformer {
       }
       value += header.key + ': ' + header.value;
     });
-    let result = {
+    const result = {
       _id: this.uuid(),
       created: item.created,
       updated: item.updated,
@@ -288,9 +267,4 @@ class _PostmanBackupTransformer extends PostmanTransformer {
     };
     return result;
   }
-}
-if (isNode) {
-  exports.PostmanBackupTransformer = _PostmanBackupTransformer;
-} else {
-  (window || self).PostmanBackupTransformer = _PostmanBackupTransformer;
 }

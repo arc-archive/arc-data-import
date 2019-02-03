@@ -1,15 +1,10 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' ||
-  (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
+/*jshint -W098 */
 /**
  * Base class for all transformers.
  * Includes common functions.
  */
-class _BaseTransformer {
+class BaseTransformer {
   /**
    * @constructor
    * @param {Object} data Data to be transformed.
@@ -43,9 +38,9 @@ class _BaseTransformer {
    * @return {String} Request ID value.
    */
   generateRequestId(item, projectId) {
-    let name = (item.name || 'unknown name').toLowerCase();
-    let url = (item.url || 'https://').toLowerCase();
-    let method = (item.method || 'GET').toLowerCase();
+    const name = (item.name || 'unknown name').toLowerCase();
+    const url = (item.url || 'https://').toLowerCase();
+    const method = (item.method || 'GET').toLowerCase();
 
     let id = encodeURIComponent(name) + '/';
     id += encodeURIComponent(url) + '/';
@@ -130,9 +125,36 @@ class _BaseTransformer {
     id += method;
     return id;
   }
-}
-if (isNode) {
-  exports.BaseTransformer = _BaseTransformer;
-} else {
-  (window || self).BaseTransformer = _BaseTransformer;
+  /**
+   * Adds project reference to a request object.
+   * @param {Object} request Request object to alter
+   * @param {String} id Project id
+   */
+  addProjectReference(request, id) {
+    if (!id) {
+      return;
+    }
+    if (!request.projects) {
+      request.projects = [];
+    }
+    if (request.projects.indexOf(id) === -1) {
+      request.projects.push(id);
+    }
+  }
+  /**
+   * Adds request reference to a project object.
+   * @param {Object} project Project object to alter
+   * @param {String} id Request id
+   */
+  addRequestReference(project, id) {
+    if (!id) {
+      return;
+    }
+    if (!project.requests) {
+      project.requests = [];
+    }
+    if (project.requests.indexOf(id) === -1) {
+      project.requests.push(id);
+    }
+  }
 }

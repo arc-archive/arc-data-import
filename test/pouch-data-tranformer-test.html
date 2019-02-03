@@ -1,44 +1,29 @@
 <!doctype html>
-<!--
-@license
-Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
-Licensed under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License. You may obtain a copy of
-the License at
-http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-License for the specific language governing permissions and limitations under
-the License.
--->
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
-    <script src="../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../iron-test-helpers/mock-interactions.js"></script>
     <script src="test-helper.js"></script>
     <script src="../transformers/base-transformer.js"></script>
     <script src="../transformers/arc-pouch-transformer.js"></script>
-    <link rel="import" href="../../fetch-polyfill/fetch-polyfill.html">
+    <link rel="import" href="../../app-pouchdb/pouchdb.html">
   </head>
   <body>
     <script>
     /* global assert, DataTestHelper, ArcPouchTransformer */
     suite('Data transform - PouchDB', function() {
-      var jsonData;
-      var result;
+      let jsonData;
+      let result;
       suiteSetup(function() {
         return DataTestHelper.getFile('pouch-data-export.json')
-        .then(response => {
+        .then((response) => {
           jsonData = JSON.parse(response);
           const transformer = new ArcPouchTransformer(jsonData);
           return transformer.transform();
         })
-        .then(data => result = data);
+        .then((data) => result = data);
       });
 
       test('Normalizes the data', function() {
@@ -93,8 +78,8 @@ the License.
       });
 
       test('Request values are set', function() {
-        var request = result.requests[0];
-        var compare = jsonData.requests[0];
+        let request = result.requests[0];
+        let compare = jsonData.requests[0];
         assert.equal(request.url, compare.url);
         assert.equal(request.method, compare.method);
         assert.equal(request.headers, compare.headers);
@@ -128,8 +113,8 @@ the License.
       });
 
       test('Project values are set', function() {
-        var project = result.projects[0];
-        var compare = jsonData.projects[0];
+        let project = result.projects[0];
+        let compare = jsonData.projects[0];
         assert.equal(project.name, compare.name, 'name is set');
         assert.equal(project.created, compare.created, 'created is set');
         assert.strictEqual(project.order, compare.order, 'order is set');
@@ -144,16 +129,28 @@ the License.
       });
 
       test('Associate requests with porojects', function() {
-        assert.isUndefined(result.requests[0].legacyProject);
-        assert.isUndefined(result.requests[1].legacyProject);
-        assert.typeOf(result.requests[2].legacyProject, 'string');
-        assert.typeOf(result.requests[3].legacyProject, 'string');
+        assert.isUndefined(result.requests[0].projects);
+        assert.isUndefined(result.requests[1].projects);
+        assert.typeOf(result.requests[2].projects, 'array');
+        assert.lengthOf(result.requests[2].projects, 1);
+        assert.typeOf(result.requests[3].projects, 'array');
+        assert.lengthOf(result.requests[3].projects, 1);
+      });
+
+      test('Associate porojects with requests', function() {
+        const p1 = result.projects[0];
+        assert.typeOf(p1.requests, 'array');
+        assert.lengthOf(p1.requests, 1);
+        const p2 = result.projects[0];
+        assert.typeOf(p2.requests, 'array');
+        assert.lengthOf(p2.requests, 1);
       });
 
       test('Project ID is set correctly', function() {
-        var p2id = result.projects[1]._id;
-        assert.equal(result.requests[2].legacyProject, p2id);
-        assert.equal(result.requests[3].legacyProject, p2id);
+        const p1id = result.projects[0]._id;
+        const p2id = result.projects[1]._id;
+        assert.equal(result.requests[2].projects[0], p1id);
+        assert.equal(result.requests[3].projects[0], p2id);
       });
 
       test('variable object has the `_id` property', function() {
@@ -164,8 +161,8 @@ the License.
       });
 
       test('variable values are set', function() {
-        var v1 = result.variables[0];
-        var compare = jsonData.variables[0];
+        let v1 = result.variables[0];
+        let compare = jsonData.variables[0];
         assert.strictEqual(v1.enabled, compare.enabled);
         assert.strictEqual(v1.environment, compare.environment);
         assert.strictEqual(v1.value, compare.value);
@@ -187,8 +184,8 @@ the License.
       });
 
       test('cookie values are set', function() {
-        var v1 = result.cookies[0];
-        var compare = jsonData.cookies[0];
+        let v1 = result.cookies[0];
+        let compare = jsonData.cookies[0];
         assert.strictEqual(v1.domain, compare.domain);
         assert.strictEqual(v1.name, compare.name);
         assert.strictEqual(v1.value, compare.value);
@@ -207,8 +204,8 @@ the License.
       });
 
       test('websocket-url-history values are set', function() {
-        var v1 = result['websocket-url-history'][0];
-        var compare = jsonData['websocket-url-history'][0];
+        const v1 = result['websocket-url-history'][0];
+        const compare = jsonData['websocket-url-history'][0];
         assert.strictEqual(v1.cnt, compare.cnt);
         assert.strictEqual(v1.time, compare.time);
         assert.isUndefined(v1.kind);
@@ -219,8 +216,8 @@ the License.
       });
 
       test('url-history values are set', function() {
-        var v1 = result['url-history'][3];
-        var compare = jsonData['url-history'][3];
+        const v1 = result['url-history'][3];
+        const compare = jsonData['url-history'][3];
         assert.strictEqual(v1.cnt, compare.cnt);
         assert.strictEqual(v1.time, compare.time);
         assert.isUndefined(v1.kind);
@@ -231,8 +228,8 @@ the License.
       });
 
       test('headers-sets values are set', function() {
-        var v1 = result['headers-sets'][0];
-        var compare = jsonData['headers-sets'][0];
+        const v1 = result['headers-sets'][0];
+        const compare = jsonData['headers-sets'][0];
         assert.strictEqual(v1.headers, compare.headers);
         assert.strictEqual(v1.name, compare.name);
         assert.isUndefined(v1.kind);
@@ -243,8 +240,8 @@ the License.
       });
 
       test('auth-data values are set', function() {
-        var v1 = result['auth-data'][0];
-        var compare = jsonData['auth-data'][0];
+        const v1 = result['auth-data'][0];
+        const compare = jsonData['auth-data'][0];
         assert.strictEqual(v1.encoded, compare.encoded);
         assert.isUndefined(v1.kind);
       });
@@ -254,8 +251,8 @@ the License.
       });
 
       test('host-rules values are set', function() {
-        var v1 = result['host-rules'][0];
-        var compare = jsonData['host-rules'][0];
+        const v1 = result['host-rules'][0];
+        const compare = jsonData['host-rules'][0];
         assert.strictEqual(v1.from, compare.from);
         assert.isUndefined(v1.kind);
       });

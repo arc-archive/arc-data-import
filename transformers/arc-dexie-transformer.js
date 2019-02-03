@@ -1,24 +1,10 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {BaseTransformer} = require('./base-transformer');
-}
+/* global BaseTransformer */
+/* jshint -W098 */
 /**
  * Transforms Dexie system (legacy system) into current data model.
- * @extends BaseTransformer
  */
-class _ArcDexieTransformer extends BaseTransformer {
-  /**
-   * @constructor
-   * @param {Object} data Import data object
-   */
-  constructor(data) {
-    super(data);
-  }
+class ArcDexieTransformer extends BaseTransformer {
   /**
    * Transforms legacy ARC export object based on Dexie data store
    * into current export data model.
@@ -28,14 +14,14 @@ class _ArcDexieTransformer extends BaseTransformer {
   transform() {
     return this._parseRequests(this._data.requests)
     .then((result) => {
-      let projects = this._processProjects(this._data.projects);
+      const projects = this._processProjects(this._data.projects);
       return {
         projects: projects,
         data: this._associateProjects(result, projects)
       };
     })
-    .then(data => {
-      let result = {
+    .then((data) => {
+      const result = {
         createdAt: new Date().toISOString(),
         version: 'unknown',
         kind: 'ARC#Import',
@@ -58,8 +44,14 @@ class _ArcDexieTransformer extends BaseTransformer {
     if (!projects || !projects.length) {
       return [];
     }
-    let list = projects.map((item) => this._processProjectItem(item));
-    return list.filter((item) => !!item);
+    const list = [];
+    projects.forEach((item) => {
+      const result = this._processProjectItem(item);
+      if (result) {
+        list.push(result);
+      }
+    });
+    return list;
   }
   /**
    * Creates a pre-processed project data.
@@ -97,7 +89,7 @@ class _ArcDexieTransformer extends BaseTransformer {
     })
     .then((result) => {
       // remove duplicates from the history.
-      let ids = [];
+      const ids = [];
       result.history = result.history.filter((item) => {
         if (ids.indexOf(item.request._id) === -1) {
           ids[ids.length] = item.request._id;
@@ -128,7 +120,7 @@ class _ArcDexieTransformer extends BaseTransformer {
       });
       return;
     }
-    let len = Math.min(requests.length, 200);
+    const len = Math.min(requests.length, 200);
     // Up to 200 loop iteration at once.
     // Then the function return and release main loop.
     for (let i = 0; i < len; i++) {
@@ -155,7 +147,7 @@ class _ArcDexieTransformer extends BaseTransformer {
     }
     requests.splice(0, len);
     if (typeof Polymer !== 'undefined' && Polymer.RenderStatus) {
-      Polymer.RenderStatus.afterNextRender(this, function() {
+      Polymer.RenderStatus.afterNextRender(this, () => {
         this._parseRequestsDeffered(requests, done, saved, history);
       });
     } else if (typeof process !== 'undefined' && process.nextTick) {
@@ -206,17 +198,18 @@ class _ArcDexieTransformer extends BaseTransformer {
   }
 
   _parseSavedItem(item) {
-    let requestName = item.name || item._name;
+    const requestName = item.name || item._name;
     let keyName = requestName;
     if (keyName && keyName[0] === '_') {
       keyName = keyName.substr(1);
     }
-    let id = this.generateRequestId({
+    // This is not the latest id structure but will avoid duplicates
+    const id = this.generateRequestId({
       name: keyName,
       url: item.url,
       method: item.method
     });
-    let obj = {
+    const obj = {
       _id: id,
       name: requestName,
       method: item.method,
@@ -226,10 +219,10 @@ class _ArcDexieTransformer extends BaseTransformer {
       headersModel: []
     };
     // payload and headers
-    let harIndex = item.referenceEntry || 0;
-    let har = item._har || item.har;
+    const harIndex = item.referenceEntry || 0;
+    const har = item._har || item.har;
     if (har) {
-      let entries = har.entries;
+      const entries = har.entries;
       let entry;
       if (harIndex || harIndex === 0) {
         entry = entries[harIndex];
@@ -237,7 +230,7 @@ class _ArcDexieTransformer extends BaseTransformer {
         entry = entries[0];
       }
       if (entry) {
-        let harRequest = entry.request;
+        const harRequest = entry.request;
         obj.headers = this._parseHarHeders(harRequest.headers);
         obj.payload = harRequest.postData.text;
         let t = new Date(entry.startedDateTime).getTime();
@@ -258,7 +251,6 @@ class _ArcDexieTransformer extends BaseTransformer {
   _parseDriveItem(item) {
     let result = this._parseSavedItem(item);
     result.request.driveId = item.driveId;
-    result.request.type = 'google-drive';
     return result;
   }
 
@@ -285,26 +277,21 @@ class _ArcDexieTransformer extends BaseTransformer {
     let savedLen = data.saved.length;
     let projectsLen = projects.length;
     for (let i = 0; i < projectsLen; i++) {
-      let project = projects[i];
-      let newProjectId = project.legacyProject._id;
+      const project = projects[i];
+      const newProjectId = project.legacyProject._id;
       for (let j = 0, rLen = project.updateData.length; j < rLen; j++) {
-        let rId = project.updateData[j];
+        const rId = project.updateData[j];
         for (let k = 0; k < savedLen; k++) {
           if (data.saved[k].origin === rId) {
-            if (!data.saved[k].legacyProject) {
-              data.saved[k].request._id += '/' + newProjectId;
-              data.saved[k].request.legacyProject = newProjectId;
-              break;
-            }
+            const request = data.saved[k].request;
+            request._id += '/' + newProjectId;
+            this.addProjectReference(request, newProjectId);
+            this.addRequestReference(project.legacyProject, request._id);
+            break;
           }
         }
       }
     }
     return data;
   }
-}
-if (isNode) {
-  exports.ArcDexieTransformer = _ArcDexieTransformer;
-} else {
-  (window || self).ArcDexieTransformer = _ArcDexieTransformer;
 }

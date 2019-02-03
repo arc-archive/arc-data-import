@@ -1,17 +1,10 @@
 'use strict';
-/* global self */
-var isNode = true;
-if (typeof window !== 'undefined' || (typeof self !== 'undefined' && self.importScripts)) {
-  isNode = false;
-}
-if (isNode) {
-  var {PostmanTransformer} = require('./postman-transformer');
-}
+/* global PostmanTransformer */
+/* jshint -W098 */
 /**
  * Transforms Postamn v2 collections to ARC import object.
- * @extends BaseTransformer
  */
-class _PostmanV2Transformer extends PostmanTransformer {
+class PostmanV2Transformer extends PostmanTransformer {
   /**
    * @constructor
    * @param {Object} data Import data object
@@ -28,8 +21,8 @@ class _PostmanV2Transformer extends PostmanTransformer {
   transform() {
     return this._readRequestsData()
     .then((requests) => {
-      const project = this._readProjectInfo();
-      let result = {
+      const project = this._readProjectInfo(requests);
+      const result = {
         createdAt: new Date().toISOString(),
         version: 'postman-collection-v2',
         kind: 'ARC#Import',
@@ -42,11 +35,12 @@ class _PostmanV2Transformer extends PostmanTransformer {
   /**
    * Creates the project model based on Postman collection
    *
+   * @param {Array<Object>} requests list of read requests
    * @return {Object} Arc project data model.
    */
-  _readProjectInfo() {
-    let info = this._data.info;
-    let time = Date.now();
+  _readProjectInfo(requests) {
+    const info = this._data.info;
+    const time = Date.now();
     const result = {
       _id: info._postman_id,
       name: info.name,
@@ -55,6 +49,9 @@ class _PostmanV2Transformer extends PostmanTransformer {
       updated: time,
       order: 0
     };
+    if (requests && requests.length) {
+      result.requests = requests.map((item) => item._id);
+    }
     return result;
   }
   /**
@@ -64,7 +61,7 @@ class _PostmanV2Transformer extends PostmanTransformer {
    * @return {Promise} Promise resolved to list of ARC request objects.
    */
   _readRequestsData() {
-    let data = this._data.item;
+    const data = this._data.item;
     if (!data || !data.length) {
       return Promise.resolve([]);
     }
@@ -112,30 +109,32 @@ class _PostmanV2Transformer extends PostmanTransformer {
   _computeArcRequest(item) {
     let request = item.request;
     let name = item.name || 'unnamed';
-    let url = request.url.raw || 'http://';
+    let url;
+    if (typeof request.url === 'string') {
+      url = request.url;
+    } else if (request.url && request.url.raw) {
+      url = request.url.raw;
+    } else {
+      url = 'http://';
+    }
     url = this.ensureVariablesSyntax(url);
     let method = request.method || 'GET';
     method = this.ensureVariablesSyntax(method);
     const header = this.ensureVarsRecursevily(request.header);
-    const query = this.ensureVarsRecursevily(request.url.query);
-    let headersModel = this.computeSimpleModel(header);
-    let queryModel = this.computeSimpleModel(query);
     let time = Date.now();
     const result = {
       name: name,
       url: url,
       method: method,
-      headersModel: headersModel,
-      queryModel: queryModel,
       created: time,
       updated: time,
       type: 'saved',
-      projectOrder: this._currentItem,
-      legacyProject: this._data.info._postman_id,
       headers: this._computeHeaders(header)
     };
-    result._id = this.generateRequestId(result, result.legacyProject);
+    const projectId = this._data.info._postman_id;
+    result._id = this.generateRequestId(result, projectId);
     result.payload = this._computePayload(request.body, result);
+    this.addProjectReference(result, projectId);
     return result;
   }
   /**
@@ -227,9 +226,4 @@ class _PostmanV2Transformer extends PostmanTransformer {
     item.urlEncodedModel = model;
     return result.join('&');
   }
-}
-if (isNode) {
-  exports.PostmanV2Transformer = _PostmanV2Transformer;
-} else {
-  (window || self).PostmanV2Transformer = _PostmanV2Transformer;
 }
