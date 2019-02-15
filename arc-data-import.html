@@ -281,10 +281,13 @@ class ArcDataImport extends Polymer.Element {
       case 'ARC#SavedHistoryDataExport':
       case 'ARC#AllDataExport':
       case 'ARC#SavedDataExport':
+      case 'ARC#SavedExport':
       case 'ARC#HistoryDataExport':
+      case 'ARC#HistoryExport':
       case 'ARC#Project':
       case 'ARC#SessionCookies':
       case 'ARC#HostRules':
+      case 'ARC#ProjectExport':
         return this._normalizeArcPouchSystem(data);
       case 'ARC#requestsDataExport':
         return this._normalizeArcDexieSystem(data);
@@ -492,8 +495,11 @@ class ArcDataImport extends Polymer.Element {
       obj._id = obj.key;
       delete obj.key;
       this._fire('request-workspace-append', {
+        kind: 'ARC#Request',
         request: obj
       });
+    } else if (data.loadToWorkspace) {
+      this._fire('request-workspace-append', data);
     } else {
       this._fire('import-data-inspect', {
         data

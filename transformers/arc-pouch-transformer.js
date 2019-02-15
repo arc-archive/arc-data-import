@@ -47,7 +47,9 @@ class ArcPouchTransformer extends BaseTransformer {
     if (hostRules && hostRules.length) {
       data['host-rules'] = this._tranformSimpleObject(hostRules);
     }
-    data.kind = 'ARC#Import';
+    if (!data.loadToWorkspace) {
+      data.kind = 'ARC#Import';
+    }
     return Promise.resolve(data);
   }
 

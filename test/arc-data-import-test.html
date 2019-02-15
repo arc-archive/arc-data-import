@@ -710,6 +710,14 @@
         assert.isTrue(spy.called);
       });
 
+      test('Dispatches request-workspace-append for project with forced open', () => {
+        const spy = sinon.spy();
+        element.addEventListener('request-workspace-append', spy);
+        const data = DataHelper.generateProjectImportOpen();
+        element._handleNormalizedFileData(data);
+        assert.deepEqual(spy.args[0][0].detail, data);
+      });
+
       test('Removes key and kind properties', () => {
         const spy = sinon.spy();
         element.addEventListener('request-workspace-append', spy);

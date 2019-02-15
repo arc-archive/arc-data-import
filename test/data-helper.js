@@ -90,3 +90,32 @@ DataHelper.generateMultiRequestImport = () => {
     kind: 'ARC#AllDataExport'
   };
 };
+
+DataHelper.generateProjectImportOpen = () => {
+  return {
+    requests: [{
+      key: '11013905-9b5a-49d9-adc8-f76ec3ead2f1',
+      kind: 'ARC#RequestData',
+      updated: 1545502958053,
+      created: 1545363890469,
+      headers: 'Content-Type: application/json\nContent-Length: 2',
+      method: 'POST',
+      payload: '{}',
+      url: 'https://www.domain.com/customers',
+      projects: ['24550674-868e-411c-9359-09e59c91956c']
+    }],
+    projects: [{
+      order: 0,
+      requests: ['11013905-9b5a-49d9-adc8-f76ec3ead2f1'],
+      name: 'Response actions',
+      updated: 1549390841631,
+      created: 1549390841631,
+      kind: 'ARC#ProjectData',
+      key: '24550674-868e-411c-9359-09e59c91956c'
+    }],
+    loadToWorkspace: true,
+    createdAt: '2019-02-02T21:58:25.467Z',
+    version: '13.0.0',
+    kind: 'ARC#ProjectExport'
+  };
+};
