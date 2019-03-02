@@ -1,6 +1,9 @@
-/* global chance */
+import '../../../chance/dist/chance.min.js';
+import '../../../pouchdb/dist/pouchdb.js';
+/* global Chance, PouchDB */
+const chance = new Chance();
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-const DataTestHelper = {};
+export const DataTestHelper = {};
 DataTestHelper.getFile = function(file) {
   return fetch(file).then((response) => {
     if (!response.ok) {

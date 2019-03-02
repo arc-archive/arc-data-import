@@ -1,5 +1,4 @@
-const DataHelper = {};
-
+export const DataHelper = {};
 DataHelper.generateArcImportFile = () => {
   const data = `{
     "createdAt": "2019-02-02T21:58:25.467Z",

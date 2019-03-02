@@ -6,85 +6,15 @@
  *
  * To modify these typings, edit the source file(s):
  *   transformers/arc-dexie-transformer.js
- *   transformers/arc-dexie-transformer.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/**
- * Transforms Dexie system (legacy system) into current data model.
- */
-declare class ArcDexieTransformer extends BaseTransformer {
+import {BaseTransformer} from './base-transformer.js';
 
-  /**
-   * @param data Data to be transformed.
-   */
-  constructor(data: object|null);
-
-  /**
-   * Transforms legacy ARC export object based on Dexie data store
-   * into current export data model.
-   *
-   * @returns New data model object.
-   */
-  transform(): object|null;
-
-  /**
-   * In new structure projects do not have a refference to request ids. It's
-   * the other way around in previous system.
-   * It's a bad pattern for object stores but it must suffice for now.
-   *
-   * @param projects List of projects in the import.
-   * @returns preprocessed projects array
-   */
-  _processProjects(projects: any[]|null): any[]|null;
-
-  /**
-   * Creates a pre-processed project data.
-   *
-   * @param item Project object from the import.
-   * @returns Pre-processed project object with project store data
-   * under the `legacyProject` property and list of requests IDs under
-   * the `updateData` property.
-   */
-  _processProjectItem(item: object|null): object|null;
-
-  /**
-   * History is placed in its own store, saved items has own store.
-   * Har data are not imported this way as user cannot actually use it.
-   *
-   * @param requests List of requests objects from the import file.
-   * @returns A promise resolved when import is ready.
-   */
-  _parseRequests(requests: any[]|null): Promise<any>|null;
-
-  /**
-   * Parses the request data.
-   * It takes only portion of the data to parse so the script release the
-   * event loop and ANR screen won't appear.
-   *
-   * @param requests List of requests from the import.
-   * @param done A callkback function to be called when ready.
-   * @param saved Final list of saved requests
-   * @param history Final list of history items.
-   */
-  _parseRequestsDeffered(requests: any[]|null, done: Function|null, saved: any[]|null, history: any[]|null): void;
-  _parseHistoryItem(item: any): any;
-  _parseSavedItem(item: any): any;
-  _parseDriveItem(item: any): any;
-  _parseHarHeders(arr: any): any;
-
-  /**
-   * Associate requests with project data.
-   *
-   * @param data Parsed requests object
-   * @param projects List of projects
-   * @returns Parsed requests object
-   */
-  _associateProjects(data: object|null, projects: any[]|null): object|null;
-}
+export {ArcDexieTransformer};
 
 /**
  * Transforms Dexie system (legacy system) into current data model.

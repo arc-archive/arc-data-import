@@ -12,9 +12,16 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/**
- * jshint -W098
- */
+import {PostmanBackupTransformer} from './postman-backup-transformer.js';
+
+import {PostmanEnvTransformer} from './postman-env-transformer.js';
+
+import {PostmanV1Transformer} from './postman-v1-transformer.js';
+
+import {PostmanV2Transformer} from './postman-v2-transformer.js';
+
+export {PostmanDataTransformer};
+
 declare class PostmanDataTransformer {
   transform(data: any): any;
   recognizeVersion(data: any): any;

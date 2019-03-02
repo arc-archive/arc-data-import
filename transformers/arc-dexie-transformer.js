@@ -1,10 +1,8 @@
-'use strict';
-/* global BaseTransformer */
-/* jshint -W098 */
+import {BaseTransformer} from './base-transformer.js';
 /**
  * Transforms Dexie system (legacy system) into current data model.
  */
-class ArcDexieTransformer extends BaseTransformer {
+export class ArcDexieTransformer extends BaseTransformer {
   /**
    * Transforms legacy ARC export object based on Dexie data store
    * into current export data model.

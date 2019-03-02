@@ -6,40 +6,15 @@
  *
  * To modify these typings, edit the source file(s):
  *   transformers/arc-pouch-transformer.js
- *   transformers/arc-pouch-transformer.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/**
- * Transforms Dexie system (legacy system) into current data model.
- */
-declare class ArcPouchTransformer extends BaseTransformer {
+import {BaseTransformer} from './base-transformer.js';
 
-  /**
-   * @param data Data to be transformed.
-   */
-  constructor(data: object|null);
-
-  /**
-   * Transforms PouchDB ARC export object based into current export data model.
-   *
-   * @returns New data model object.
-   */
-  transform(): object|null;
-  _updateItemTimings(item: any): any;
-
-  /**
-   * Replaces `_referenceId` with `_id`
-   */
-  _transformProjects(projects: any): any;
-  _transformRequests(requests: any, projects: any): any;
-  _transformHistory(history: any): any;
-  _tranformSimpleObject(items: any): any;
-  _tranformHeadersSets(items: any): any;
-}
+export {ArcPouchTransformer};
 
 /**
  * Transforms Dexie system (legacy system) into current data model.

@@ -1,10 +1,8 @@
-'use strict';
-/* global PostmanTransformer */
-/* jshint -W098 */
+import {PostmanTransformer} from './postman-transformer.js';
 /**
  * Transforms Postamn v1 collections to ARC import object.
  */
-class PostmanV1Transformer extends PostmanTransformer {
+export class PostmanV1Transformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.

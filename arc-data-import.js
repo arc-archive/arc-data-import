@@ -1,4 +1,4 @@
-<!--
+/**
 @license
 Copyright 2018 The Advanced REST client authors <arc@mulesoft.com>
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -10,11 +10,13 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
--->
-<link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="import-data-store.html">
-<link rel="import" href="transformers-import.html">
-<script>
+*/
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import './import-data-store.js';
+import {ArcLegacyTransformer} from './transformers/arc-legacy-transformer.js';
+import {ArcDexieTransformer} from './transformers/arc-dexie-transformer.js';
+import {ArcPouchTransformer} from './transformers/arc-pouch-transformer.js';
+import {PostmanDataTransformer} from './transformers/postman-data-transformer.js';
 /**
  * An element that imports data into the ARC datastore.
  *
@@ -56,7 +58,7 @@ the License.
  * @polymer
  * @memberof LogicElements
  */
-class ArcDataImport extends Polymer.Element {
+export class ArcDataImport extends PolymerElement {
   static get is() {
     return 'arc-data-import';
   }
@@ -301,9 +303,6 @@ class ArcDataImport extends Polymer.Element {
    * @return {Object} Normalized import object
    */
   _normalizeArcLegacyData(data) {
-    /* global ArcLegacyTransformer, ArcDexieTransformer, ArcPouchTransformer,
-    PostmanDataTransformer */
-    /* jshint -W098 */
     const transformer = new ArcLegacyTransformer(data);
     return transformer.transform();
   }
@@ -587,4 +586,3 @@ class ArcDataImport extends Polymer.Element {
   }
 }
 window.customElements.define(ArcDataImport.is, ArcDataImport);
-</script>

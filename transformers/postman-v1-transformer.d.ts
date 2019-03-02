@@ -6,73 +6,15 @@
  *
  * To modify these typings, edit the source file(s):
  *   transformers/postman-v1-transformer.js
- *   transformers/postman-v1-transformer.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/**
- * Transforms Postamn v1 collections to ARC import object.
- */
-declare class PostmanV1Transformer extends PostmanTransformer {
+import {PostmanTransformer} from './postman-transformer.js';
 
-  /**
-   * @param data Import data object
-   */
-  constructor(data: object|null);
-
-  /**
-   * Transforms `_data` into ARC data model.
-   *
-   * @returns Promise resolved when data are transformed.
-   */
-  transform(): Promise<any>|null;
-
-  /**
-   * Creates the project model baqsed on Postman collections
-   *
-   * @returns Arc project data model.
-   */
-  _readProjectInfo(): object|null;
-
-  /**
-   * Iterates over collection requests array and transforms objects
-   * to ARC requests.
-   *
-   * @param project Project object
-   * @returns List of ARC request objects.
-   */
-  _readRequestsData(project: object|null): any[]|null;
-
-  /**
-   * Creates ordered list of requests as defined in collection order property.
-   * This creates a flat structure of requests and order assumes ARC's flat
-   * structure.
-   *
-   * @returns List of ordered Postman requests
-   */
-  _computeRequestsInOrder(): object|null;
-
-  /**
-   * Computes list of folders including sub-folders .
-   *
-   * @param folders Collection folders definition
-   * @param orderIds Collection order info array
-   * @returns Ordered list of folders.
-   */
-  _computeOrderedFolders(folders: Array<object|null>|null, orderIds: Array<String|null>|null): Array<object|null>|null;
-
-  /**
-   * Transforms postman request to ARC request
-   *
-   * @param item Postman request object
-   * @param project Project object
-   * @returns ARC request object
-   */
-  _postmanRequestToArc(item: object|null, project: object|null): object|null;
-}
+export {PostmanV1Transformer};
 
 /**
  * Transforms Postamn v1 collections to ARC import object.

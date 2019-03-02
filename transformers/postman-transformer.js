@@ -1,10 +1,8 @@
-'use strict';
-/* global BaseTransformer */
-/* jshint -W098 */
+import {BaseTransformer} from './base-transformer.js';
 /**
  * Base class for all Postman transformers
  */
-class PostmanTransformer extends BaseTransformer {
+export class PostmanTransformer extends BaseTransformer {
   /**
    * @constructor
    * @param {Object} data Import data object

@@ -1,10 +1,8 @@
-'use strict';
-/*jshint -W098 */
 /**
  * Base class for all transformers.
  * Includes common functions.
  */
-class BaseTransformer {
+export class BaseTransformer {
   /**
    * @constructor
    * @param {Object} data Data to be transformed.
@@ -12,7 +10,6 @@ class BaseTransformer {
   constructor(data) {
     this._data = data;
   }
-
   /**
    * Executes function in next event loop.
    *

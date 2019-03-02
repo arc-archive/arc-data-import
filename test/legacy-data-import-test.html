@@ -3,12 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-    <script src="test-helper.js"></script>
-    <link rel="import" href="../../app-pouchdb/pouchdb.html">
-    <link rel="import" href="../../arc-data-generator/arc-data-generator.html">
-    <link rel="import" href="../arc-data-import.html">
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
   </head>
   <body>
 
@@ -18,8 +19,10 @@
       </template>
     </test-fixture>
 
-    <script>
-    /* global fixture, assert, DataTestHelper, DataGenerator */
+    <script type="module">
+    import {DataGenerator} from '../../arc-data-generator/arc-data-generator.js';
+    import {DataTestHelper} from './test-helper.js';
+    import '../arc-data-import.js';
     suite('Legacy import to datastore', function() {
       let originalData;
       let element;
@@ -40,9 +43,6 @@
         data = DataTestHelper.clone(originalData);
       });
 
-      let readProjects;
-      let readRequests;
-
       test('Stores the data', function() {
         return element.normalizeImportData(data)
         .then((parsed) => {
@@ -54,14 +54,13 @@
         })
         .then((requests) => {
           assert.lengthOf(requests, 2);
-          readRequests = requests;
           return DataTestHelper.getDatastoreProjectsData();
         })
         .then((projects) => {
           assert.lengthOf(projects, 1);
-          readProjects = projects;
         });
       });
+
       test('Overrides (some) data', function() {
         return element.normalizeImportData(data)
         .then((parsed) => {
