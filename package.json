@@ -9,7 +9,7 @@
     "url": "git://github.com/advanced-rest-client/arc-data-import.git"
   },
   "name": "@advanced-rest-client/arc-data-import",
-  "version": "3.0.0-preview.1",
+  "version": "3.0.0-preview.2",
   "license": "Apache-2.0",
   "devDependencies": {
     "@advanced-rest-client/arc-data-generator": "^3.0.0-preview.1",
