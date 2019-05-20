@@ -367,7 +367,7 @@
 
       [
         'application/zip', 'application/yaml', 'application/x-yaml',
-        'application/raml', 'application/x-raml'
+        'application/raml', 'application/x-raml', 'application/x-zip-compressed'
       ].forEach((type) => {
         test('Calls _notifyApiParser() for file type ' + type, () => {
           const file = {type};
@@ -380,7 +380,7 @@
       });
 
       [
-        'api.raml', 'api.yaml'
+        'api.raml', 'api.yaml', 'project.zip'
       ].forEach((name) => {
         test('Calls _notifyApiParser() for file with extension ' + name, () => {
           const file = {type: '', name};

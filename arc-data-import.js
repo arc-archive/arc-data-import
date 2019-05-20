@@ -424,13 +424,15 @@ export class ArcDataImport extends PolymerElement {
   _processFileData(file, opts) {
     const apiTypes = [
       'application/zip', 'application/yaml', 'application/x-yaml',
-      'application/raml', 'application/x-raml'
+      'application/raml', 'application/x-raml', 'application/x-zip-compressed'
     ];
     if (apiTypes.indexOf(file.type) !== -1) {
       return this._notifyApiParser(file);
     }
     // RAML files
-    if (file.name && (file.name.indexOf('.raml') !== -1 || file.name.indexOf('.yaml') !== -1)) {
+    if (file.name && (file.name.indexOf('.raml') !== -1 ||
+      file.name.indexOf('.yaml') !== -1 ||
+      file.name.indexOf('.zip') !== -1)) {
       return this._notifyApiParser(file);
     }
     const id = Date.now();
