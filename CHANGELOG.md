@@ -254,3 +254,7 @@
 
 
 
+# [3.0.0](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.18...3.0.0) (2019-09-13)
+
+
+
