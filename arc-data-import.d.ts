@@ -5,16 +5,24 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   arc-data-import.html
+ *   arc-data-import.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="import-data-store.d.ts" />
-/// <reference path="transformers-import.d.ts" />
+import {LitElement} from 'lit-element';
+
+import {ArcLegacyTransformer} from './transformers/arc-legacy-transformer.js';
+
+import {ArcDexieTransformer} from './transformers/arc-dexie-transformer.js';
+
+import {ArcPouchTransformer} from './transformers/arc-pouch-transformer.js';
+
+import {PostmanDataTransformer} from './transformers/postman-data-transformer.js';
+
+export {ArcDataImport};
 
 declare namespace LogicElements {
 
@@ -55,8 +63,9 @@ declare namespace LogicElements {
    * - The component no longer includes PouchDB. Use your own version of the
    * library from Bower, npm, csd etc.
    */
-  class ArcDataImport extends Polymer.Element {
+  class ArcDataImport extends LitElement {
     readonly _dataStore: any;
+    constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
 
@@ -96,6 +105,16 @@ declare namespace LogicElements {
      * if error were not reported.
      */
     storeData(importObject: Obejct|null): Promise<any>|null;
+    _notifyDataImported(): void;
+
+    /**
+     * Dispatches `url-index-update` event handled by `arc-models/url-indexer`.
+     * It will index URL data for search function.
+     *
+     * @param saved List of saved requests indexes
+     * @param history List of history requests indexes
+     */
+    _notifyIndexer(saved: Array<object|null>|null, history: Array<object|null>|null): void;
 
     /**
      * Transforms any previous ARC export file to current export object.
@@ -242,6 +261,9 @@ declare namespace LogicElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "arc-data-import": LogicElements.ArcDataImport;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "arc-data-import": LogicElements.ArcDataImport;
+  }
 }

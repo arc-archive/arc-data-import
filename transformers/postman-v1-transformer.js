@@ -1,10 +1,8 @@
-'use strict';
-/* global PostmanTransformer */
-/* jshint -W098 */
+import { PostmanTransformer } from './postman-transformer.js';
 /**
  * Transforms Postamn v1 collections to ARC import object.
  */
-class PostmanV1Transformer extends PostmanTransformer {
+export class PostmanV1Transformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
@@ -13,7 +11,7 @@ class PostmanV1Transformer extends PostmanTransformer {
     const project = this._readProjectInfo();
     const requests = this._readRequestsData(project);
 
-    let result = {
+    const result = {
       createdAt: new Date().toISOString(),
       version: 'postman-collection-v1',
       kind: 'ARC#Import',
@@ -72,7 +70,7 @@ class PostmanV1Transformer extends PostmanTransformer {
       ordered = ordered.concat(this._data.order);
     }
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    let folders = this._computeOrderedFolders(this._data.folders,
+    const folders = this._computeOrderedFolders(this._data.folders,
       this._data.folders_order);
     // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
     if (folders) {
@@ -82,7 +80,7 @@ class PostmanV1Transformer extends PostmanTransformer {
         }
       });
     }
-    let requests = this._data.requests;
+    const requests = this._data.requests;
     let result = ordered.map((id) => {
       return requests.find((request) => request.id === id);
     });
@@ -129,7 +127,7 @@ class PostmanV1Transformer extends PostmanTransformer {
     let headers = item.headers || '';
     headers = this.ensureVariablesSyntax(headers);
     const body = this.computeBodyOld(item);
-    let id = this.generateRequestId(item, this._data.id);
+    const id = this.generateRequestId(item, this._data.id);
     let created = Number(item.time);
     if (created !== created) {
       created = Date.now();

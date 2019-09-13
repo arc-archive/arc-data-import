@@ -1,10 +1,8 @@
-'use strict';
-/* global PostmanTransformer */
-/* jshint -W098 */
+import { PostmanTransformer } from './postman-transformer.js';
 /**
  * Transformer for Postamn backup file.
  */
-class PostmanBackupTransformer extends PostmanTransformer {
+export class PostmanBackupTransformer extends PostmanTransformer {
   /**
    * Transforms `_data` into ARC data model.
    * @return {Promise} Promise resolved when data are transformed.
@@ -36,14 +34,14 @@ class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Array} List of ARC request objects.
    */
   _readRequestsData(data) {
-    let result = {
+    const result = {
       projects: [],
       requests: []
     };
     if (!data || !data.length) {
       return result;
     }
-    let parts = data.map((item, index) =>
+    const parts = data.map((item, index) =>
       this._readCollectionData(item, index));
     parts.forEach((data) => {
       result.projects.push(data.project);
@@ -59,7 +57,7 @@ class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Object} Map of projects and requests.
    */
   _readCollectionData(collection, index) {
-    let result = {
+    const result = {
       project: {},
       requests: []
     };
@@ -228,10 +226,10 @@ class PostmanBackupTransformer extends PostmanTransformer {
    * found.
    */
   _computeVariables(data) {
-    let result = [];
+    const result = [];
     if (data.globals && data.globals.length) {
       data.globals.forEach((item) => {
-        let obj = this._computeVariableObject(item, 'default');
+        const obj = this._computeVariableObject(item, 'default');
         result.push(obj);
       });
     }
@@ -241,9 +239,9 @@ class PostmanBackupTransformer extends PostmanTransformer {
         if (!env.values || !env.values.length) {
           return;
         }
-        let name = env.name || 'Unnamed';
+        const name = env.name || 'Unnamed';
         env.values.forEach((item) => {
-          let obj = this._computeVariableObject(item, name);
+          const obj = this._computeVariableObject(item, name);
           result.push(obj);
         });
       });
@@ -258,7 +256,7 @@ class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Object} ARC's variable definition.
    */
   _computeVariableObject(item, environment) {
-    let result = {
+    const result = {
       _id: this.uuid(),
       enabled: item.enabled || true,
       environment: environment,

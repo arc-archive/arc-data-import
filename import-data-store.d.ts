@@ -5,21 +5,21 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   import-data-store.html
+ *   import-data-store.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
+import {LitElement} from 'lit-element';
 
 declare namespace LogicElements {
 
   /**
    * An element that offers access to the datastore for ARC objects.
    */
-  class ImportDataStore extends Polymer.Element {
+  class ImportDataStore extends LitElement {
     readonly _savedDb: any;
     readonly _historyDb: any;
     readonly _projectsDb: any;
@@ -31,6 +31,7 @@ declare namespace LogicElements {
     readonly _cookiesDb: any;
     readonly _authDataDb: any;
     readonly _hostRulesDb: any;
+    constructor();
 
     /**
      * Imports data into the data store.
@@ -53,9 +54,23 @@ declare namespace LogicElements {
     _importEnvironments(variables: any): any;
     _handleInsertResponse(result: any, items: any, db: any): any;
     _handleConflictedInserts(db: any, conflicted: any): any;
+
+    /**
+     * Lists all requests that should be added to URL index.
+     * It builds an array of requests are required by `arc-models/url-indexer`
+     * element.
+     *
+     * @param result PouchDB bulk insert response
+     * @param requests Inserted requests
+     * @param type Request type, `saved` or `history`
+     */
+    _listRequestIndex(result: Array<object|null>|null, requests: Array<object|null>|null, type: String|null): Array<object|null>|null|undefined;
   }
 }
 
-interface HTMLElementTagNameMap {
-  "import-data-store": LogicElements.ImportDataStore;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "import-data-store": LogicElements.ImportDataStore;
+  }
 }

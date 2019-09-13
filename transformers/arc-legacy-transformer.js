@@ -1,10 +1,8 @@
-'use strict';
-/* global BaseTransformer */
-/* jshint -W098 */
+import { BaseTransformer } from './base-transformer.js';
 /**
  * Transforms the first ARC data object to curent schema.
  */
-class ArcLegacyTransformer extends BaseTransformer {
+export class ArcLegacyTransformer extends BaseTransformer {
   /**
    * Transforms legacy ARC export object into current export data model.
    *

@@ -1,5 +1,4 @@
-const DataHelper = {};
-
+export const DataHelper = {};
 DataHelper.generateArcImportFile = () => {
   const data = `{
     "createdAt": "2019-02-02T21:58:25.467Z",
@@ -7,7 +6,7 @@ DataHelper.generateArcImportFile = () => {
     "kind": "ARC#AllDataExport",
     "requests": []
   }`;
-  const file = new Blob([data], {type: 'application/json'});
+  const file = new Blob([data], { type: 'application/json' });
   file.name = 'arc-export.json';
   return file;
 };

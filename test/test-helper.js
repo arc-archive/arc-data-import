@@ -1,8 +1,12 @@
-/* global chance */
+import { assert } from '@open-wc/testing';
+import 'chance/dist/chance.min.js';
+import 'pouchdb/dist/pouchdb.js';
+/* global Chance, PouchDB */
+const chance = new Chance();
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-const DataTestHelper = {};
+export const DataTestHelper = {};
 DataTestHelper.getFile = function(file) {
-  return fetch(file).then((response) => {
+  return fetch('/base/test/' + file).then((response) => {
     if (!response.ok) {
       throw new Error('File ' + file + ' is unavailable');
     }
@@ -75,7 +79,8 @@ DataTestHelper.clone = function(obj) {
   }
   if (obj instanceof Object) {
     copy = {};
-    for (let attr in obj) {
+    for (const attr in obj) {
+      /* eslint-disable no-prototype-builtins */
       if (obj.hasOwnProperty(attr)) {
         copy[attr] = DataTestHelper.clone(obj[attr]);
       }
@@ -86,7 +91,6 @@ DataTestHelper.clone = function(obj) {
 };
 
 DataTestHelper.getDatastoreData = function(name) {
-  /* global PouchDB */
   const db = new PouchDB(name);
   return db.allDocs({
     include_docs: true

@@ -1,4 +1,4 @@
-<!--
+/**
 @license
 Copyright 2018 The Advanced REST client authors <arc@mulesoft.com>
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -10,11 +10,13 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
--->
-<link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="import-data-store.html">
-<link rel="import" href="transformers-import.html">
-<script>
+*/
+import { LitElement } from 'lit-element';
+import './import-data-store.js';
+import { ArcLegacyTransformer } from './transformers/arc-legacy-transformer.js';
+import { ArcDexieTransformer } from './transformers/arc-dexie-transformer.js';
+import { ArcPouchTransformer } from './transformers/arc-pouch-transformer.js';
+import { PostmanDataTransformer } from './transformers/postman-data-transformer.js';
 /**
  * An element that imports data into the ARC datastore.
  *
@@ -56,7 +58,7 @@ the License.
  * @polymer
  * @memberof LogicElements
  */
-class ArcDataImport extends Polymer.Element {
+export class ArcDataImport extends LitElement {
   static get is() {
     return 'arc-data-import';
   }
@@ -72,7 +74,9 @@ class ArcDataImport extends Polymer.Element {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
     window.addEventListener('import-normalize', this._normalizeHandler);
     window.addEventListener('import-data', this._importHandler);
     window.addEventListener('import-process-file', this._importFileHandler);
@@ -80,7 +84,9 @@ class ArcDataImport extends Polymer.Element {
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
     window.removeEventListener('import-normalize', this._normalizeHandler);
     window.removeEventListener('import-data', this._importHandler);
     window.removeEventListener('import-process-file', this._importFileHandler);
@@ -101,12 +107,12 @@ class ArcDataImport extends Polymer.Element {
       return;
     }
     e.preventDefault();
-    const data = e.detail.content;
-    if (!data) {
+    const { content } = e.detail;
+    if (!content) {
       e.detail.result = Promise.reject(new Error('Content property not set'));
       return;
     }
-    e.detail.result = this.normalizeImportData(data);
+    e.detail.result = this.normalizeImportData(content);
   }
   /**
    * Handler for the `import-data` cutom event.
@@ -123,12 +129,12 @@ class ArcDataImport extends Polymer.Element {
       return;
     }
     e.preventDefault();
-    const data = e.detail.content;
-    if (!data) {
+    const { content } = e.detail;
+    if (!content) {
       e.detail.result = Promise.reject(new Error('The "content" property not set'));
       return;
     }
-    e.detail.result = this.storeData(data);
+    e.detail.result = this.storeData(content);
   }
   /**
    * Handles file import event dispatched by the UI.
@@ -154,7 +160,7 @@ class ArcDataImport extends Polymer.Element {
       return;
     }
     e.preventDefault();
-    const {data} = e.detail;
+    const { data } = e.detail;
     if (!data) {
       e.detail.result = Promise.reject(new Error('The "data" property not set'));
       return;
@@ -180,24 +186,22 @@ class ArcDataImport extends Polymer.Element {
    * @return {Promise} Resolved promise to list of errors or `undefined`
    * if error were not reported.
    */
-  storeData(importObject) {
+  async storeData(importObject) {
     if (!importObject) {
-      return Promise.reject(new Error('Missing required argument.'));
+      throw new Error('Missing required argument.');
     }
     if (!importObject.kind || importObject.kind !== 'ARC#Import') {
-      return Promise.reject(new Error('Data not normalized for import.'));
+      throw new Error('Data not normalized for import.');
     }
     const store = this._dataStore;
-    return store.importData(importObject)
-    .then((result) => {
-      const savedIndexes = store.savedIndexes;
-      const historyIndexes = store.historyIndexes;
-      setTimeout(() => {
-        this._notifyIndexer(savedIndexes, historyIndexes);
-        this._notifyDataImported();
-      }, 100);
-      return result;
-    });
+    const result = await store.importData(importObject);
+    const savedIndexes = store.savedIndexes;
+    const historyIndexes = store.historyIndexes;
+    setTimeout(() => {
+      this._notifyIndexer(savedIndexes, historyIndexes);
+      this._notifyDataImported();
+    }, 100);
+    return result;
   }
 
   _notifyDataImported() {
@@ -237,19 +241,19 @@ class ArcDataImport extends Polymer.Element {
    * @param {String|Object} data Data from the import file.
    * @return {Promise} Normalized data import object.
    */
-  normalizeImportData(data) {
+  async normalizeImportData(data) {
     try {
       data = this._prepareImportObject(data);
     } catch (e) {
-      return Promise.reject(new Error('File not recognized. Not a JSON.'));
+      throw new Error('File not recognized. Not a JSON.');
     }
     if (this._isPostman(data)) {
-      return this._normalizePostmap(data);
+      return await this._normalizePostmap(data);
     }
     if (this._isArcFile(data)) {
-      return this._normalizeArc(data);
+      return await this._normalizeArc(data);
     }
-    return Promise.reject(new Error('File not recognized'));
+    throw new Error('File not recognized');
   }
 
   /**
@@ -301,9 +305,6 @@ class ArcDataImport extends Polymer.Element {
    * @return {Object} Normalized import object
    */
   _normalizeArcLegacyData(data) {
-    /* global ArcLegacyTransformer, ArcDexieTransformer, ArcPouchTransformer,
-    PostmanDataTransformer */
-    /* jshint -W098 */
     const transformer = new ArcLegacyTransformer(data);
     return transformer.transform();
   }
@@ -422,57 +423,55 @@ class ArcDataImport extends Polymer.Element {
    * @param {?Object} opts Additional options. `driveId` is only supported.
    * @return {Promise}
    */
-  _processFileData(file, opts) {
+  async _processFileData(file, opts) {
     const apiTypes = [
       'application/zip', 'application/yaml', 'application/x-yaml',
-      'application/raml', 'application/x-raml'
+      'application/raml', 'application/x-raml', 'application/x-zip-compressed'
     ];
     if (apiTypes.indexOf(file.type) !== -1) {
-      return this._notifyApiParser(file);
+      return await this._notifyApiParser(file);
     }
     // RAML files
-    if (file.name && (file.name.indexOf('.raml') !== -1 || file.name.indexOf('.yaml') !== -1)) {
-      return this._notifyApiParser(file);
+    if (file.name && (file.name.indexOf('.raml') !== -1 ||
+      file.name.indexOf('.yaml') !== -1 ||
+      file.name.indexOf('.zip') !== -1)) {
+      return await this._notifyApiParser(file);
     }
     const id = Date.now();
     this._fire('process-loading-start', {
       message: 'Procerssing file data',
       id
     });
-    let p;
+    let content;
     if (file instanceof Uint8Array) {
-      p = Promise.resolve(file.toString());
+      content = file.toString();
     } else {
-      p = this._readFile(file);
+      content = await this._readFile(file);
     }
-    return p.then((content) => {
-      content = content.trim();
-      if (content[0] === '#' && content.indexOf('#%RAML') === 0) {
-        return this._notifyApiParser(file);
-      }
-      let data;
-      try {
-        data = JSON.parse(content);
-      } catch (_) {
-        this._fire('process-loading-stop', {
-          id
-        });
-        throw new Error('Unknown file format');
-      }
-      if (data.swagger) {
-        this._fire('process-loading-stop', {
-          id
-        });
-        return this._notifyApiParser(file);
-      }
-      return this.normalizeImportData(data)
-      .then((data) => {
-        this._fire('process-loading-stop', {
-          id
-        });
-        return this._handleNormalizedFileData(data, opts);
+    content = content.trim();
+    if (content[0] === '#' && content.indexOf('#%RAML') === 0) {
+      return await this._notifyApiParser(file);
+    }
+    let data;
+    try {
+      data = JSON.parse(content);
+    } catch (_) {
+      this._fire('process-loading-stop', {
+        id
       });
+      throw new Error('Unknown file format');
+    }
+    if (data.swagger) {
+      this._fire('process-loading-stop', {
+        id
+      });
+      return await this._notifyApiParser(file);
+    }
+    const importData = await this.normalizeImportData(data);
+    this._fire('process-loading-stop', {
+      id
     });
+    return this._handleNormalizedFileData(importData, opts);
   }
   /**
    * Processes normalized file import data.
@@ -530,19 +529,17 @@ class ArcDataImport extends Polymer.Element {
    * @param {File} file User file.
    * @return {Promise}
    */
-  _notifyApiParser(file) {
+  async _notifyApiParser(file) {
     const e = this._fire('api-process-file', {
       file
     });
     if (!e.defaultPrevented) {
-      return Promise.reject(new Error('API processor not available'));
+      throw new Error('API processor not available');
     }
-    return e.detail.result
-    .then((api) => {
-      this._fire('api-data-ready', {
-        model: api.model,
-        type: api.type
-      });
+    const api = await e.detail.result;
+    this._fire('api-data-ready', {
+      model: api.model,
+      type: api.type
     });
   }
   /**
@@ -586,5 +583,4 @@ class ArcDataImport extends Polymer.Element {
     return false;
   }
 }
-window.customElements.define(ArcDataImport.is, ArcDataImport);
-</script>
+window.customElements.define('arc-data-import', ArcDataImport);
