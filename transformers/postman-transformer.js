@@ -1,4 +1,4 @@
-import {BaseTransformer} from './base-transformer.js';
+import { BaseTransformer } from './base-transformer.js';
 /**
  * Base class for all Postman transformers
  */
@@ -41,10 +41,10 @@ export class PostmanTransformer extends BaseTransformer {
     if (!item.data || !item.data.length) {
       return '';
     }
-    let multipart = [];
+    const multipart = [];
     item.data = this.ensureVarsRecursevily(item.data);
     item.data.forEach((item) => {
-      let obj = {
+      const obj = {
         enabled: item.enabled,
         name: item.key,
         isFile: item.type === 'file',
@@ -67,8 +67,8 @@ export class PostmanTransformer extends BaseTransformer {
     }
     item.data = this.ensureVarsRecursevily(item.data);
     return item.data.map((item) => {
-      let name = this._paramValue(item.key);
-      let value = this._paramValue(item.value);
+      const name = this._paramValue(item.key);
+      const value = this._paramValue(item.value);
       return name + '=' + value;
     }).join('&');
   }

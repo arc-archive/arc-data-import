@@ -10,25 +10,20 @@ An element that imports data into the ARC datastore.
 
 Currently the element imports the following formats:
 
-- ARC original format
-- ARC format for Dexie data store
-- ARC format for PouchDB (current)
-- Postman v1 collections
-- Postman v2 collections
-- Postman backup data
-- Postamn environment data
+-   ARC original format
+-   ARC format for Dexie data store
+-   ARC format for PouchDB (current)
+-   Postman v1 collections
+-   Postman v2 collections
+-   Postman backup data
+-   Postamn environment data
 
-Planned suupport for:
+Planned support for:
 
-- HAR files
+-   HAR files
 
-```html
-<arc-data-import></arc-data-import>
-```
-
-### API components
-
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
+The component reads the file and try to recognize file content. If it find an API specification file it dispatches `api-process-file`
+custom event for the application to handle API data.
 
 ## Usage
 
@@ -37,58 +32,41 @@ This components is a part of [API components ecosystem](https://elements.advance
 npm install --save @advanced-rest-client/arc-data-import
 ```
 
-### In an html file
-
-```html
-<html>
-  <head>
-    <script type="module">
-      import '@advanced-rest-client/arc-data-import/arc-data-import.js';
-    </script>
-  </head>
-  <body>
-    <arc-data-import></arc-data-import>
-  </body>
-</html>
-```
-
-### In a Polymer 3 element
+### In a LitElement
 
 ```js
-import {PolymerElement, html} from '@polymer/polymer';
+import { LitElement, html } from 'lit-element';
 import '@advanced-rest-client/arc-data-import/arc-data-import.js';
 
-class SampleElement extends PolymerElement {
-  static get template() {
+class SampleElement extends LitElement {
+  render() {
     return html`
     <arc-data-import></arc-data-import>
     `;
-  }
-
-  _authChanged(e) {
-    console.log(e.detail);
   }
 }
 customElements.define('sample-element', SampleElement);
 ```
 
-### Installation
+## Development
 
 ```sh
 git clone https://github.com/advanced-rest-client/arc-data-import
-cd api-url-editor
-npm install
-npm install -g polymer-cli
+cd arc-data-import
+npm i
 ```
 
 ### Running the demo locally
 
 ```sh
-polymer serve --npm
-open http://127.0.0.1:<port>/demo/
+npm start
 ```
 
 ### Running the tests
 ```sh
-polymer test --npm
+npm test
 ```
+
+## API components
+
+This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)

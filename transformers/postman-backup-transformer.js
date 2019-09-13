@@ -1,4 +1,4 @@
-import {PostmanTransformer} from './postman-transformer.js';
+import { PostmanTransformer } from './postman-transformer.js';
 /**
  * Transformer for Postamn backup file.
  */
@@ -34,14 +34,14 @@ export class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Array} List of ARC request objects.
    */
   _readRequestsData(data) {
-    let result = {
+    const result = {
       projects: [],
       requests: []
     };
     if (!data || !data.length) {
       return result;
     }
-    let parts = data.map((item, index) =>
+    const parts = data.map((item, index) =>
       this._readCollectionData(item, index));
     parts.forEach((data) => {
       result.projects.push(data.project);
@@ -57,7 +57,7 @@ export class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Object} Map of projects and requests.
    */
   _readCollectionData(collection, index) {
-    let result = {
+    const result = {
       project: {},
       requests: []
     };
@@ -226,10 +226,10 @@ export class PostmanBackupTransformer extends PostmanTransformer {
    * found.
    */
   _computeVariables(data) {
-    let result = [];
+    const result = [];
     if (data.globals && data.globals.length) {
       data.globals.forEach((item) => {
-        let obj = this._computeVariableObject(item, 'default');
+        const obj = this._computeVariableObject(item, 'default');
         result.push(obj);
       });
     }
@@ -239,9 +239,9 @@ export class PostmanBackupTransformer extends PostmanTransformer {
         if (!env.values || !env.values.length) {
           return;
         }
-        let name = env.name || 'Unnamed';
+        const name = env.name || 'Unnamed';
         env.values.forEach((item) => {
-          let obj = this._computeVariableObject(item, name);
+          const obj = this._computeVariableObject(item, name);
           result.push(obj);
         });
       });
@@ -256,7 +256,7 @@ export class PostmanBackupTransformer extends PostmanTransformer {
    * @return {Object} ARC's variable definition.
    */
   _computeVariableObject(item, environment) {
-    let result = {
+    const result = {
       _id: this.uuid(),
       enabled: item.enabled || true,
       environment: environment,

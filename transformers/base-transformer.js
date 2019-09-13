@@ -16,9 +16,7 @@ export class BaseTransformer {
    * @param {Function} fn A function to be executed in next event loop.
    */
   deffer(fn) {
-    if (typeof Polymer !== 'undefined' && Polymer.RenderStatus) {
-      Polymer.RenderStatus.afterNextRender(this, fn);
-    } else if (typeof process !== 'undefined' && process.nextTick) {
+    if (typeof process !== 'undefined' && process.nextTick) {
       process.nextTick(fn.bind(this));
     } else if (typeof window !== 'undefined' && window.requestAnimationFrame) {
       window.requestAnimationFrame(fn.bind(this));
@@ -56,7 +54,7 @@ export class BaseTransformer {
     if (this.__lut) {
       return this.__lut;
     }
-    let lut = [];
+    const lut = [];
     for (let i = 0; i < 256; i++) {
       lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
     }
@@ -69,11 +67,11 @@ export class BaseTransformer {
    * @return {String} UUID.
    */
   uuid() {
-    let d0 = Math.random() * 0xffffffff | 0;
-    let d1 = Math.random() * 0xffffffff | 0;
-    let d2 = Math.random() * 0xffffffff | 0;
-    let d3 = Math.random() * 0xffffffff | 0;
-    let lut = this._lut;
+    const d0 = Math.random() * 0xffffffff | 0;
+    const d1 = Math.random() * 0xffffffff | 0;
+    const d2 = Math.random() * 0xffffffff | 0;
+    const d3 = Math.random() * 0xffffffff | 0;
+    const lut = this._lut;
     return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] +
       lut[d0 >> 24 & 0xff] + '-' + lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' +
       lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
@@ -90,8 +88,8 @@ export class BaseTransformer {
    * @return {Number} Timestamp to the day.
    */
   getDayToday(timestamp) {
-    let d = new Date(timestamp);
-    let tCheck = d.getTime();
+    const d = new Date(timestamp);
+    const tCheck = d.getTime();
     if (tCheck !== tCheck) {
       throw new Error('Invalid timestamp: ' + timestamp);
     }
@@ -109,8 +107,8 @@ export class BaseTransformer {
    * @return {String} Datastore ID
    */
   generateHistoryId(timestamp, item) {
-    let url = item.url.toLowerCase();
-    let method = item.method.toLowerCase();
+    const url = item.url.toLowerCase();
+    const method = item.method.toLowerCase();
     let today;
     try {
       today = this.getDayToday(timestamp);

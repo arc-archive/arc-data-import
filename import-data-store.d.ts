@@ -12,14 +12,14 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {LitElement} from 'lit-element';
 
 declare namespace LogicElements {
 
   /**
    * An element that offers access to the datastore for ARC objects.
    */
-  class ImportDataStore extends PolymerElement {
+  class ImportDataStore extends LitElement {
     readonly _savedDb: any;
     readonly _historyDb: any;
     readonly _projectsDb: any;
@@ -31,6 +31,7 @@ declare namespace LogicElements {
     readonly _cookiesDb: any;
     readonly _authDataDb: any;
     readonly _hostRulesDb: any;
+    constructor();
 
     /**
      * Imports data into the data store.

@@ -1,4 +1,4 @@
-import {BaseTransformer} from './base-transformer.js';
+import { BaseTransformer } from './base-transformer.js';
 /**
  * Transforms Dexie system (legacy system) into current data model.
  */
@@ -122,21 +122,21 @@ export class ArcDexieTransformer extends BaseTransformer {
     // Up to 200 loop iteration at once.
     // Then the function return and release main loop.
     for (let i = 0; i < len; i++) {
-      let item = requests[i];
+      const item = requests[i];
       if (item.type === 'history') {
-        let result = this._parseHistoryItem(item);
+        const result = this._parseHistoryItem(item);
         history.push({
           origin: result.originId,
           request: result.request
         });
       } else if (item.type === 'saved') {
-        let result = this._parseSavedItem(item);
+        const result = this._parseSavedItem(item);
         saved.push({
           origin: result.originId,
           request: result.request
         });
       } else if (item.type === 'drive') {
-        let result = this._parseDriveItem(item);
+        const result = this._parseDriveItem(item);
         saved.push({
           origin: result.originId,
           request: result.request
@@ -144,11 +144,7 @@ export class ArcDexieTransformer extends BaseTransformer {
       }
     }
     requests.splice(0, len);
-    if (typeof Polymer !== 'undefined' && Polymer.RenderStatus) {
-      Polymer.RenderStatus.afterNextRender(this, () => {
-        this._parseRequestsDeffered(requests, done, saved, history);
-      });
-    } else if (typeof process !== 'undefined' && process.nextTick) {
+    if (typeof process !== 'undefined' && process.nextTick) {
       process.nextTick(() => {
         this._parseRequestsDeffered(requests, done, saved, history);
       });
@@ -165,19 +161,19 @@ export class ArcDexieTransformer extends BaseTransformer {
 
   _parseHistoryItem(item) {
     item.updateTime = item.updateTime || Date.now();
-    let id = this.generateHistoryId(item.updateTime, item);
-    let obj = {
+    const id = this.generateHistoryId(item.updateTime, item);
+    const obj = {
       _id: id,
       method: item.method,
       url: item.url,
       updated: new Date(item.updateTime).getTime()
     };
     // payload and headers
-    let har = item._har || item.har;
-    let entries = har.entries;
-    let entry = entries[entries.length - 1];
+    const har = item._har || item.har;
+    const entries = har.entries;
+    const entry = entries[entries.length - 1];
     if (entry) {
-      let harRequest = entry.request;
+      const harRequest = entry.request;
       obj.headers = this._parseHarHeders(harRequest.headers);
       obj.payload = harRequest.postData.text;
       let t = new Date(entry.startedDateTime).getTime();
@@ -247,7 +243,7 @@ export class ArcDexieTransformer extends BaseTransformer {
   }
 
   _parseDriveItem(item) {
-    let result = this._parseSavedItem(item);
+    const result = this._parseSavedItem(item);
     result.request.driveId = item.driveId;
     return result;
   }
@@ -272,8 +268,8 @@ export class ArcDexieTransformer extends BaseTransformer {
       return data;
     }
     data.saved = data.saved || [];
-    let savedLen = data.saved.length;
-    let projectsLen = projects.length;
+    const savedLen = data.saved.length;
+    const projectsLen = projects.length;
     for (let i = 0; i < projectsLen; i++) {
       const project = projects[i];
       const newProjectId = project.legacyProject._id;

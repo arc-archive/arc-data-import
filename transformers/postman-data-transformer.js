@@ -1,7 +1,7 @@
-import {PostmanBackupTransformer} from './postman-backup-transformer.js';
-import {PostmanEnvTransformer} from './postman-env-transformer.js';
-import {PostmanV1Transformer} from './postman-v1-transformer.js';
-import {PostmanV2Transformer} from './postman-v2-transformer.js';
+import { PostmanBackupTransformer } from './postman-backup-transformer.js';
+import { PostmanEnvTransformer } from './postman-env-transformer.js';
+import { PostmanV1Transformer } from './postman-v1-transformer.js';
+import { PostmanV2Transformer } from './postman-v2-transformer.js';
 
 export class PostmanDataTransformer {
   transform(data) {

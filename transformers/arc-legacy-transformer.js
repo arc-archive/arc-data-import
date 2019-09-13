@@ -1,4 +1,4 @@
-import {BaseTransformer} from './base-transformer.js';
+import { BaseTransformer } from './base-transformer.js';
 /**
  * Transforms the first ARC data object to curent schema.
  */

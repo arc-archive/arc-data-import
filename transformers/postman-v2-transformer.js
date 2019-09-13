@@ -1,4 +1,4 @@
-import {PostmanTransformer} from './postman-transformer.js';
+import { PostmanTransformer } from './postman-transformer.js';
 /**
  * Transforms Postamn v2 collections to ARC import object.
  */
@@ -86,7 +86,7 @@ export class PostmanV2Transformer extends PostmanTransformer {
       return this._extractRequestsV2(item.item, result)
       .then(() => this._extractRequestsV2(data, result));
     }
-    let arcRequest = this._computeArcRequest(item);
+    const arcRequest = this._computeArcRequest(item);
     result.push(arcRequest);
     if (this._currentItem === this.chounkSize) {
       return new Promise((resolve) => {
@@ -105,8 +105,8 @@ export class PostmanV2Transformer extends PostmanTransformer {
    * @return {Object} ARC request object.
    */
   _computeArcRequest(item) {
-    let request = item.request;
-    let name = item.name || 'unnamed';
+    const request = item.request;
+    const name = item.name || 'unnamed';
     let url;
     if (typeof request.url === 'string') {
       url = request.url;
@@ -119,7 +119,7 @@ export class PostmanV2Transformer extends PostmanTransformer {
     let method = request.method || 'GET';
     method = this.ensureVariablesSyntax(method);
     const header = this.ensureVarsRecursevily(request.header);
-    let time = Date.now();
+    const time = Date.now();
     const result = {
       name: name,
       url: url,
@@ -146,7 +146,7 @@ export class PostmanV2Transformer extends PostmanTransformer {
     if (!headers || !headers.length) {
       return result;
     }
-    let tmp = headers.filter((h) => !h.disabled);
+    const tmp = headers.filter((h) => !h.disabled);
     result = tmp.map((item) => item.key + ': ' + item.value).join('\n');
     return result;
   }
@@ -158,7 +158,7 @@ export class PostmanV2Transformer extends PostmanTransformer {
    * @return {String} Body value as string.
    */
   _computePayload(body, item) {
-    let def = body[body.mode];
+    const def = body[body.mode];
     if (!def) {
       return;
     }
@@ -184,7 +184,7 @@ export class PostmanV2Transformer extends PostmanTransformer {
     }
     items = this.ensureVarsRecursevily(items);
     item.multipart = items.map((_item) => {
-      let obj = {
+      const obj = {
         enabled: !_item.disabled,
         name: _item.key,
         isFile: _item.type === 'file',
@@ -206,12 +206,12 @@ export class PostmanV2Transformer extends PostmanTransformer {
     if (!items || !items.length) {
       return '';
     }
-    let result = [];
-    let model = [];
+    const result = [];
+    const model = [];
     items = this.ensureVarsRecursevily(items);
     items.forEach((item) => {
-      let name = this._paramValue(item.key);
-      let value = this._paramValue(item.value);
+      const name = this._paramValue(item.key);
+      const value = this._paramValue(item.value);
       model.push({
         name: name,
         value: value,

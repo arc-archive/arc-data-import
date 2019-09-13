@@ -6,7 +6,7 @@ DataHelper.generateArcImportFile = () => {
     "kind": "ARC#AllDataExport",
     "requests": []
   }`;
-  const file = new Blob([data], {type: 'application/json'});
+  const file = new Blob([data], { type: 'application/json' });
   file.name = 'arc-export.json';
   return file;
 };

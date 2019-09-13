@@ -12,7 +12,7 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {LitElement} from 'lit-element';
 
 import {ArcLegacyTransformer} from './transformers/arc-legacy-transformer.js';
 
@@ -63,8 +63,9 @@ declare namespace LogicElements {
    * - The component no longer includes PouchDB. Use your own version of the
    * library from Bower, npm, csd etc.
    */
-  class ArcDataImport extends PolymerElement {
+  class ArcDataImport extends LitElement {
     readonly _dataStore: any;
+    constructor();
     connectedCallback(): void;
     disconnectedCallback(): void;
 

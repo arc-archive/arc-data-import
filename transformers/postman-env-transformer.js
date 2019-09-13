@@ -1,4 +1,4 @@
-import {PostmanTransformer} from './postman-transformer.js';
+import { PostmanTransformer } from './postman-transformer.js';
 /**
  * Transforms environment export from postman to ARC variables.
  */

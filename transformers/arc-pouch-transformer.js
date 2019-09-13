@@ -1,4 +1,4 @@
-import {BaseTransformer} from './base-transformer.js';
+import { BaseTransformer } from './base-transformer.js';
 /**
  * Transforms Dexie system (legacy system) into current data model.
  */
