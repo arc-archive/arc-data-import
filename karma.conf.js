@@ -15,10 +15,10 @@ module.exports = (config) => {
           pattern: config.grep ? config.grep : 'test/**/*.test.js',
           type: 'module'
         },
-        // {
-        //   pattern: 'test/postman/*.test.js',
-        //   type: 'module'
-        // }
+        {
+          pattern: 'node_modules/crypto-js/crypto-js.js',
+          type: 'js'
+        },
       ],
 
       // see the karma-esm docs for all options

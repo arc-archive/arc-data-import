@@ -242,6 +242,9 @@ export class ArcDataImport extends LitElement {
    * @return {Promise} Normalized data import object.
    */
   async normalizeImportData(data) {
+    if (typeof data === 'string') {
+      data = await this._decryptIfNeeded(data);
+    }
     try {
       data = this._prepareImportObject(data);
     } catch (e) {
@@ -449,6 +452,7 @@ export class ArcDataImport extends LitElement {
       content = await this._readFile(file);
     }
     content = content.trim();
+    content = await this._decryptIfNeeded(content);
     if (content[0] === '#' && content.indexOf('#%RAML') === 0) {
       return await this._notifyApiParser(file);
     }
@@ -480,6 +484,7 @@ export class ArcDataImport extends LitElement {
    * `import-data-inspect` custom event.
    * @param {Object} data Normalized data
    * @param {?Object} opts Additional options. `driveId` is only supported.
+   * @return {Object} passed data
    */
   _handleNormalizedFileData(data, opts) {
     if (!data) {
@@ -504,6 +509,7 @@ export class ArcDataImport extends LitElement {
         data
       });
     }
+    return data;
   }
   /**
    * Reads file content as string
@@ -582,5 +588,51 @@ export class ArcDataImport extends LitElement {
     }
     return false;
   }
+  /**
+   * Processes incomming data and if encryption is detected then id processes
+   * the file for decryption.
+   *
+   * @param {String} content File content
+   * @return {Promise}
+   */
+  async _decryptIfNeeded(content) {
+    const headerIndex = content.indexOf('\n');
+    const header = content.substr(0, headerIndex).trim();
+    if (header === 'aes') {
+      // the opposite of `ArcDataExport._encryptFile()`.
+      content = await this._decryptFile(content.substr(headerIndex + 1));
+    }
+    return content;
+  }
+  /**
+   * Dispatches `encryption-decode` and await for the result.
+   * @param {String} data Data to decode
+   * @return {Promise} Decoded data.
+   */
+  async _decryptFile(data) {
+    const e = new CustomEvent('encryption-decode', {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      detail: {
+        data,
+        method: 'aes'
+      }
+    });
+    this.dispatchEvent(e);
+    const decoded = await e.detail.result;
+    if (!decoded) {
+      throw new Error('Unable to decode encrypted file.');
+    }
+    return decoded;
+  }
+
+  /**
+   * Dispatched when import file was encrypted
+   *
+   * @event encryption-encode
+   * @param {String} data The data to decode.
+   * @param {String} method Encryption method. Set to `aes`.
+   */
 }
 window.customElements.define('arc-data-import', ArcDataImport);

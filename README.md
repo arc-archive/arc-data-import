@@ -48,6 +48,14 @@ class SampleElement extends LitElement {
 customElements.define('sample-element', SampleElement);
 ```
 
+### File decryption
+
+The component discovers when the file was previously encoded using AES provided by
+[crypto-js](https://www.npmjs.com/package/crypto-js) library.
+`arc-data-export` adds `aes` in the first line of the file which is used in ARC as an anchor to know whether the file was encoded.
+If the file was encoded the element dispatches `encryption-decode` event with the `data` set on the `detail` object
+and `aes` value set on `detail.method`. The application must support this event or it result in error otherwise.
+
 ## Development
 
 ```sh
