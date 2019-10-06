@@ -223,8 +223,9 @@ declare namespace LogicElements {
      *
      * @param data Normalized data
      * @param opts Additional options. `driveId` is only supported.
+     * @returns passed data
      */
-    _handleNormalizedFileData(data: object|null, opts: object|null): void;
+    _handleNormalizedFileData(data: object|null, opts: object|null): object|null;
 
     /**
      * Reads file content as string
@@ -258,6 +259,22 @@ declare namespace LogicElements {
      * @param data Normalized import data
      */
     _isSingleRequest(data: object|null): Boolean|null;
+
+    /**
+     * Processes incomming data and if encryption is detected then id processes
+     * the file for decryption.
+     *
+     * @param content File content
+     */
+    _decryptIfNeeded(content: String|null): Promise<any>|null;
+
+    /**
+     * Dispatches `encryption-decode` and await for the result.
+     *
+     * @param data Data to decode
+     * @returns Decoded data.
+     */
+    _decryptFile(data: String|null): Promise<any>|null;
   }
 }
 
