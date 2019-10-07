@@ -258,3 +258,12 @@
 
 
 
+# [3.1.0](https://github.com/advanced-rest-client/arc-data-import/compare/0.1.18...3.1.0) (2019-10-07)
+
+
+### Bug Fixes
+
+* fixes [#4](https://github.com/advanced-rest-client/arc-data-import/issues/4) - support for AES encoded files ([231b2d4](https://github.com/advanced-rest-client/arc-data-import/commit/231b2d4))
+
+
+
