@@ -8,7 +8,7 @@ export class ArcPouchTransformer extends BaseTransformer {
    *
    * @return {Object} New data model object.
    */
-  transform() {
+  async transform() {
     const data = this._data;
     if (data.projects && data.projects.length) {
       data.projects = this._transformProjects(data.projects);
@@ -48,7 +48,11 @@ export class ArcPouchTransformer extends BaseTransformer {
     if (!data.loadToWorkspace) {
       data.kind = 'ARC#Import';
     }
-    return Promise.resolve(data);
+    const ccs = data['client-certificates'];
+    if (ccs && ccs.length) {
+      data['client-certificates'] = this._tranformClientCertificates(ccs);
+    }
+    return data;
   }
 
   _updateItemTimings(item) {
@@ -143,5 +147,40 @@ export class ArcPouchTransformer extends BaseTransformer {
       delete item.kind;
       return item;
     });
+  }
+  /**
+   * Transformes ARC's client certificate export object into intermediate structure
+   * used by the import panel.
+   *
+   * @param {Array<Object>} items [description]
+   * @return {Array<Array>} A list of certificates to import. In each element
+   * first item is the index data and the second is the certificates data.
+   */
+  _tranformClientCertificates(items) {
+    const result = [];
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.kind !== 'ARC#ClientCertificate') {
+        continue;
+      }
+      item = this._updateItemTimings(item);
+      const index = {
+        _id: item.key,
+        updated: item.updated,
+        created: item.created,
+        dataKey: item.dataKey,
+        name: item.name,
+        type: item.type,
+      };
+      const data = {
+        _id: item.dataKey,
+        cert: item.cert,
+      };
+      if (item.pKey) {
+        data.key = item.pKey;
+      }
+      result[result.length] = [index, data];
+    }
+    return result;
   }
 }

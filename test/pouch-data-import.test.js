@@ -2,6 +2,7 @@ import { assert, fixture } from '@open-wc/testing';
 import { DataGenerator } from '@advanced-rest-client/arc-data-generator/arc-data-generator.js';
 import { DataTestHelper } from './test-helper.js';
 import '../arc-data-import.js';
+
 suite('PouchDB import to datastore', function() {
   async function basicFixture() {
     return await fixture(`
@@ -12,107 +13,127 @@ suite('PouchDB import to datastore', function() {
   let originalData;
   let element;
   let data;
-  suiteSetup(function() {
-    return DataTestHelper.getFile('pouch-data-export.json')
-    .then((response) => {
-      originalData = JSON.parse(response);
-    });
+  suiteSetup(async () => {
+    const response = await DataTestHelper.getFile('pouch-data-export.json');
+    originalData = JSON.parse(response);
   });
 
-  suiteTeardown(function() {
-    return DataGenerator.destroyAll();
-  });
-
-  setup(async function() {
-    element = await basicFixture();
-    data = DataTestHelper.clone(originalData);
-  });
-
-  test('Stores the data', function() {
-    return element.normalizeImportData(data)
-    .then((parsed) => {
-      return element.storeData(parsed);
-    })
-    .then((errors) => {
+  suite('storing data', () => {
+    setup(async function() {
+      element = await basicFixture();
+      data = DataTestHelper.clone(originalData);
+      const parsed = await element.normalizeImportData(data);
+      const errors = await element.storeData(parsed);
       assert.isUndefined(errors, 'No errors while importing');
-      return DataTestHelper.getDatastoreRequestData();
-    })
-    .then((requests) => {
-      assert.lengthOf(requests, 4, 'Has 4 requests');
-      return DataTestHelper.getDatastoreProjectsData();
-    })
-    .then((projects) => {
-      assert.lengthOf(projects, 2, 'Has 2 projects');
-      return DataTestHelper.getDatastoreVariablesData();
-    })
-    .then((variables) => {
-      assert.lengthOf(variables, 4, 'Has 4 variables');
-      return DataTestHelper.getDatastoreEnvironmentsData();
-    })
-    .then((environments) => {
-      assert.lengthOf(environments, 2, 'Has 2 environments');
-      return DataTestHelper.getDatastoreheadersData();
-    })
-    .then((headers) => {
-      assert.lengthOf(headers, 1, 'Has 1 header set');
-      return DataTestHelper.getDatastoreHistoryData();
-    })
-    .then((history) => {
-      assert.lengthOf(history, 3, 'Has 3 history');
-      return DataTestHelper.getDatastoreCookiesData();
-    })
-    .then((cookies) => {
-      assert.lengthOf(cookies, 2, 'Has 2 cookies');
-      return DataTestHelper.getDatastoreWebsocketsData();
-    })
-    .then((websocketUrls) => {
-      assert.lengthOf(websocketUrls, 1, 'Has 1 WS history');
-      return DataTestHelper.getDatastoreUrlsData();
-    })
-    .then((urls) => {
-      assert.lengthOf(urls, 5, 'Has 5 URL history');
-      return DataTestHelper.getDatastoreAthDataData();
-    })
-    .then((auth) => {
-      assert.lengthOf(auth, 1, 'Has 1 auth data');
-      return DataTestHelper.getDatastoreHostRulesData();
-    })
-    .then((rules) => {
-      assert.lengthOf(rules, 1, 'Has 1 host rule');
-      assert.equal(rules[0]._id, 'host-rule');
+    });
+
+    teardown(function() {
+      return DataGenerator.destroyAll();
+    });
+
+    test('stores saved request data', async () => {
+      const result = await DataTestHelper.getDatastoreRequestData();
+      assert.lengthOf(result, 5, 'Has 5 requests');
+    });
+
+    test('stores projects data', async () => {
+      const result = await DataTestHelper.getDatastoreProjectsData();
+      assert.lengthOf(result, 2, 'Has 2 projects');
+    });
+
+    test('stores variables data', async () => {
+      const result = await DataTestHelper.getDatastoreVariablesData();
+      assert.lengthOf(result, 4, 'Has 4 variables');
+    });
+
+    test('stores environments data', async () => {
+      const result = await DataTestHelper.getDatastoreEnvironmentsData();
+      assert.lengthOf(result, 2, 'Has 2 environments');
+    });
+
+    test('stores history request data', async () => {
+      const result = await DataTestHelper.getDatastoreHistoryData();
+      assert.lengthOf(result, 3, 'Has 3 history');
+    });
+
+    test('stores cookies data', async () => {
+      const result = await DataTestHelper.getDatastoreCookiesData();
+      assert.lengthOf(result, 2, 'Has 2 cookies');
+    });
+
+    test('stores websocket url data', async () => {
+      const result = await DataTestHelper.getDatastoreWebsocketsData();
+      assert.lengthOf(result, 1, 'Has 1 WS history');
+    });
+
+    test('stores url history data', async () => {
+      const result = await DataTestHelper.getDatastoreUrlsData();
+      assert.lengthOf(result, 5, 'Has 5 URL history');
+    });
+
+    test('stores auth data', async () => {
+      const result = await DataTestHelper.getDatastoreAthDataData();
+      assert.lengthOf(result, 1, 'Has 1 auth data');
+    });
+
+    test('stores host rules data', async () => {
+      const result = await DataTestHelper.getDatastoreHostRulesData();
+      assert.lengthOf(result, 1, 'Has 1 host rule');
+      assert.equal(result[0]._id, 'host-rule');
+    });
+
+    test('stores client certificates', async () => {
+      const [indexes, certs] = await DataGenerator.getDatastoreClientCertificates();
+      assert.lengthOf(indexes, 1, 'has 1 certificate index document');
+      assert.lengthOf(certs, 1, 'has 1 certificate data document');
     });
   });
 
-  test('Overrides all data', function() {
-    return element.normalizeImportData(data)
-    .then((parsed) => {
-      return element.storeData(parsed);
-    })
-    .then((errors) => {
-      assert.isUndefined(errors);
-      return DataTestHelper.getDatastoreRequestData();
-    })
-    .then((requests) => {
+
+  suite('overriding data', () => {
+    suiteTeardown(function() {
+      return DataGenerator.destroyAll();
+    });
+
+    setup(async function() {
+      element = await basicFixture();
+      data = DataTestHelper.clone(originalData);
+      const parsed = await element.normalizeImportData(data);
+      const errors = await element.storeData(parsed);
+      assert.isUndefined(errors, 'No errors while importing');
+    });
+
+    // this test comes first as variables are always added as new
+    test('stores variables data', async () => {
+      const parsed = await element.normalizeImportData(data);
+      const errors = await element.storeData(parsed);
+      assert.isUndefined(errors, 'No errors while importing');
+      const result = await DataTestHelper.getDatastoreVariablesData();
+      assert.lengthOf(result, 4, 'Has 4 variables');
+    });
+
+    test('stores saved request data', async () => {
+      const result = await DataTestHelper.getDatastoreRequestData();
       // 1 request is in a project in the test data
       // and this import is missing project ID so it generates IDs again
       // so together it should give 2 from previous import + 1 new
-      assert.lengthOf(requests, 4, 'Has 4 requests');
-      return DataTestHelper.getDatastoreProjectsData();
-    })
-    .then((projects) => {
-      assert.lengthOf(projects, 2, 'Has 2 projects');
-      return DataTestHelper.getDatastoreVariablesData();
-    })
-    .then((variables) => {
-      assert.lengthOf(variables, 8, 'Has 8 variables');
-      return DataTestHelper.getDatastoreEnvironmentsData();
-    })
-    .then((environments) => {
-      assert.lengthOf(environments, 2, 'Has 2 environments');
-      return DataTestHelper.getDatastoreheadersData();
-    })
-    .then((headers) => {
-      assert.lengthOf(headers, 2, 'Has 2 headers');
+      assert.lengthOf(result, 7, 'Has 7 requests');
+    });
+
+    test('stores projects data', async () => {
+      const result = await DataTestHelper.getDatastoreProjectsData();
+      assert.lengthOf(result, 4, 'Has 4 projects');
+    });
+
+    test('stores environments data', async () => {
+      const result = await DataTestHelper.getDatastoreEnvironmentsData();
+      assert.lengthOf(result, 2, 'Has 2 environments');
+    });
+
+    test('stores client certificates', async () => {
+      const [indexes, certs] = await DataGenerator.getDatastoreClientCertificates();
+      assert.lengthOf(indexes, 1, 'has 1 certificate index document');
+      assert.lengthOf(certs, 1, 'has 1 certificate data document');
     });
   });
 });

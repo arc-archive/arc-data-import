@@ -55,14 +55,9 @@ import { PostmanDataTransformer } from './transformers/postman-data-transformer.
  * library from Bower, npm, csd etc.
  *
  * @customElement
- * @polymer
  * @memberof LogicElements
  */
 export class ArcDataImport extends LitElement {
-  static get is() {
-    return 'arc-data-import';
-  }
-
   constructor() {
     super();
     this._normalizeHandler = this._normalizeHandler.bind(this);

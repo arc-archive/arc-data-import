@@ -54,6 +54,12 @@ class ImportDataStore extends LitElement {
   get _hostRulesDb() {
     return new PouchDB('host-rules');
   }
+  get _ccDb() {
+    return new PouchDB('client-certificates');
+  }
+  get _ccDataDb() {
+    return new PouchDB('client-certificates-data');
+  }
 
   /**
    * Imports data into the data store.
@@ -117,6 +123,11 @@ class ImportDataStore extends LitElement {
       const result = await this.importHostRules(hr);
       handleInfo(result);
     }
+    const cc = exportObj['client-certificates'];
+    if (cc && cc.length) {
+      const result = await this.importClientCertificates(cc);
+      handleInfo(result);
+    }
     return errors.length ? errors : undefined;
   }
 
@@ -129,7 +140,7 @@ class ImportDataStore extends LitElement {
 
   async importProjects(projects) {
     const db = this._projectsDb;
-    const result = await db.bulkDocs(projects)
+    const result = await db.bulkDocs(projects);
     return await this._handleInsertResponse(result, projects, db);
   }
 
@@ -142,44 +153,67 @@ class ImportDataStore extends LitElement {
 
   async importWebsocketUrls(urls) {
     const db = this._socketUrlDb;
-    const result = await db.bulkDocs(urls)
+    const result = await db.bulkDocs(urls);
     return await this._handleInsertResponse(result, urls, db);
   }
 
   async importUrls(urls) {
     const db = this._urlDb;
-    const result = await db.bulkDocs(urls)
+    const result = await db.bulkDocs(urls);
     return await this._handleInsertResponse(result, urls, db);
   }
 
   async importCookies(data) {
     const db = this._cookiesDb;
-    const result = await db.bulkDocs(data)
+    const result = await db.bulkDocs(data);
     return await this._handleInsertResponse(result, data, db);
   }
 
   async importAuthData(data) {
     const db = this._authDataDb;
-    const result = await db.bulkDocs(data)
+    const result = await db.bulkDocs(data);
     return await this._handleInsertResponse(result, data, db);
   }
 
   async importHeaders(data) {
     const db = this._headersSetsDb;
-    const result = await db.bulkDocs(data)
+    const result = await db.bulkDocs(data);
     return await this._handleInsertResponse(result, data, db);
   }
 
   async importHostRules(data) {
     const db = this._hostRulesDb;
-    const result = await db.bulkDocs(data)
+    const result = await db.bulkDocs(data);
     return await this._handleInsertResponse(result, data, db);
   }
 
   async importVariables(data) {
     const db = this._variablesDb;
-    const result = await db.bulkDocs(data)
+    const result = await db.bulkDocs(data);
     return await this._handleInsertResponse(result, data, db);
+  }
+  /**
+   * Imports client certificates to the data store.
+   * @param {Array<Array>} data Previously normalized certificates data.
+   * @return {Promise<Array|undefined>} Promise resolved to the list of errors or
+   * undefined.
+   */
+  async importClientCertificates(data) {
+    const indexes = [];
+    const certs = [];
+    for (let i = 0, len = data.length; i < len; i++) {
+      const [index, cert] = data[i];
+      indexes[indexes.length] = index;
+      certs[certs.length] = cert;
+    }
+    const db = this._ccDb;
+    const indexesResponse = await db.bulkDocs(indexes);
+    const indexesResult = await this._handleInsertResponse(indexesResponse, indexes, db);
+    const dataDb = this._ccDataDb;
+    const dataResponse = await dataDb.bulkDocs(certs);
+    const dataResult = await this._handleInsertResponse(dataResponse, certs, dataDb);
+    const final = (indexesResult || []).concat(dataResult || []);
+    return final.length ? final : undefined;
   }
 
   async importEnvironments(data) {

@@ -4,14 +4,11 @@ import { ArcPouchTransformer } from '../transformers/arc-pouch-transformer.js';
 suite('Data transform - PouchDB', function() {
   let jsonData;
   let result;
-  suiteSetup(function() {
-    return DataTestHelper.getFile('pouch-data-export.json')
-    .then((response) => {
-      jsonData = JSON.parse(response);
-      const transformer = new ArcPouchTransformer(jsonData);
-      return transformer.transform();
-    })
-    .then((data) => result = data);
+  suiteSetup(async () => {
+    const response = await DataTestHelper.getFile('pouch-data-export.json');
+    jsonData = JSON.parse(response);
+    const transformer = new ArcPouchTransformer(jsonData);
+    result = await transformer.transform();
   });
 
   test('Normalizes the data', function() {
@@ -35,16 +32,16 @@ suite('Data transform - PouchDB', function() {
   });
 
   test('Data are accounted for', function() {
-    assert.lengthOf(result.projects, 2);
-    assert.lengthOf(result.requests, 4);
-    assert.lengthOf(result.history, 3);
-    assert.lengthOf(result.variables, 4);
-    assert.lengthOf(result.cookies, 2);
-    assert.lengthOf(result['websocket-url-history'], 1);
-    assert.lengthOf(result['url-history'], 5);
-    assert.lengthOf(result['headers-sets'], 1);
-    assert.lengthOf(result['auth-data'], 1);
-    assert.lengthOf(result['host-rules'], 1);
+    assert.lengthOf(result.projects, 2, 'has 2 projects');
+    assert.lengthOf(result.requests, 5, 'has 5 saved');
+    assert.lengthOf(result.history, 3, 'has 3 history');
+    assert.lengthOf(result.variables, 4, 'has 4 variables');
+    assert.lengthOf(result.cookies, 2, 'has 2 cookies');
+    assert.lengthOf(result['websocket-url-history'], 1, 'has 1 websocket url');
+    assert.lengthOf(result['url-history'], 5, 'has 5 history urls');
+    assert.lengthOf(result['headers-sets'], 1, 'has 1 header set');
+    assert.lengthOf(result['auth-data'], 1, 'has 1 auth data');
+    assert.lengthOf(result['host-rules'], 1, 'has 1 host rules');
   });
 
   test('Request objects are valid', function() {
